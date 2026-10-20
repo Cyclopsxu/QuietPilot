@@ -32,6 +32,7 @@ public final class ClipboardGuard {
             } finally {
                 SystemClock.sleep(300);
                 cb.restoreClip(saved);
+                android.util.Log.i("ShadowAutoShell", "clipboard restored");
             }
         }
     }
