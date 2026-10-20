@@ -10,6 +10,9 @@ public final class ActionDecision {
     public String packageName = "";
     public String action = "wait";
     public String reason = "";
+    public String kind = "";
+    public String message = "";
+    public String boundary = "";
     public String expectedEvidence = "";
     public String text = "";
     public String query = "";
@@ -68,6 +71,9 @@ public final class ActionDecision {
         JsonObject args = call.arguments;
         String name = call.name.toLowerCase(Locale.US);
         decision.reason = string(args, "reason");
+        decision.kind = string(args, "kind");
+        decision.message = string(args, "message");
+        decision.boundary = string(args, "boundary");
         decision.expectedEvidence = string(args, "expected_evidence");
         if ("get_ui_layout".equals(name)) {
             decision.action = "wait";
@@ -120,6 +126,8 @@ public final class ActionDecision {
         } else if ("press_key".equals(name)) {
             decision.action = "key";
             decision.key = string(args, "key");
+        } else if ("request_user".equals(name)) {
+            decision.action = "request_user";
         } else if ("finish".equals(name)) {
             decision.action = "done";
         } else {
@@ -158,6 +166,9 @@ public final class ActionDecision {
                 decision.action = "done";
             }
             decision.reason = string(object, "reason");
+            decision.kind = string(object, "kind");
+            decision.message = string(object, "message");
+            decision.boundary = string(object, "boundary");
             decision.expectedEvidence = string(object, "expected_evidence");
             decision.text = string(object, "text");
             decision.direction = string(object, "direction", "down");

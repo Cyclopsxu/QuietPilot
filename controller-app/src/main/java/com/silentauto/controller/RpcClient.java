@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: close one-shot notification RPC connections. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.controller;
 
 import org.json.JSONObject;
@@ -64,6 +65,11 @@ final class RpcClient {
         } finally {
             clearConnection();
         }
+    }
+
+    synchronized void close() throws Exception {
+        if (socket != null) socket.close();
+        clearConnection();
     }
 
     private synchronized void clearConnection() {

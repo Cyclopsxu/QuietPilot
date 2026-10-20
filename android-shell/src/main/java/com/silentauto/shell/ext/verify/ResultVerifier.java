@@ -34,6 +34,14 @@ public final class ResultVerifier {
     }
 
     public Result verify(ExecutionContext ctx, String goal, String expectedEvidence) throws Exception {
+        return verify(ctx, goal, expectedEvidence, false);
+    }
+
+    public Result verifyBoundary(ExecutionContext ctx, String goal, String boundary) throws Exception {
+        return verify(ctx, goal, boundary, true);
+    }
+
+    private Result verify(ExecutionContext ctx, String goal, String expectedEvidence, boolean boundaryOnly) throws Exception {
         if (expectedEvidence == null || expectedEvidence.trim().isEmpty()) {
             return new Result(false, "", "expected_evidence is required; describe visible proof of completion");
         }
@@ -46,6 +54,9 @@ public final class ResultVerifier {
         }
         JsonObject observation = new JsonObject();
         observation.addProperty("goal", goal);
+        observation.addProperty("scope", boundaryOnly
+                ? "Verify only the requested handoff boundary; the user will handle the remaining goal"
+                : "Verify the entire user goal is complete as well as expected_evidence");
         observation.addProperty("expected_evidence", expectedEvidence);
         observation.addProperty("ui_dump", dump);
         observation.addProperty("ocr", ocrText);

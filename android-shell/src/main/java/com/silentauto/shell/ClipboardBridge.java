@@ -1,4 +1,4 @@
-// Modified by Codex for ShadowAuto: expose execution context bridge API. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: expose clipboard snapshots and restore original ClipData. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.content.ClipData;

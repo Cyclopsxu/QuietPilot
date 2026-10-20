@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: accept user handoff outcomes. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.google.gson.JsonElement;
@@ -77,6 +78,10 @@ final class RpcServer {
                         integer(params, "height", 0),
                         JsonRpc.text(params, "mode")
                 ));
+            }
+            if ("resumeTask".equals(method)) {
+                engine.resumeTask(JsonRpc.text(params, "taskId"), JsonRpc.text(params, "outcome"));
+                return JsonRpc.result(id, "resumed");
             }
             if ("stopTask".equals(method)) {
                 String taskId = JsonRpc.text(params, "taskId");

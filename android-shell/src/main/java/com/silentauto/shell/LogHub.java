@@ -1,4 +1,4 @@
-// Modified by Codex for ShadowAuto: expose execution context bridge API. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: expose extension logging and emit result and handoff events. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.media.MediaFormat;
@@ -122,6 +122,16 @@ public final class LogHub {
         params.addProperty("type", type);
         params.addProperty("level", level);
         params.addProperty("message", message);
+        emit(params);
+    }
+
+    public void handoff(String taskId, String kind, String message, String boundary) {
+        JsonObject params = new JsonObject();
+        params.addProperty("type", "handoff");
+        params.addProperty("taskId", taskId);
+        params.addProperty("kind", kind);
+        params.addProperty("message", message);
+        params.addProperty("boundary", boundary);
         emit(params);
     }
 

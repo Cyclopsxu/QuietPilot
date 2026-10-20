@@ -1,14 +1,14 @@
-// Modified by Codex for ShadowAuto: expose task state for extracted action execution. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: delegate actions, verify results and coordinate user handoff. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.silentauto.shell.ext.*;
 import com.silentauto.shell.ext.verify.ResultVerifier;
+import com.silentauto.shell.ext.handoff.HandoffManager;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.SystemClock;
-import android.view.KeyEvent;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -90,12 +90,20 @@ public final class AutomationEngine {
         logs.task(taskId, "automation stopped");
     }
 
+    synchronized void resumeTask(String taskId, String outcome) {
+        TaskState task = tasks.get(taskId);
+        if (task == null || !"waiting_user".equals(task.state) || task.handoff == null) {
+            throw new IllegalStateException("task is not waiting for user");
+        }
+        task.handoff.resume(outcome);
+    }
+
     synchronized JsonObject statusJson() {
         JsonObject object = new JsonObject();
         boolean running = false;
         int displayId = -1;
         for (TaskState task : tasks.values()) {
-            if (!"running".equals(task.state)) {
+            if (!"running".equals(task.state) && !"waiting_user".equals(task.state)) {
                 continue;
             }
             running = true;
@@ -171,6 +179,39 @@ public final class AutomationEngine {
                 ActionDecision action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
                 action = applyAutoCorrections(task, action);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason));
+                if ("request_user".equals(action.action)) {
+                    if (!HandoffManager.valid(action.kind, action.message, action.boundary)) {
+                        task.lastAction = "handoff_failed";
+                        task.lastReason = "request_user requires a valid kind, message and visible boundary";
+                        continue;
+                    }
+                    ResultVerifier.Result boundary = verifier.verifyBoundary(ctx, request.goal, action.boundary);
+                    logs.task(task.taskId, "handoff boundary verified=" + boundary.verified + ": "
+                            + (boundary.verified ? boundary.evidence : boundary.missing));
+                    if (!boundary.verified) {
+                        task.lastAction = "handoff_failed";
+                        task.lastReason = boundary.missing;
+                        continue;
+                    }
+                    HandoffManager handoff = new HandoffManager();
+                    task.handoff = handoff;
+                    task.state = "waiting_user";
+                    logs.task(task.taskId, "HANDOFF " + action.kind + ": " + action.message);
+                    logs.handoff(task.taskId, action.kind, action.message, action.boundary);
+                    String outcome = handoff.awaitResponse();
+                    task.handoff = null;
+                    if (!"done".equals(outcome)) {
+                        task.resultStatus = "handoff";
+                        task.lastReason = "已停在 " + action.boundary + "，等待用户: " + action.message
+                                + " (" + outcome + ")";
+                        logs.result(task.taskId, "handoff", task.lastReason);
+                        break;
+                    }
+                    task.state = "running";
+                    task.lastAction = "user_resumed";
+                    task.lastReason = "User handled the boundary; inspect the fresh UI before continuing";
+                    continue;
+                }
                 if ("done".equals(action.action)) {
                     ResultVerifier.Result verification = verifier.verify(ctx, request.goal, action.expectedEvidence);
                     if (verification.verified) {
@@ -198,6 +239,8 @@ public final class AutomationEngine {
             task.state = task.resultStatus.isEmpty() ? "idle" : task.resultStatus;
             if (task.stop.get()) {
                 doneMessage = "automation cancelled";
+            } else if ("handoff".equals(task.resultStatus)) {
+                doneMessage = "automation handoff: " + task.lastReason;
             } else if ("unverified".equals(task.resultStatus)) {
                 doneMessage = "automation unverified: " + task.lastReason;
             } else if (task.completed) {
@@ -222,7 +265,7 @@ public final class AutomationEngine {
             task.ai = null;
             releaseTask(task);
             synchronized (this) {
-                tasks.remove(task.taskId);
+                tasks.remove(task.taskId, task);
             }
             if (doneMessage != null) {
                 logs.task(task.taskId, doneMessage);
@@ -273,6 +316,7 @@ public final class AutomationEngine {
                 11. Search text candidate is the text to enter after opening a search field. If it is non-empty and the previous action clicked or focused a search/input field, call input_text with exactly that text; do not wait.
                 12. Do not call wait repeatedly on sparse or empty UI. After two waits, call get_ui_layout, get_screen_ocr, input_text, press_back, scroll_ui, or another concrete tool.
                 13. If a search was submitted and the UI dump has windows but inputs=[] and targets=[], the page may be visually rendered but accessibility-opaque. Do not press_back or restart the search only because nodes are missing. Prefer get_screen_ocr, get_ui_layout(full), wait once, or scroll_ui.
+                14. For payment, password entry, login, captcha, face or fingerprint verification, you MUST call request_user. Never complete these yourself.
                 Goal: %s
                 Package: %s
                 Step: %d
@@ -687,10 +731,6 @@ public final class AutomationEngine {
         return value == null || value.length() <= max ? value : value.substring(0, max);
     }
 
-    private static int clamp(int value, int min, int max) {
-        return Math.max(min, Math.min(max, value));
-    }
-
     static final class TaskRequest {
         final String taskId;
         final String goal;
@@ -720,6 +760,7 @@ public final class AutomationEngine {
         public volatile VideoStreamer videoStreamer;
         public volatile AiClient ai;
         public boolean completed;
+        public volatile HandoffManager handoff;
         public String resultStatus = "";
         public int verificationFailures;
         public String agentClipboard = "";

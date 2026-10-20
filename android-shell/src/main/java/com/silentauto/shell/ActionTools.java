@@ -1,4 +1,4 @@
-// Modified by Codex for ShadowAuto: describe task-private clipboard tools. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: define private clipboard, evidence and handoff tool contracts. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.google.gson.JsonArray;
@@ -67,6 +67,11 @@ final class ActionTools {
         tools.add(tool("wait", "Wait for UI changes.",
                 props(prop("ms", "integer", "milliseconds to wait"), prop("reason", "string", "why waiting is needed")),
                 required("ms")));
+        tools.add(tool("request_user", "Hand off payment, login, password, captcha, biometric or confirmation to the user. The boundary must already be visible and will be verified.",
+                props(propEnum("kind", "reason for handoff", "payment", "login", "captcha", "confirm", "other"),
+                        prop("message", "string", "one sentence for the user"),
+                        prop("boundary", "string", "visible UI evidence proving the handoff boundary is reached")),
+                required("kind", "message", "boundary")));
         tools.add(tool("finish", "Mark the automation goal as complete.",
                 props(prop("reason", "string", "completion reason"), prop("expected_evidence", "string", "visible UI evidence that must prove the goal is complete")),
                 required("expected_evidence")));

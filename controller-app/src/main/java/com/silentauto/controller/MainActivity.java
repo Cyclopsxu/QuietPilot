@@ -1,6 +1,14 @@
-// Modified by Codex for ShadowAuto: log verified task result events. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: log results and notify users about verified handoff boundaries. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.controller;
 
+import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -46,6 +54,8 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     private TaskPagerAdapter pagerAdapter;
     private TextView indicator;
     private boolean configOpen;
+    private final java.util.Map<String, JSONObject> pendingHandoffs = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final String HANDOFF_CHANNEL = "task-handoff";
 
     @Override
     protected void onCreate(Bundle bundle) {
@@ -55,11 +65,23 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
         configStore = new AiConfigStore(this);
         config = configStore.load();
         rpcClient = new RpcClient("127.0.0.1", PORT, this);
+        if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 23);
+        }
         if (config.isConfigured()) {
             showMain();
         } else {
             openConfig(false);
         }
+        handleHandoffIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleHandoffIntent(intent);
     }
 
     @Override
@@ -259,7 +281,13 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 return;
             }
             String type = params.optString("type");
-            if ("result".equals(type)) {
+            if ("handoff".equals(type)) {
+                pendingHandoffs.put(task.taskId(), params);
+                main.post(() -> notifyHandoff(params));
+                task.append("等待用户: " + params.optString("message"));
+            } else if ("result".equals(type)) {
+                pendingHandoffs.remove(task.taskId());
+                main.post(() -> getSystemService(NotificationManager.class).cancel(task.taskId(), 23));
                 task.append("RESULT " + params.optString("status") + ": " + params.optString("evidence"));
                 task.setRunning(false);
             } else if ("video.config".equals(type)) {
@@ -272,6 +300,104 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 task.append(params.optString("message"));
             }
         } catch (Exception ignored) {
+        }
+    }
+
+    private void notifyHandoff(JSONObject params) {
+        String taskId = params.optString("taskId");
+        NotificationManager manager = getSystemService(NotificationManager.class);
+        NotificationChannel channel = new NotificationChannel(HANDOFF_CHANNEL, "任务交接", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.setSound(null, null);
+        channel.enableVibration(false);
+        manager.createNotificationChannel(channel);
+        Intent open = new Intent(this, MainActivity.class)
+                .setAction("handoff:" + taskId)
+                .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                .putExtra("handoffTaskId", taskId)
+                .putExtra("handoffMessage", params.optString("message"))
+                .putExtra("handoffBoundary", params.optString("boundary"));
+        PendingIntent show = PendingIntent.getActivity(this, taskId.hashCode(), open,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        Intent cancel = new Intent(this, HandoffCancelReceiver.class)
+                .setAction("cancel:" + taskId).putExtra("taskId", taskId);
+        PendingIntent dismiss = PendingIntent.getBroadcast(this, taskId.hashCode(), cancel,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        Notification notification = new Notification.Builder(this, HANDOFF_CHANNEL)
+                .setSmallIcon(R.drawable.ic_notification)
+                .setContentTitle("任务等待处理")
+                .setContentText(params.optString("message"))
+                .setStyle(new Notification.BigTextStyle().bigText(params.optString("message")))
+                .setPriority(Notification.PRIORITY_DEFAULT)
+                .setContentIntent(show)
+                .addAction(new Notification.Action.Builder(null, "去处理", show).build())
+                .addAction(new Notification.Action.Builder(null, "取消任务", dismiss).build())
+                .setAutoCancel(true).build();
+        try {
+            manager.notify(taskId, 23, notification);
+        } catch (SecurityException e) {
+            AutomationTaskView task = taskById(taskId);
+            if (task != null) task.append("通知权限未开启，请在任务页处理: " + params.optString("message"));
+        }
+    }
+
+    private void handleHandoffIntent(Intent intent) {
+        String taskId = intent.getStringExtra("handoffTaskId");
+        if (taskId == null) return;
+        String message = intent.getStringExtra("handoffMessage");
+        String boundary = intent.getStringExtra("handoffBoundary");
+        intent.removeExtra("handoffTaskId");
+        main.post(() -> {
+            if (pager != null) {
+                synchronized (tasks) {
+                    for (int i = 0; i < tasks.size(); i++) {
+                        if (tasks.get(i).taskId().equals(taskId)) pager.setCurrentItem(i, false);
+                    }
+                }
+            }
+            new AlertDialog.Builder(this).setTitle("任务等待处理")
+                    .setMessage(message + "\n\n" + boundary + "\n\n当前预览尚不支持触控转发。")
+                    .setPositiveButton("已处理，继续", (dialog, which) -> resumeHandoff(taskId, "done"))
+                    .setNegativeButton("取消任务", (dialog, which) -> resumeHandoff(taskId, "cancel"))
+                    .setNeutralButton("稍后", null).show();
+        });
+    }
+
+    private void resumeHandoff(String taskId, String outcome) {
+        io.execute(() -> {
+            try {
+                rpcClient.send("resumeTask", new JSONObject().put("taskId", taskId).put("outcome", outcome));
+                pendingHandoffs.remove(taskId);
+                getSystemService(NotificationManager.class).cancel(taskId, 23);
+            } catch (Exception e) {
+                reportRpcError(taskById(taskId), e);
+            }
+        });
+    }
+
+    public static final class HandoffCancelReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String taskId = intent.getStringExtra("taskId");
+            if (taskId == null) return;
+            PendingResult pending = goAsync();
+            new Thread(() -> {
+                try {
+                    RpcClient client = new RpcClient("127.0.0.1", PORT, new RpcClient.Listener() {
+                        public void onLine(String line) {}
+                        public void onClosed(Exception error) {}
+                    });
+                    try {
+                        client.send("resumeTask", new JSONObject().put("taskId", taskId).put("outcome", "cancel"));
+                    } finally {
+                        client.close();
+                    }
+                    context.getSystemService(NotificationManager.class).cancel(taskId, 23);
+                } catch (Exception e) {
+                    android.util.Log.e("ShadowAuto", "handoff cancellation failed", e);
+                } finally {
+                    pending.finish();
+                }
+            }, "handoff-cancel").start();
         }
     }
 
@@ -337,5 +463,14 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
             dots.append(i == current ? "\u25CF" : "\u25CB");
         }
         indicator.setText(dots.toString());
+        indicator.setOnClickListener(v -> {
+            String taskId = tasks.get(pager.getCurrentItem()).taskId();
+            JSONObject handoff = pendingHandoffs.get(taskId);
+            if (handoff != null) {
+                handleHandoffIntent(new Intent().putExtra("handoffTaskId", taskId)
+                        .putExtra("handoffMessage", handoff.optString("message"))
+                        .putExtra("handoffBoundary", handoff.optString("boundary")));
+            }
+        });
     }
 }
