@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: expose execution context bridge API. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.annotation.SuppressLint;
@@ -21,9 +22,9 @@ import java.util.Map;
 
 import static com.silentauto.shell.UiNodeUtils.*;
 
-final class UiBridge {
-    static final String MODE_SIMPLE = "simple";
-    static final String MODE_FULL = "full";
+public final class UiBridge {
+    public static final String MODE_SIMPLE = "simple";
+    public static final String MODE_FULL = "full";
     private static final Gson GSON = new Gson();
 
     private final HandlerThread thread = new HandlerThread("ui-automation");
@@ -57,15 +58,15 @@ final class UiBridge {
         }
     }
 
-    String dump(int displayId) {
+    public String dump(int displayId) {
         return dump(displayId, 0, 0);
     }
 
-    String dump(int displayId, int width, int height) {
+    public String dump(int displayId, int width, int height) {
         return dump(displayId, width, height, MODE_SIMPLE);
     }
 
-    String dump(int displayId, int width, int height, String mode) {
+    public String dump(int displayId, int width, int height, String mode) {
         DumpContext context = new DumpContext(MODE_FULL.equals(mode) ? MODE_FULL : MODE_SIMPLE);
         WindowSnapshot snapshot = windowSnapshot(displayId);
         Map<String, Object> out = object();
@@ -101,7 +102,7 @@ final class UiBridge {
         return GSON.toJson(out);
     }
 
-    FocusResult focusInput(int displayId, int inputIndex, String query) {
+    public FocusResult focusInput(int displayId, int inputIndex, String query) {
         try {
             FocusResult result = inputIndex > 0 ? findInputByIndex(displayId, inputIndex) : null;
             if (result == null && !empty(query)) {
@@ -123,7 +124,7 @@ final class UiBridge {
         }
     }
 
-    ClickResult clickTarget(int displayId, int targetIndex) {
+    public ClickResult clickTarget(int displayId, int targetIndex) {
         try {
             TargetCounter counter = new TargetCounter(targetIndex);
             int windowIndex = 0;
@@ -142,7 +143,7 @@ final class UiBridge {
         return null;
     }
 
-    ClickResult clickBestSubmitTarget(int displayId, int width, int height) {
+    public ClickResult clickBestSubmitTarget(int displayId, int width, int height) {
         try {
             SubmitCandidate best = null;
             int windowIndex = 0;
@@ -166,7 +167,7 @@ final class UiBridge {
         }
     }
 
-    boolean hasInputMethodWindow(int displayId) {
+    public boolean hasInputMethodWindow(int displayId) {
         try {
             for (AccessibilityWindowInfo window : orderedWindows(displayId, true)) {
                 if (window.getType() == AccessibilityWindowInfo.TYPE_INPUT_METHOD) {
@@ -179,7 +180,7 @@ final class UiBridge {
         return false;
     }
 
-    boolean setText(int displayId, String text) {
+    public boolean setText(int displayId, String text) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable == null) {
@@ -195,7 +196,7 @@ final class UiBridge {
         }
     }
 
-    boolean paste(int displayId) {
+    public boolean paste(int displayId) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable == null) {
@@ -209,7 +210,7 @@ final class UiBridge {
         }
     }
 
-    boolean copySelection(int displayId) {
+    public boolean copySelection(int displayId) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable != null && editable.performAction(AccessibilityNodeInfo.ACTION_COPY)) {
@@ -227,7 +228,7 @@ final class UiBridge {
         return false;
     }
 
-    boolean selectAll(int displayId) {
+    public boolean selectAll(int displayId) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable == null) {
@@ -246,7 +247,7 @@ final class UiBridge {
         }
     }
 
-    boolean deleteSelection(int displayId) {
+    public boolean deleteSelection(int displayId) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable == null) {
@@ -835,14 +836,14 @@ final class UiBridge {
         return node.isFocusable() && node.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
     }
 
-    static final class ClickResult {
-        final int targetIndex;
-        final int x;
-        final int y;
-        final String label;
-        final String path;
+    public static final class ClickResult {
+        public final int targetIndex;
+        public final int x;
+        public final int y;
+        public final String label;
+        public final String path;
         private final AccessibilityNodeInfo node;
-        boolean clicked;
+        public boolean clicked;
 
         ClickResult(int targetIndex, int x, int y, String label, String path, AccessibilityNodeInfo node) {
             this.targetIndex = targetIndex;
@@ -854,17 +855,17 @@ final class UiBridge {
         }
     }
 
-    static final class FocusResult {
-        final int inputIndex;
-        final int targetIndex;
-        final int x;
-        final int y;
-        final String label;
-        final String path;
-        final boolean editable;
+    public static final class FocusResult {
+        public final int inputIndex;
+        public final int targetIndex;
+        public final int x;
+        public final int y;
+        public final String label;
+        public final String path;
+        public final boolean editable;
         private final AccessibilityNodeInfo node;
-        boolean accessibility;
-        boolean focused;
+        public boolean accessibility;
+        public boolean focused;
 
         FocusResult(int inputIndex, int targetIndex, int x, int y, String label, String path, boolean editable, AccessibilityNodeInfo node) {
             this.inputIndex = inputIndex;

@@ -1,9 +1,10 @@
+// Modified by Codex for ShadowAuto: expose execution context bridge API. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.content.ClipData;
 import android.content.Context;
 
-final class ClipboardBridge {
+public final class ClipboardBridge {
     private final android.content.ClipboardManager manager;
 
     ClipboardBridge() {
@@ -13,7 +14,7 @@ final class ClipboardBridge {
         }
     }
 
-    String getText() {
+    public String getText() {
         ClipData clip = manager.getPrimaryClip();
         if (clip == null || clip.getItemCount() == 0) {
             return "";
@@ -22,7 +23,7 @@ final class ClipboardBridge {
         return text == null ? "" : text.toString();
     }
 
-    void setText(String text) {
+    public void setText(String text) {
         manager.setPrimaryClip(ClipData.newPlainText("ShadowAuto", text == null ? "" : text));
     }
 }

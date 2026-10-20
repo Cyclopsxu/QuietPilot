@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: expose execution context bridge API. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.media.MediaFormat;
@@ -12,7 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-final class LogHub {
+public final class LogHub {
     private static final String TAG = "ShadowAutoShell";
 
     interface Sink {
@@ -62,7 +63,7 @@ final class LogHub {
         task(null, message);
     }
 
-    void task(String taskId, String message) {
+    public void task(String taskId, String message) {
         event(taskId, "task", "info", message);
     }
 

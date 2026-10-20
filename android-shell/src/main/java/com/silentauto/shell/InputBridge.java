@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: expose execution context bridge API. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.content.Context;
@@ -10,7 +11,7 @@ import android.view.MotionEvent;
 
 import java.lang.reflect.Method;
 
-final class InputBridge {
+public final class InputBridge {
     private static final int INJECT_WAIT_FOR_FINISH = 2;
     private final Object inputManager;
     private final Method inject;
@@ -22,7 +23,7 @@ final class InputBridge {
         setDisplayId = InputEvent.class.getMethod("setDisplayId", int.class);
     }
 
-    boolean tap(int displayId, int x, int y) throws Exception {
+    public boolean tap(int displayId, int x, int y) throws Exception {
         long now = SystemClock.uptimeMillis();
         MotionEvent down = motion(now, now, MotionEvent.ACTION_DOWN, x, y);
         MotionEvent up = motion(now, now + 80, MotionEvent.ACTION_UP, x, y);
@@ -31,7 +32,7 @@ final class InputBridge {
         return downOk && upOk;
     }
 
-    boolean longPress(int displayId, int x, int y, int durationMs) throws Exception {
+    public boolean longPress(int displayId, int x, int y, int durationMs) throws Exception {
         int duration = Math.max(450, durationMs);
         long now = SystemClock.uptimeMillis();
         boolean downOk = send(displayId, motion(now, now, MotionEvent.ACTION_DOWN, x, y));
@@ -40,7 +41,7 @@ final class InputBridge {
         return downOk && upOk;
     }
 
-    boolean swipe(int displayId, int startX, int startY, int endX, int endY, int durationMs) throws Exception {
+    public boolean swipe(int displayId, int startX, int startY, int endX, int endY, int durationMs) throws Exception {
         int duration = Math.max(120, durationMs);
         int steps = Math.max(6, duration / 24);
         long downTime = SystemClock.uptimeMillis();
@@ -56,26 +57,26 @@ final class InputBridge {
         return send(displayId, motion(downTime, downTime + duration, MotionEvent.ACTION_UP, endX, endY)) && ok;
     }
 
-    boolean key(int displayId, int keyCode) throws Exception {
+    public boolean key(int displayId, int keyCode) throws Exception {
         long now = SystemClock.uptimeMillis();
         boolean downOk = send(displayId, new KeyEvent(now, now, KeyEvent.ACTION_DOWN, keyCode, 0));
         boolean upOk = send(displayId, new KeyEvent(now, now + 20, KeyEvent.ACTION_UP, keyCode, 0));
         return downOk && upOk;
     }
 
-    boolean selectAll(int displayId) throws Exception {
+    public boolean selectAll(int displayId) throws Exception {
         return chord(displayId, KeyEvent.KEYCODE_CTRL_LEFT, KeyEvent.META_CTRL_LEFT_ON | KeyEvent.META_CTRL_ON, KeyEvent.KEYCODE_A);
     }
 
-    boolean delete(int displayId) throws Exception {
+    public boolean delete(int displayId) throws Exception {
         return key(displayId, KeyEvent.KEYCODE_DEL);
     }
 
-    boolean paste(int displayId) throws Exception {
+    public boolean paste(int displayId) throws Exception {
         return key(displayId, KeyEvent.KEYCODE_PASTE);
     }
 
-    boolean text(int displayId, String text) throws Exception {
+    public boolean text(int displayId, String text) throws Exception {
         if (text == null || text.isEmpty()) {
             return true;
         }
