@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: expose action values to extensions. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.google.gson.JsonObject;
@@ -5,25 +6,25 @@ import com.google.gson.JsonParser;
 
 import java.util.Locale;
 
-final class ActionDecision {
-    String packageName = "";
-    String action = "wait";
-    String reason = "";
-    String text = "";
-    String query = "";
-    String direction = "";
-    String key = "";
-    int x;
-    int y;
-    int startX;
-    int startY;
-    int endX;
-    int endY;
-    int targetIndex;
-    int inputIndex;
-    int distance;
-    int durationMs;
-    int ms = 1000;
+public final class ActionDecision {
+    public String packageName = "";
+    public String action = "wait";
+    public String reason = "";
+    public String text = "";
+    public String query = "";
+    public String direction = "";
+    public String key = "";
+    public int x;
+    public int y;
+    public int startX;
+    public int startY;
+    public int endX;
+    public int endY;
+    public int targetIndex;
+    public int inputIndex;
+    public int distance;
+    public int durationMs;
+    public int ms = 1000;
 
     static ActionDecision wait(int ms) {
         return wait(ms, "");

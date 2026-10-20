@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: expose task state for extracted action execution. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.graphics.Bitmap;
@@ -24,7 +25,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-final class AutomationEngine {
+public final class AutomationEngine {
     private static final int MAX_STEPS = 25;
     private static final int MAX_OBSERVATION_TOOL_CALLS = 4;
     private static final int MAX_UI_CHARS = (int) (1_000_000 * 0.6);
@@ -927,30 +928,30 @@ final class AutomationEngine {
         }
     }
 
-    private static final class TaskState {
-        final String taskId;
-        final AtomicBoolean stop = new AtomicBoolean(false);
-        volatile String state = "running";
-        volatile Future<?> future;
-        volatile VirtualDisplaySession display;
-        volatile VideoStreamer videoStreamer;
-        volatile AiClient ai;
-        boolean completed;
-        String searchText = "";
-        String pendingInputText = "";
-        boolean searchInputActive;
-        boolean pendingSearchSubmit;
-        int searchSubmitAttempts;
-        String lastAction = "";
-        String lastReason = "";
-        int consecutiveWaits;
-        boolean searchSubmitted;
-        int sparseUiAfterSearch;
-        int lastUiWindows;
-        int lastUiInputs;
-        int lastUiTargets;
-        String lastUiWindowSource = "";
-        String lastUiWindowError = "";
+    public static final class TaskState {
+        public final String taskId;
+        public final AtomicBoolean stop = new AtomicBoolean(false);
+        public volatile String state = "running";
+        public volatile Future<?> future;
+        public volatile VirtualDisplaySession display;
+        public volatile VideoStreamer videoStreamer;
+        public volatile AiClient ai;
+        public boolean completed;
+        public String searchText = "";
+        public String pendingInputText = "";
+        public boolean searchInputActive;
+        public boolean pendingSearchSubmit;
+        public int searchSubmitAttempts;
+        public String lastAction = "";
+        public String lastReason = "";
+        public int consecutiveWaits;
+        public boolean searchSubmitted;
+        public int sparseUiAfterSearch;
+        public int lastUiWindows;
+        public int lastUiInputs;
+        public int lastUiTargets;
+        public String lastUiWindowSource = "";
+        public String lastUiWindowError = "";
 
         TaskState(String taskId) {
             this.taskId = taskId;
