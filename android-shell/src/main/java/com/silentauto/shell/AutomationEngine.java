@@ -1,6 +1,8 @@
 // Modified by Codex for ShadowAuto: expose task state for extracted action execution. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
+import com.silentauto.shell.ext.*;
+
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -40,6 +42,7 @@ public final class AutomationEngine {
     private final ExecutorService executor = Executors.newCachedThreadPool();
     private final Map<String, TaskState> tasks = new LinkedHashMap<>();
     private final AtomicInteger nextTaskId = new AtomicInteger(1);
+    private final List<StepListener> listeners = new ArrayList<>();
     private UiBridge ui;
     private PaddleOcrEngine ocr;
 
