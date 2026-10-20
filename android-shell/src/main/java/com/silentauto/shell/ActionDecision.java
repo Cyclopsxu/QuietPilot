@@ -8,6 +8,7 @@ import java.util.Locale;
 
 public final class ActionDecision {
     public String packageName = "";
+    public String source = "model";
     public String action = "wait";
     public String reason = "";
     public String kind = "";

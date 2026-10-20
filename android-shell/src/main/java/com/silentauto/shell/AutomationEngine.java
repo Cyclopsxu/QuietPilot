@@ -44,6 +44,7 @@ public final class AutomationEngine {
     private final Map<String, TaskState> tasks = new LinkedHashMap<>();
     private final AtomicInteger nextTaskId = new AtomicInteger(1);
     private final List<StepListener> listeners = new ArrayList<>();
+    private final List<ActionSource> sources = new ArrayList<>();
     private UiBridge ui;
     private PaddleOcrEngine ocr;
 
@@ -177,9 +178,10 @@ public final class AutomationEngine {
                 String dump = bridge.dump(task.display.displayId, task.display.width, task.display.height, UiBridge.MODE_SIMPLE);
                 rememberUiObservation(task, dump);
                 for (StepListener listener : listeners) listener.beforeStep(ctx, step, dump);
-                ActionDecision action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
+                ActionDecision action = firstNonNull(ctx, task, step, dump);
+                if (action == null) action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
                 action = applyAutoCorrections(task, action);
-                logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason));
+                logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason) + " source=" + action.source);
                 if ("request_user".equals(action.action)) {
                     if (!HandoffManager.valid(action.kind, action.message, action.boundary)) {
                         task.lastAction = "handoff_failed";
@@ -272,6 +274,14 @@ public final class AutomationEngine {
                 logs.task(task.taskId, doneMessage);
             }
         }
+    }
+
+    private ActionDecision firstNonNull(ExecutionContext ctx, TaskState task, int step, String dump) {
+        for (ActionSource source : sources) {
+            ActionDecision decision = source.next(ctx, task, step, dump);
+            if (decision != null) return decision;
+        }
+        return null;
     }
 
     private UiBridge getUi() {
