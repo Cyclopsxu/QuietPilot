@@ -170,6 +170,7 @@ public final class AutomationEngine {
 
             ctx = new ExecutionContext(task.taskId, task.display.displayId, task.display.width, task.display.height,
                     bridge, input, clipboard, logs);
+            for (StepListener listener : listeners) listener.onTaskStart(ctx, request.goal, app.packageName);
             ActionExecutor actionExecutor = new ActionExecutor(logs);
             ResultVerifier verifier = new ResultVerifier(ai::complete, () -> screenOcrJson(task));
             for (int step = 1; step <= MAX_STEPS && !task.stop.get(); step++) {
@@ -259,7 +260,7 @@ public final class AutomationEngine {
         } finally {
             if (ctx != null) {
                 for (StepListener listener : listeners) {
-                    listener.onTaskEnd(ctx, task.completed, doneMessage == null ? task.state : doneMessage);
+                    listener.onTaskEnd(ctx, new TaskOutcome(task.state, doneMessage == null ? task.state : doneMessage, "", ""));
                 }
             }
             task.ai = null;
