@@ -43,6 +43,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     private static final int MAIN_PADDING_DP = 24;
 
     private final Handler main = new Handler(Looper.getMainLooper());
+    private final ExecutorService touchIo = Executors.newSingleThreadExecutor();
     private final ExecutorService io = Executors.newCachedThreadPool();
     private final AtomicInteger nextTask = new AtomicInteger(1);
     private final List<AutomationTaskView> tasks = Collections.synchronizedList(new ArrayList<>());
@@ -122,6 +123,24 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     }
 
     @Override
+    public void onTaskTouch(String taskId, String action, float x, float y) {
+        // Keep DOWN/MOVE/UP ordered, independently of model/config network calls.
+        touchIo.execute(() -> {
+            try {
+                rpcClient.send("injectTouch", new JSONObject().put("taskId", taskId).put("action", action).put("x", x).put("y", y));
+            } catch (Exception e) { reportRpcError(taskById(taskId), e); }
+        });
+    }
+
+    @Override
+    public void onHandoffAction(String taskId, String method, String outcome) {
+        io.execute(() -> {
+            try { rpcClient.send(method, new JSONObject().put("taskId", taskId).put("outcome", outcome)); }
+            catch (Exception e) { reportRpcError(taskById(taskId), e); }
+        });
+    }
+
+    @Override
     public void onLine(String line) {
         handleRpcLine(line);
     }
@@ -134,6 +153,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     @Override
     protected void onDestroy() {
         io.shutdownNow();
+        touchIo.shutdownNow();
         super.onDestroy();
     }
 
@@ -284,11 +304,19 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
             String type = params.optString("type");
             if ("status".equals(type)) {
                 String status = params.optString("status");
+                task.updateStatus(params);
                 task.append(status + " " + params.optString("stepText") + " " + params.optString("message"));
+                if ("WAITING_USER".equals(status)) {
+                    JSONObject previous = pendingHandoffs.put(task.taskId(), params);
+                    if (previous == null || previous.optBoolean("protectedScreen") != params.optBoolean("protectedScreen"))
+                        main.post(() -> notifyHandoff(params));
+                } else {
+                    pendingHandoffs.remove(task.taskId());
+                    main.post(() -> getSystemService(NotificationManager.class).cancel(task.taskId(), 23));
+                }
                 if (java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status)) task.setRunning(false);
             } else if ("handoff".equals(type)) {
-                pendingHandoffs.put(task.taskId(), params);
-                main.post(() -> notifyHandoff(params));
+                // Compatibility event; v2 notifications are driven by the richer status event.
                 task.append("等待用户: " + params.optString("message"));
             } else if ("result".equals(type)) {
                 pendingHandoffs.remove(task.taskId());
@@ -311,7 +339,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     private void notifyHandoff(JSONObject params) {
         String taskId = params.optString("taskId");
         NotificationManager manager = getSystemService(NotificationManager.class);
-        NotificationChannel channel = new NotificationChannel(HANDOFF_CHANNEL, "任务交接", NotificationManager.IMPORTANCE_DEFAULT);
+        NotificationChannel channel = new NotificationChannel(HANDOFF_CHANNEL, "任务交接", NotificationManager.IMPORTANCE_LOW);
         channel.setSound(null, null);
         channel.enableVibration(false);
         manager.createNotificationChannel(channel);
@@ -320,7 +348,8 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 .addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 .putExtra("handoffTaskId", taskId)
                 .putExtra("handoffMessage", params.optString("message"))
-                .putExtra("handoffBoundary", params.optString("boundary"));
+                .putExtra("handoffBoundary", params.optString("boundary"))
+                .putExtra("handoffStatus", params.toString());
         PendingIntent show = PendingIntent.getActivity(this, taskId.hashCode(), open,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         Intent cancel = new Intent(this, HandoffCancelReceiver.class)
@@ -348,34 +377,26 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     private void handleHandoffIntent(Intent intent) {
         String taskId = intent.getStringExtra("handoffTaskId");
         if (taskId == null) return;
-        String message = intent.getStringExtra("handoffMessage");
-        String boundary = intent.getStringExtra("handoffBoundary");
+        String rawStatus = intent.getStringExtra("handoffStatus");
         intent.removeExtra("handoffTaskId");
         main.post(() -> {
-            if (pager != null) {
-                synchronized (tasks) {
-                    for (int i = 0; i < tasks.size(); i++) {
-                        if (tasks.get(i).taskId().equals(taskId)) pager.setCurrentItem(i, false);
+            try {
+                JSONObject status = pendingHandoffs.get(taskId);
+                if (status == null && rawStatus != null) status = new JSONObject(rawStatus);
+                AutomationTaskView task = taskById(taskId);
+                if (task == null) {
+                    task = new AutomationTaskView(this, main, taskId, this);
+                    synchronized (tasks) { tasks.add(task); }
+                    if (pagerAdapter != null) pagerAdapter.notifyDataSetChanged();
+                }
+                if (pager != null) {
+                    synchronized (tasks) {
+                        for (int i = 0; i < tasks.size(); i++) if (tasks.get(i).taskId().equals(taskId)) pager.setCurrentItem(i, false);
                     }
                 }
-            }
-            new AlertDialog.Builder(this).setTitle("任务等待处理")
-                    .setMessage(message + "\n\n" + boundary + "\n\n当前预览尚不支持触控转发。")
-                    .setPositiveButton("已处理，继续", (dialog, which) -> resumeHandoff(taskId, "done"))
-                    .setNegativeButton("取消任务", (dialog, which) -> resumeHandoff(taskId, "cancel"))
-                    .setNeutralButton("稍后", null).show();
-        });
-    }
-
-    private void resumeHandoff(String taskId, String outcome) {
-        io.execute(() -> {
-            try {
-                rpcClient.send("resumeTask", new JSONObject().put("taskId", taskId).put("outcome", outcome));
-                pendingHandoffs.remove(taskId);
-                getSystemService(NotificationManager.class).cancel(taskId, 23);
-            } catch (Exception e) {
-                reportRpcError(taskById(taskId), e);
-            }
+                if (status != null) task.showHandoff(status);
+                io.execute(() -> { try { rpcClient.send("listTasks", new JSONObject()); } catch (Exception e) { reportRpcError(taskById(taskId), e); } });
+            } catch (Exception e) { reportRpcError(taskById(taskId), e); }
         });
     }
 

@@ -23,6 +23,10 @@ public final class InputBridge {
         setDisplayId = InputEvent.class.getMethod("setDisplayId", int.class);
     }
 
+    public boolean touch(int displayId, int action, float x, float y, long downTime) throws Exception {
+        return send(displayId, motion(downTime, SystemClock.uptimeMillis(), action, x, y));
+    }
+
     public boolean tap(int displayId, int x, int y) throws Exception {
         long now = SystemClock.uptimeMillis();
         MotionEvent down = motion(now, now, MotionEvent.ACTION_DOWN, x, y);
@@ -91,7 +95,7 @@ public final class InputBridge {
         return ok;
     }
 
-    private MotionEvent motion(long downTime, long eventTime, int action, int x, int y) {
+    private MotionEvent motion(long downTime, long eventTime, int action, float x, float y) {
         MotionEvent event = MotionEvent.obtain(downTime, eventTime, action, x, y, 1f, 1f, 0, 1f, 1f, 0, 0);
         event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
         return event;

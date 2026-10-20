@@ -82,6 +82,15 @@ final class RpcServer {
                         JsonRpc.text(params, "mode")
                 ));
             }
+            if ("injectTouch".equals(method)) {
+                engine.injectTouch(JsonRpc.text(params, "taskId"), JsonRpc.text(params, "action"),
+                        params.get("x").getAsFloat(), params.get("y").getAsFloat());
+                return JsonRpc.result(id, "injected");
+            }
+            if ("openTaskOnMain".equals(method)) {
+                engine.openTaskOnMain(JsonRpc.text(params, "taskId"));
+                return JsonRpc.result(id, "opening");
+            }
             if ("resumeTask".equals(method)) {
                 engine.resumeTask(JsonRpc.text(params, "taskId"), JsonRpc.text(params, "outcome"));
                 return JsonRpc.result(id, "resumed");

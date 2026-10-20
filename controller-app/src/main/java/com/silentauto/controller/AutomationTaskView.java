@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: provide full-screen handoff preview with scaled touch forwarding. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.controller;
 
 import android.app.Activity;
@@ -22,6 +23,8 @@ final class AutomationTaskView {
         void onTaskStart(AutomationTaskView task);
 
         void onTaskStop(String taskId);
+        void onTaskTouch(String taskId, String action, float x, float y);
+        void onHandoffAction(String taskId, String method, String outcome);
     }
 
     private final Activity activity;
@@ -41,6 +44,9 @@ final class AutomationTaskView {
     private AlertDialog screenDialog;
     private H264VideoDecoder dialogDecoder;
     private VideoConfig videoConfig;
+    private JSONObject handoffStatus;
+    private TextView handoffHint;
+    private Button openOnMain;
 
     AutomationTaskView(Activity activity, Handler main, String taskId, Listener listener) {
         this.activity = activity;
@@ -58,7 +64,7 @@ final class AutomationTaskView {
         stop = view.findViewById(R.id.stopButton);
         screenDecoder = new H264VideoDecoder(screen, main);
         UiUtils.clearButtonTint(run, stop);
-        screenBox.setOnClickListener(v -> showScreenDialog());
+        screenBox.setOnClickListener(v -> { if (handoffStatus != null) showHandoff(handoffStatus); else showScreenDialog(); });
         run.setOnClickListener(v -> start());
         stop.setOnClickListener(v -> {
             setRunning(false);
@@ -152,6 +158,81 @@ final class AutomationTaskView {
         run.setEnabled(!running);
         run.setText(running ? activity.getString(R.string.running) : activity.getString(R.string.run));
         stop.setVisibility(running ? View.VISIBLE : View.GONE);
+    }
+
+    void updateStatus(JSONObject status) {
+        activity.runOnUiThread(() -> {
+            if ("WAITING_USER".equals(status.optString("status"))) {
+                handoffStatus = status;
+                if (handoffHint != null) handoffHint.setText(handoffMessage(status));
+                if (openOnMain != null) openOnMain.setVisibility(status.optBoolean("protectedScreen") ? View.VISIBLE : View.GONE);
+            } else {
+                handoffStatus = null;
+                if (handoffHint != null && screenDialog != null) screenDialog.dismiss();
+            }
+        });
+    }
+
+    private String handoffMessage(JSONObject status) {
+        return status.optBoolean("protectedScreen")
+                ? "该页面受系统保护，请在 " + status.optString("app") + " 中完成"
+                : "处理完成后会自动继续\n" + status.optString("message");
+    }
+
+    void showHandoff(JSONObject status) {
+        activity.runOnUiThread(() -> {
+            handoffStatus = status;
+            if (screenDialog != null) screenDialog.dismiss();
+            android.widget.LinearLayout content = new android.widget.LinearLayout(activity);
+            content.setOrientation(android.widget.LinearLayout.VERTICAL);
+            int padding = (int) (16 * activity.getResources().getDisplayMetrics().density);
+            content.setPadding(padding, padding, padding, padding);
+            handoffHint = new TextView(activity); handoffHint.setText(handoffMessage(status));
+            handoffHint.setTextSize(18); content.addView(handoffHint);
+            FrameLayout frame = new FrameLayout(activity);
+            content.addView(frame, new android.widget.LinearLayout.LayoutParams(-1, 0, 1));
+            TextureView preview = new TextureView(activity); preview.setOpaque(true);
+            frame.addView(preview);
+            frame.addOnLayoutChangeListener((v,l,t,r,b,ol,ot,or,ob) -> {
+                int vw = videoConfig == null ? status.optInt("width", 1080) : videoConfig.width;
+                int vh = videoConfig == null ? status.optInt("height", 2400) : videoConfig.height;
+                float scale = Math.min(frame.getWidth() / (float) vw, frame.getHeight() / (float) vh);
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(Math.max(1, (int)(vw * scale)), Math.max(1, (int)(vh * scale)), android.view.Gravity.CENTER);
+                preview.setLayoutParams(lp);
+            });
+            preview.setOnTouchListener((v, event) -> {
+                if (handoffStatus == null || handoffStatus.optBoolean("protectedScreen") || videoConfig == null) return true;
+                String action;
+                switch (event.getActionMasked()) {
+                    case android.view.MotionEvent.ACTION_DOWN: action = "down"; break;
+                    case android.view.MotionEvent.ACTION_MOVE: action = "move"; break;
+                    case android.view.MotionEvent.ACTION_UP: action = "up"; break;
+                    case android.view.MotionEvent.ACTION_CANCEL: action = "cancel"; break;
+                    default: return true;
+                }
+                listener.onTaskTouch(taskId, action, event.getX() * videoConfig.width / Math.max(1, preview.getWidth()),
+                        event.getY() * videoConfig.height / Math.max(1, preview.getHeight()));
+                return true;
+            });
+            dialogDecoder = new H264VideoDecoder(preview, main);
+            if (videoConfig != null) videoConfig.apply(dialogDecoder);
+            openOnMain = new Button(activity); openOnMain.setText("在主屏打开");
+            openOnMain.setVisibility(status.optBoolean("protectedScreen") ? View.VISIBLE : View.GONE);
+            openOnMain.setOnClickListener(v -> listener.onHandoffAction(taskId, "openTaskOnMain", "")); content.addView(openOnMain);
+            Button done = new Button(activity); done.setText("我处理好了"); content.addView(done);
+            done.setOnClickListener(v -> listener.onHandoffAction(taskId, "resumeTask", "done"));
+            Button cancel = new Button(activity); cancel.setText("取消任务"); content.addView(cancel);
+            cancel.setOnClickListener(v -> listener.onHandoffAction(taskId, "resumeTask", "cancel"));
+            screenDialog = new AlertDialog.Builder(activity).setView(content).create();
+            screenDialog.setOnDismissListener(dialog -> {
+                if (dialogDecoder != null) dialogDecoder.release();
+                dialogDecoder = null; screenDialog = null; handoffHint = null; openOnMain = null;
+            });
+            screenDialog.setOnShowListener(dialog -> {
+                if (screenDialog.getWindow() != null) screenDialog.getWindow().setLayout(-1, -1);
+            });
+            screenDialog.show();
+        });
     }
 
     private void hideKeyboard() {

@@ -11,6 +11,7 @@ public final class TaskProgress {
     private final LogHub logs;
     private final long started = SystemClock.elapsedRealtime();
     private long ended;
+    private boolean protectedScreen;
     private TaskStatus status = TaskStatus.QUEUED;
     private String app = "", stepText = "", source = "model", message = "", evidence = "", boundary = "";
     private final Map<String, Integer> calls = new LinkedHashMap<>();
@@ -19,6 +20,10 @@ public final class TaskProgress {
         this.taskId = taskId; this.goal = goal; this.logs = logs;
         calls.put("executor", 0); calls.put("verifier", 0); calls.put("intake", 0);
     }
+    public synchronized void protectedScreen(boolean value) {
+        if (protectedScreen != value) { protectedScreen = value; publish(); }
+    }
+    public synchronized boolean protectedScreen() { return protectedScreen; }
     public synchronized TaskStatus status() { return status; }
     public synchronized void app(String value) { app = value; }
     public synchronized void call(String role) { calls.put(role, calls.get(role) + 1); }
@@ -53,6 +58,7 @@ public final class TaskProgress {
         JsonObject counts = new JsonObject();
         for (Map.Entry<String,Integer> entry : calls.entrySet()) counts.addProperty(entry.getKey(), entry.getValue());
         o.add("llmCalls", counts);
+        o.addProperty("protectedScreen", protectedScreen);
         o.addProperty("elapsedMs", (ended == 0 ? SystemClock.elapsedRealtime() : ended) - started);
         return o;
     }

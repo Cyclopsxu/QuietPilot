@@ -93,12 +93,29 @@ public final class AutomationEngine {
         logs.task(taskId, "automation stopped");
     }
 
+    synchronized void openTaskOnMain(String taskId) {
+        TaskState task = tasks.get(taskId);
+        if (task == null || task.handoff == null || !task.progress.protectedScreen())
+            throw new IllegalStateException("task is not waiting on a protected page");
+        task.handoff.resume("open_main");
+    }
+
+    synchronized void injectTouch(String taskId, String action, float x, float y) throws Exception {
+        TaskState task = tasks.get(taskId);
+        if (task == null || task.progress.status() != TaskStatus.WAITING_USER || task.display == null)
+            throw new IllegalStateException("touch is only allowed while waiting for user");
+        if (!Float.isFinite(x) || !Float.isFinite(y)) throw new IllegalArgumentException("finite coordinates required");
+        task.touch.inject(action, Math.max(0, Math.min(task.display.width - 1, x)),
+                Math.max(0, Math.min(task.display.height - 1, y)));
+    }
+
     synchronized void resumeTask(String taskId, String outcome) {
         TaskState task = tasks.get(taskId);
         if (task == null || !"waiting_user".equals(task.state) || task.handoff == null) {
             throw new IllegalStateException("task is not waiting for user");
         }
         task.handoff.resume(outcome);
+        if (task.verifierAi != null) task.verifierAi.cancel();
     }
 
     synchronized JsonArray listTasks() {
@@ -192,6 +209,7 @@ public final class AutomationEngine {
             ctx = new ExecutionContext(task.taskId, task.display.displayId, task.display.width, task.display.height,
                     bridge, input, clipboard, logs);
             for (StepListener listener : listeners) listener.onTaskStart(ctx, request.goal, app.packageName);
+            task.touch = new com.silentauto.shell.ext.handoff.TouchSession(input, ctx.displayId);
             ActionExecutor actionExecutor = new ActionExecutor(logs);
             AiClient verifierAi = new AiClient(config.forRole(config.verifier), logs, task.taskId, () -> task.progress.call("verifier"));
             task.verifierAi = verifierAi;
@@ -215,22 +233,30 @@ public final class AutomationEngine {
                     ResultVerifier.Result boundary = verifier.verifyBoundary(ctx, action.boundary);
                     logs.task(task.taskId, "handoff boundary verified=" + boundary.verified + ": "
                             + (boundary.verified ? boundary.evidence : boundary.missing));
-                    if (!boundary.verified) {
+                    boolean protectedScreen = boundary.frame != null && boundary.frame.protectedScreen;
+                    if (!boundary.verified && !protectedScreen) {
                         task.lastAction = "handoff_failed";
                         task.lastReason = boundary.missing;
                         continue;
                     }
                     HandoffManager handoff = new HandoffManager();
                     task.handoff = handoff;
-                    transition(task, TaskStatus.WAITING_USER, action.message, boundary.evidence, action.boundary);
+                    task.progress.protectedScreen(protectedScreen);
+                    transition(task, TaskStatus.WAITING_USER, protectedScreen
+                            ? "该页面受系统保护，请在 " + task.packageName + " 中完成。" + action.message
+                            : action.message, boundary.evidence, action.boundary);
                     logs.task(task.taskId, "HANDOFF " + action.kind + ": " + action.message);
                     logs.handoff(task.taskId, action.kind, action.message, action.boundary);
-                    String outcome = handoff.awaitResponse();
+                    String outcome = handoff.awaitResponse(ctx, verifier, action.boundary, task.progress);
                     task.handoff = null;
                     if (!"done".equals(outcome)) {
                         task.resultStatus = "handoff";
-                        task.lastReason = "已停在 " + action.boundary + "，等待用户: " + action.message
-                                + " (" + outcome + ")";
+                        if ("open_main".equals(outcome)) {
+                            appCatalog.launchPackage(task.taskId, task.packageName, 0);
+                            task.lastReason = "已交给你在主屏完成";
+                        } else {
+                            task.lastReason = "已停在 " + action.boundary + "，等待用户: " + action.message + " (" + outcome + ")";
+                        }
                         transition(task, "timeout".equals(outcome) ? TaskStatus.HANDOFF_TIMEOUT : TaskStatus.CANCELLED,
                                 task.lastReason, "", action.boundary);
                         logs.result(task.taskId, "handoff", task.lastReason);
@@ -356,7 +382,7 @@ public final class AutomationEngine {
                 11. Search text candidate is the text to enter after opening a search field. If it is non-empty and the previous action clicked or focused a search/input field, call input_text with exactly that text; do not wait.
                 12. Do not call wait repeatedly on sparse or empty UI. After two waits, call get_ui_layout, get_screen_ocr, input_text, press_back, scroll_ui, or another concrete tool.
                 13. If a search was submitted and the UI dump has windows but inputs=[] and targets=[], the page may be visually rendered but accessibility-opaque. Do not press_back or restart the search only because nodes are missing. Prefer get_screen_ocr, get_ui_layout(full), wait once, or scroll_ui.
-                14. For payment, password entry, login, captcha, face or fingerprint verification, you MUST call request_user. Never complete these yourself.
+                14. For payment or payment passwords, login, captcha or sliders, face/fingerprint biometrics, and irreversible deletion/refunds without explicit user authorization, you MUST call request_user. Never attempt these yourself.
                 Goal: %s
                 Package: %s
                 Step: %d
@@ -805,6 +831,7 @@ public final class AutomationEngine {
         public volatile AiClient ai;
         public boolean completed;
         public volatile HandoffManager handoff;
+        public com.silentauto.shell.ext.handoff.TouchSession touch;
         public String resultStatus = "";
         public int verificationFailures;
         public String agentClipboard = "";

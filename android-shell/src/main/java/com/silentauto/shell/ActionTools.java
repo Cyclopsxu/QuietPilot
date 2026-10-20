@@ -68,7 +68,7 @@ final class ActionTools {
                 props(prop("ms", "integer", "milliseconds to wait"), prop("reason", "string", "why waiting is needed")),
                 required("ms")));
         tools.add(tool("request_user", "Hand off payment, login, password, captcha, biometric or confirmation to the user. The boundary must already be visible and will be verified.",
-                props(propEnum("kind", "reason for handoff", "payment", "login", "captcha", "confirm", "other"),
+                props(propEnum("kind", "reason for handoff", "payment", "login", "captcha", "biometric", "confirm"),
                         prop("message", "string", "one sentence for the user"),
                         prop("boundary", "string", "visible UI evidence proving the handoff boundary is reached")),
                 required("kind", "message", "boundary")));
