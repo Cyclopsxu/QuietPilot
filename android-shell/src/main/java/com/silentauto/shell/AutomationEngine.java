@@ -3,6 +3,7 @@ package com.silentauto.shell;
 
 import com.silentauto.shell.ext.*;
 import com.silentauto.shell.ext.verify.ResultVerifier;
+import com.silentauto.shell.ext.verify.EvidenceFrame;
 import com.silentauto.shell.ext.handoff.HandoffManager;
 
 import android.graphics.Bitmap;
@@ -59,6 +60,8 @@ public final class AutomationEngine {
             throw new IllegalArgumentException("goal is required");
         }
         String taskId = Config.empty(request.taskId) ? "task-" + nextTaskId.getAndIncrement() : request.taskId;
+        if (!taskId.matches("[A-Za-z0-9_.-]{1,100}") || ".".equals(taskId) || "..".equals(taskId))
+            throw new IllegalArgumentException("taskId must contain safe filename characters");
         stopTask(taskId);
         TaskState task = new TaskState(taskId, request.goal, logs);
         tasks.put(taskId, task);
@@ -190,7 +193,10 @@ public final class AutomationEngine {
                     bridge, input, clipboard, logs);
             for (StepListener listener : listeners) listener.onTaskStart(ctx, request.goal, app.packageName);
             ActionExecutor actionExecutor = new ActionExecutor(logs);
-            ResultVerifier verifier = new ResultVerifier(ai::complete, () -> screenOcrJson(task));
+            AiClient verifierAi = new AiClient(config.forRole(config.verifier), logs, task.taskId, () -> task.progress.call("verifier"));
+            task.verifierAi = verifierAi;
+            ResultVerifier verifier = new ResultVerifier(verifierAi::completeVision, () -> screenOcrJson(task),
+                    () -> EvidenceFrame.from(task.display.captureBitmap(8, 120)));
             for (int step = 1; step <= MAX_STEPS && !task.stop.get(); step++) {
                 String dump = bridge.dump(task.display.displayId, task.display.width, task.display.height, UiBridge.MODE_SIMPLE);
                 rememberUiObservation(task, dump);
@@ -206,7 +212,7 @@ public final class AutomationEngine {
                         task.lastReason = "request_user requires a valid kind, message and visible boundary";
                         continue;
                     }
-                    ResultVerifier.Result boundary = verifier.verifyBoundary(ctx, request.goal, action.boundary);
+                    ResultVerifier.Result boundary = verifier.verifyBoundary(ctx, action.boundary);
                     logs.task(task.taskId, "handoff boundary verified=" + boundary.verified + ": "
                             + (boundary.verified ? boundary.evidence : boundary.missing));
                     if (!boundary.verified) {
@@ -238,6 +244,8 @@ public final class AutomationEngine {
                 if ("done".equals(action.action)) {
                     ResultVerifier.Result verification = verifier.verify(ctx, request.goal, action.expectedEvidence);
                     if (verification.verified) {
+                        String evidencePath = verifier.saveEvidence(ctx, verification);
+                        logs.task(task.taskId, "evidence saved: " + evidencePath);
                         task.completed = true;
                         task.resultStatus = "verified";
                         transition(task, TaskStatus.VERIFIED, "任务已验收", verification.evidence, "");
@@ -288,6 +296,7 @@ public final class AutomationEngine {
                 }
             }
             task.ai = null;
+            task.verifierAi = null;
             releaseTask(task);
             logs.task(task.taskId, "task metrics " + task.progress.json());
             if (doneMessage != null) {

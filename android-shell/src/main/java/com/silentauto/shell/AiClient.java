@@ -63,12 +63,24 @@ final class AiClient {
     }
 
     String complete(String system, String prompt) throws Exception {
+        return completeVision(system, prompt, null);
+    }
+
+    String completeVision(String system, String prompt, String imageUrl) throws Exception {
         JsonObject body = new JsonObject();
         body.addProperty("model", config.model);
         body.addProperty("stream", true);
         JsonArray messages = new JsonArray();
         messages.add(message("system", system));
-        messages.add(message("user", prompt));
+        JsonObject user = message("user", prompt);
+        if (imageUrl != null) {
+            JsonArray parts = new JsonArray();
+            JsonObject text = new JsonObject(); text.addProperty("type", "text"); text.addProperty("text", prompt); parts.add(text);
+            JsonObject image = new JsonObject(); image.addProperty("type", "image_url");
+            JsonObject url = new JsonObject(); url.addProperty("url", imageUrl); image.add("image_url", url); parts.add(image);
+            user.add("content", parts);
+        }
+        messages.add(user);
         body.add("messages", messages);
         return stream(body).content;
     }
