@@ -282,7 +282,11 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 return;
             }
             String type = params.optString("type");
-            if ("handoff".equals(type)) {
+            if ("status".equals(type)) {
+                String status = params.optString("status");
+                task.append(status + " " + params.optString("stepText") + " " + params.optString("message"));
+                if (java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status)) task.setRunning(false);
+            } else if ("handoff".equals(type)) {
                 pendingHandoffs.put(task.taskId(), params);
                 main.post(() -> notifyHandoff(params));
                 task.append("等待用户: " + params.optString("message"));

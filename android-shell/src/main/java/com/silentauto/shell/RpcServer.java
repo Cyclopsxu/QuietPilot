@@ -68,6 +68,9 @@ final class RpcServer {
             if ("status".equals(method)) {
                 return JsonRpc.result(id, engine.statusJson());
             }
+            if ("listTasks".equals(method)) {
+                return JsonRpc.result(id, engine.listTasks());
+            }
             if ("logs".equals(method)) {
                 return JsonRpc.result(id, JsonRpc.stringArray(logs.snapshot()));
             }

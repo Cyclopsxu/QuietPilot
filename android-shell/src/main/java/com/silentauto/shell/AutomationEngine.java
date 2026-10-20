@@ -60,8 +60,9 @@ public final class AutomationEngine {
         }
         String taskId = Config.empty(request.taskId) ? "task-" + nextTaskId.getAndIncrement() : request.taskId;
         stopTask(taskId);
-        TaskState task = new TaskState(taskId);
+        TaskState task = new TaskState(taskId, request.goal, logs);
         tasks.put(taskId, task);
+        task.progress.publish();
         task.future = executor.submit(() -> runTask(task, request));
         return taskId;
     }
@@ -75,19 +76,17 @@ public final class AutomationEngine {
 
     synchronized void stopTask(String taskId) {
         TaskState task = tasks.get(taskId);
-        if (task == null) {
+        if (task == null || task.progress.status().terminal()) {
             return;
         }
         task.stop.set(true);
-        task.state = "idle";
-        if (task.ai != null) {
-            task.ai.cancel();
-        }
+        transition(task, TaskStatus.CANCELLED, "automation cancelled", "", "");
+        if (task.ai != null) task.ai.cancel();
+        if (task.verifierAi != null) task.verifierAi.cancel();
         if (task.future != null) {
             task.future.cancel(true);
         }
         releaseTask(task);
-        tasks.remove(taskId);
         logs.task(taskId, "automation stopped");
     }
 
@@ -97,6 +96,21 @@ public final class AutomationEngine {
             throw new IllegalStateException("task is not waiting for user");
         }
         task.handoff.resume(outcome);
+    }
+
+    synchronized JsonArray listTasks() {
+        JsonArray array = new JsonArray();
+        for (TaskState task : tasks.values()) {
+            JsonObject item = task.progress.json();
+            item.addProperty("displayId", task.display == null ? -1 : task.display.displayId);
+            array.add(item);
+        }
+        return array;
+    }
+
+    private void transition(TaskState task, TaskStatus status, String message, String evidence, String boundary) {
+        task.progress.transition(status, message, evidence, boundary);
+        task.state = task.progress.status().name().toLowerCase(Locale.ROOT);
     }
 
     synchronized JsonObject statusJson() {
@@ -119,6 +133,7 @@ public final class AutomationEngine {
             JsonObject item = new JsonObject();
             item.addProperty("taskId", task.taskId);
             item.addProperty("state", task.state);
+            item.addProperty("status", task.progress.status().name());
             item.addProperty("displayId", task.display == null ? -1 : task.display.displayId);
             array.add(item);
         }
@@ -138,11 +153,12 @@ public final class AutomationEngine {
         try {
             config.executor.validate();
             config.verifier.validate();
-            AiClient ai = new AiClient(config, logs, task.taskId);
+            AiClient ai = new AiClient(config, logs, task.taskId, () -> task.progress.call("executor"));
             task.ai = ai;
             UiBridge bridge = getUi();
             InputBridge input = new InputBridge();
             ClipboardBridge clipboard = new ClipboardBridge();
+            transition(task, TaskStatus.RUNNING, "正在选择应用", "", "");
             task.searchText = searchTextFromGoal(request.goal);
             if (!Config.empty(task.searchText)) {
                 logs.task(task.taskId, "search text hint: " + task.searchText);
@@ -158,6 +174,8 @@ public final class AutomationEngine {
                 throw new IllegalStateException("AI did not choose an app package");
             }
 
+            task.packageName = app.packageName;
+            task.progress.app(app.packageName);
             DisplaySpec displaySpec = DisplaySpec.current(logs);
             task.videoStreamer = new VideoStreamer(logs, task.taskId, displaySpec.width, displaySpec.height);
             task.display = VirtualDisplaySession.create(task.videoStreamer.width(), task.videoStreamer.height(), displaySpec.dpi, task.videoStreamer.inputSurface());
@@ -180,6 +198,7 @@ public final class AutomationEngine {
                 ActionDecision action = firstNonNull(ctx, task, step, dump);
                 if (action == null) action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
                 action = applyAutoCorrections(task, action);
+                task.progress.action(action.reason, action.source);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason) + " source=" + action.source);
                 if ("request_user".equals(action.action)) {
                     if (!HandoffManager.valid(action.kind, action.message, action.boundary)) {
@@ -197,7 +216,7 @@ public final class AutomationEngine {
                     }
                     HandoffManager handoff = new HandoffManager();
                     task.handoff = handoff;
-                    task.state = "waiting_user";
+                    transition(task, TaskStatus.WAITING_USER, action.message, boundary.evidence, action.boundary);
                     logs.task(task.taskId, "HANDOFF " + action.kind + ": " + action.message);
                     logs.handoff(task.taskId, action.kind, action.message, action.boundary);
                     String outcome = handoff.awaitResponse();
@@ -206,10 +225,12 @@ public final class AutomationEngine {
                         task.resultStatus = "handoff";
                         task.lastReason = "已停在 " + action.boundary + "，等待用户: " + action.message
                                 + " (" + outcome + ")";
+                        transition(task, "timeout".equals(outcome) ? TaskStatus.HANDOFF_TIMEOUT : TaskStatus.CANCELLED,
+                                task.lastReason, "", action.boundary);
                         logs.result(task.taskId, "handoff", task.lastReason);
                         break;
                     }
-                    task.state = "running";
+                    transition(task, TaskStatus.RUNNING, "用户已处理，继续执行", "", "");
                     task.lastAction = "user_resumed";
                     task.lastReason = "User handled the boundary; inspect the fresh UI before continuing";
                     continue;
@@ -219,6 +240,7 @@ public final class AutomationEngine {
                     if (verification.verified) {
                         task.completed = true;
                         task.resultStatus = "verified";
+                        transition(task, TaskStatus.VERIFIED, "任务已验收", verification.evidence, "");
                         logs.task(task.taskId, "VERIFIED: " + verification.evidence);
                         logs.result(task.taskId, "verified", verification.evidence);
                         break;
@@ -228,6 +250,7 @@ public final class AutomationEngine {
                     logs.task(task.taskId, "verification failed: " + verification.missing);
                     if (++task.verificationFailures >= 3) {
                         task.resultStatus = "unverified";
+                        transition(task, TaskStatus.FAILED, verification.missing, verification.evidence, "");
                         logs.result(task.taskId, "unverified", verification.missing);
                         break;
                     }
@@ -238,7 +261,7 @@ public final class AutomationEngine {
                 rememberAction(task, action, result.clickResult, result.focusResult);
                 sleep(task, 900);
             }
-            task.state = task.resultStatus.isEmpty() ? "idle" : task.resultStatus;
+
             if (task.stop.get()) {
                 doneMessage = "automation cancelled";
             } else if ("handoff".equals(task.resultStatus)) {
@@ -252,23 +275,21 @@ public final class AutomationEngine {
             }
         } catch (Throwable e) {
             if (task.stop.get()) {
-                task.state = "idle";
+                transition(task, TaskStatus.CANCELLED, "automation cancelled", "", "");
                 doneMessage = "automation cancelled";
             } else {
-                task.state = "error";
+                transition(task, TaskStatus.FAILED, e.getMessage(), "", "");
                 logs.error(task.taskId, "automation failed", e);
             }
         } finally {
             if (ctx != null) {
                 for (StepListener listener : listeners) {
-                    listener.onTaskEnd(ctx, new TaskOutcome(task.state, doneMessage == null ? task.state : doneMessage, "", ""));
+                    listener.onTaskEnd(ctx, task.progress.outcome());
                 }
             }
             task.ai = null;
             releaseTask(task);
-            synchronized (this) {
-                tasks.remove(task.taskId, task);
-            }
+            logs.task(task.taskId, "task metrics " + task.progress.json());
             if (doneMessage != null) {
                 logs.task(task.taskId, doneMessage);
             }
@@ -765,7 +786,10 @@ public final class AutomationEngine {
     public static final class TaskState {
         public final String taskId;
         public final AtomicBoolean stop = new AtomicBoolean(false);
-        public volatile String state = "running";
+        public volatile String state = "queued";
+        public final TaskProgress progress;
+        public String packageName = "";
+        public volatile AiClient verifierAi;
         public volatile Future<?> future;
         public volatile VirtualDisplaySession display;
         public volatile VideoStreamer videoStreamer;
@@ -791,8 +815,9 @@ public final class AutomationEngine {
         public String lastUiWindowSource = "";
         public String lastUiWindowError = "";
 
-        TaskState(String taskId) {
+        TaskState(String taskId, String goal, LogHub logs) {
             this.taskId = taskId;
+            this.progress = new TaskProgress(taskId, goal, logs);
         }
     }
 

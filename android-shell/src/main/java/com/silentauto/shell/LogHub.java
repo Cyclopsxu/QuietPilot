@@ -135,6 +135,12 @@ public final class LogHub {
         emit(params);
     }
 
+    public void status(JsonObject task) {
+        JsonObject params = task.deepCopy();
+        params.addProperty("type", "status");
+        emit(params);
+    }
+
     public void result(String taskId, String status, String evidence) {
         JsonObject params = new JsonObject();
         params.addProperty("type", "result");

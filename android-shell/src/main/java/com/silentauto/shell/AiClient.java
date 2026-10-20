@@ -35,9 +35,12 @@ final class AiClient {
     private final LogHub logs;
     private final String taskId;
     private volatile Call call;
+    private final Runnable onCall;
     private final OkHttpClient http = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(0, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .callTimeout(90, TimeUnit.SECONDS)
+            .followRedirects(false)
             .build();
 
     AiClient(Config config, LogHub logs) {
@@ -45,6 +48,11 @@ final class AiClient {
     }
 
     AiClient(Config config, LogHub logs, String taskId) {
+        this(config, logs, taskId, () -> {});
+    }
+
+    AiClient(Config config, LogHub logs, String taskId, Runnable onCall) {
+        this.onCall = onCall;
         this.config = config;
         this.logs = logs;
         this.taskId = taskId == null ? "" : taskId;
@@ -83,6 +91,8 @@ final class AiClient {
     }
 
     private ToolResult stream(JsonObject body) throws Exception {
+        config.executor.validate();
+        onCall.run();
         Request request = new Request.Builder()
                 .url(config.apiBase + "/chat/completions")
                 .addHeader("Authorization", "Bearer " + config.apiKey)
