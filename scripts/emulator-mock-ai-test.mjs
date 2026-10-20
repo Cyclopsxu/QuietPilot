@@ -194,6 +194,8 @@ async function main() {
   await new Promise(resolve => server.listen(mockPort, '127.0.0.1', resolve));
   adb('reverse', `tcp:${mockPort}`, `tcp:${mockPort}`);
 
+  // Keep the target app off the main display so the scheduler can admit it.
+  adb('shell', 'am', 'start', '--display', '0', '-a', 'android.intent.action.MAIN', '-c', 'android.intent.category.HOME');
   const output = await rpc({
     jsonrpc: '2.0',
     id: 1,
