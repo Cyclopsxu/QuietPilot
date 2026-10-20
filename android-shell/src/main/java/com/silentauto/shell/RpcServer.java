@@ -93,13 +93,15 @@ final class RpcServer {
                 return JsonRpc.result(id, "stopped");
             }
             if ("startTask".equals(method)) {
-                String taskId = engine.startTask(new AutomationEngine.TaskRequest(
+                AutomationEngine.TaskRequest taskRequest = new AutomationEngine.TaskRequest(
                         JsonRpc.text(params, "taskId"),
                         JsonRpc.text(params, "goal"),
                         JsonRpc.text(params, "apiKey"),
                         JsonRpc.text(params, "apiBase"),
                         JsonRpc.text(params, "model")
-                ));
+                );
+                taskRequest.models = params.getAsJsonObject("models");
+                String taskId = engine.startTask(taskRequest);
                 JsonObject value = new JsonObject();
                 value.addProperty("taskId", taskId);
                 value.addProperty("value", "started");

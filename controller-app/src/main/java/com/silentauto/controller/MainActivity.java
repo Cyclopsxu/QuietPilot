@@ -245,6 +245,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
             params.put("apiKey", config.apiKey);
             params.put("apiBase", config.apiBase);
             params.put("model", config.model);
+            params.put("models", config.profilesJson());
             rpcClient.send("startTask", params);
         } catch (Exception e) {
             reportRpcError(task, e);

@@ -1,41 +1,33 @@
+// Modified by Codex for ShadowAuto: save and transmit three domestic model profiles. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.controller;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 final class AiConfigStore {
-    private static final String PREFS = "ai_config";
-
-    private final Context context;
-
-    AiConfigStore(Context context) {
-        this.context = context.getApplicationContext();
-    }
-
+    private final SharedPreferences prefs;
+    AiConfigStore(Context context) { prefs = context.getApplicationContext().getSharedPreferences("ai_config", Context.MODE_PRIVATE); }
     AiConfig load() {
-        SharedPreferences prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-        return new AiConfig(
-                prefs.getString("apiKey", ""),
-                prefs.getString("apiBase", ""),
-                prefs.getString("model", "")
-        );
+        String legacyKey = prefs.getString("apiKey", "");
+        if (!prefs.contains("executor.model") && !legacyKey.isEmpty()) {
+            return new AiConfig(legacyKey, prefs.getString("apiBase", ""), prefs.getString("model", ""));
+        }
+        return new AiConfig(loadRole("executor", AiConfig.DEEPSEEK, "deepseek-flash"),
+                loadRole("verifier", AiConfig.QWEN, "qwen3-vl-plus"),
+                loadRole("intake", AiConfig.QWEN, "qwen3.8-omni-flash"));
     }
-
-    AiConfig save(String key, String base, String selectedModel) {
-        AiConfig config = new AiConfig(key.trim(), trimSlash(base), selectedModel.trim());
-        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
-                .putString("apiKey", config.apiKey)
-                .putString("apiBase", config.apiBase)
-                .putString("model", config.model)
-                .apply();
+    private AiConfig.Model loadRole(String role, String base, String model) {
+        return new AiConfig.Model(prefs.getString(role + ".apiKey", ""), prefs.getString(role + ".apiBase", base), prefs.getString(role + ".model", model));
+    }
+    AiConfig save(AiConfig config) {
+        SharedPreferences.Editor editor = prefs.edit();
+        String[] roles = {"executor", "verifier", "intake"};
+        AiConfig.Model[] models = {config.executor, config.verifier, config.intake};
+        for (int i = 0; i < roles.length; i++) {
+            editor.putString(roles[i] + ".apiKey", models[i].apiKey).putString(roles[i] + ".apiBase", models[i].apiBase).putString(roles[i] + ".model", models[i].model);
+        }
+        editor.remove("apiKey").remove("apiBase").remove("model").apply();
         return config;
     }
-
-    static String trimSlash(String value) {
-        String result = value == null ? "" : value.trim();
-        while (result.endsWith("/")) {
-            result = result.substring(0, result.length() - 1);
-        }
-        return result;
-    }
+    static String trimSlash(String value) { return value == null ? "" : value.trim().replaceAll("/+$", ""); }
 }

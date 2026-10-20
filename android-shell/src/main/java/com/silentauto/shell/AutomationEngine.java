@@ -132,13 +132,12 @@ public final class AutomationEngine {
     }
 
     private void runTask(TaskState task, TaskRequest request) {
-        Config config = baseConfig.withOverrides(request.apiKey, request.apiBase, request.model);
+        Config config = baseConfig.withOverrides(request.apiKey, request.apiBase, request.model).withProfiles(request.models);
         String doneMessage = null;
         ExecutionContext ctx = null;
         try {
-            if (Config.empty(config.apiKey)) {
-                throw new IllegalStateException("OPENAI_API_KEY or apiKey is required");
-            }
+            config.executor.validate();
+            config.verifier.validate();
             AiClient ai = new AiClient(config, logs, task.taskId);
             task.ai = ai;
             UiBridge bridge = getUi();
@@ -748,6 +747,7 @@ public final class AutomationEngine {
         final String apiKey;
         final String apiBase;
         final String model;
+        JsonObject models;
 
         TaskRequest(String goal, String apiKey, String apiBase, String model) {
             this("", goal, apiKey, apiBase, model);
