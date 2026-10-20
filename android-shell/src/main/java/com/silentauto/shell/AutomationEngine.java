@@ -46,6 +46,8 @@ public final class AutomationEngine {
     private final AtomicInteger nextTaskId = new AtomicInteger(1);
     private final List<StepListener> listeners = new ArrayList<>();
     private final List<ActionSource> sources = new ArrayList<>();
+    private final com.silentauto.shell.ext.guard.TaskScheduler scheduler = new com.silentauto.shell.ext.guard.TaskScheduler();
+    private final com.silentauto.shell.ext.guard.ForegroundWatcher foreground = new com.silentauto.shell.ext.guard.ForegroundWatcher();
     private UiBridge ui;
     private PaddleOcrEngine ocr;
 
@@ -90,7 +92,15 @@ public final class AutomationEngine {
             task.future.cancel(true);
         }
         releaseTask(task);
+        scheduler.release(task);
         logs.task(taskId, "automation stopped");
+    }
+
+    synchronized void forceStart(String taskId) {
+        TaskState task = tasks.get(taskId);
+        if (task == null || task.progress.status() != TaskStatus.QUEUED) throw new IllegalStateException("task is not queued");
+        task.forceStart.set(true);
+        logs.task(taskId, "WARNING: forceStart may conflict with the user on the main display");
     }
 
     synchronized void openTaskOnMain(String taskId) {
@@ -178,7 +188,7 @@ public final class AutomationEngine {
             UiBridge bridge = getUi();
             InputBridge input = new InputBridge();
             ClipboardBridge clipboard = new ClipboardBridge();
-            transition(task, TaskStatus.RUNNING, "正在选择应用", "", "");
+            task.progress.action("正在选择应用", "model");
             task.searchText = searchTextFromGoal(request.goal);
             if (!Config.empty(task.searchText)) {
                 logs.task(task.taskId, "search text hint: " + task.searchText);
@@ -196,6 +206,9 @@ public final class AutomationEngine {
 
             task.packageName = app.packageName;
             task.progress.app(app.packageName);
+            awaitAdmission(task);
+            if (task.stop.get()) throw new InterruptedException("task cancelled before launch");
+            transition(task, TaskStatus.RUNNING, "开始执行", "", "");
             DisplaySpec displaySpec = DisplaySpec.current(logs);
             task.videoStreamer = new VideoStreamer(logs, task.taskId, displaySpec.width, displaySpec.height);
             task.display = VirtualDisplaySession.create(task.videoStreamer.width(), task.videoStreamer.height(), displaySpec.dpi, task.videoStreamer.inputSurface());
@@ -324,10 +337,33 @@ public final class AutomationEngine {
             task.ai = null;
             task.verifierAi = null;
             releaseTask(task);
+            scheduler.release(task);
             logs.task(task.taskId, "task metrics " + task.progress.json());
             if (doneMessage != null) {
                 logs.task(task.taskId, doneMessage);
             }
+        }
+    }
+
+    private void awaitAdmission(TaskState task) throws Exception {
+        String previous = "";
+        while (!task.stop.get()) {
+            boolean force = task.forceStart.get();
+            boolean conflict = false;
+            String reason;
+            try {
+                if (!force) conflict = task.packageName.equals(foreground.foregroundPackage());
+                reason = scheduler.tryAcquire(task, task.packageName, conflict, force);
+            } catch (Exception e) {
+                reason = "暂时无法确认主屏 App，等待安全启动";
+            }
+            if (reason == null) return;
+            if (!reason.equals(previous)) {
+                transition(task, TaskStatus.QUEUED, reason, "", "");
+                logs.task(task.taskId, reason);
+                previous = reason;
+            }
+            Thread.sleep(2000);
         }
     }
 
@@ -339,7 +375,7 @@ public final class AutomationEngine {
         return null;
     }
 
-    private UiBridge getUi() {
+    private synchronized UiBridge getUi() {
         if (ui == null) {
             ui = new UiBridge(logs);
             ui.connect();
@@ -820,6 +856,7 @@ public final class AutomationEngine {
 
     public static final class TaskState {
         public final String taskId;
+        public final AtomicBoolean forceStart = new AtomicBoolean(false);
         public final AtomicBoolean stop = new AtomicBoolean(false);
         public volatile String state = "queued";
         public final TaskProgress progress;

@@ -82,6 +82,10 @@ final class RpcServer {
                         JsonRpc.text(params, "mode")
                 ));
             }
+            if ("forceStart".equals(method)) {
+                engine.forceStart(JsonRpc.text(params, "taskId"));
+                return JsonRpc.result(id, "queued start requested");
+            }
             if ("injectTouch".equals(method)) {
                 engine.injectTouch(JsonRpc.text(params, "taskId"), JsonRpc.text(params, "action"),
                         params.get("x").getAsFloat(), params.get("y").getAsFloat());
