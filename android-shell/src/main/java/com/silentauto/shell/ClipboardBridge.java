@@ -14,6 +14,18 @@ public final class ClipboardBridge {
         }
     }
 
+    public ClipData getClip() {
+        return manager.getPrimaryClip();
+    }
+
+    public void restoreClip(ClipData clip) {
+        if (clip == null) {
+            manager.clearPrimaryClip();
+        } else {
+            manager.setPrimaryClip(clip);
+        }
+    }
+
     public String getText() {
         ClipData clip = manager.getPrimaryClip();
         if (clip == null || clip.getItemCount() == 0) {

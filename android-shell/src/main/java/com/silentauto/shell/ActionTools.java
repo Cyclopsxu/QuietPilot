@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: describe task-private clipboard tools. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.google.gson.JsonArray;
@@ -39,13 +40,13 @@ final class ActionTools {
         tools.add(tool("input_text", "Set the focused input field text to the exact given value. If no field is focused, call focus_input first.",
                 props(prop("text", "string", "text to input"), prop("reason", "string", "why this text")),
                 required("text")));
-        tools.add(tool("set_clipboard", "Copy text into the Android clipboard without pasting it.",
+        tools.add(tool("set_clipboard", "Store text in this task private clipboard without changing the user clipboard.",
                 props(prop("text", "string", "text to copy to clipboard"), prop("reason", "string", "why clipboard is needed")),
                 required("text")));
-        tools.add(tool("paste_clipboard", "Paste the current clipboard into the focused field.",
+        tools.add(tool("paste_clipboard", "Paste this task private clipboard into the focused field; restore the user clipboard afterward.",
                 props(prop("reason", "string", "why paste is needed")),
                 required()));
-        tools.add(tool("copy_selection", "Copy the selected text from the focused UI node to clipboard.",
+        tools.add(tool("copy_selection", "Copy selected text to this task private clipboard; preserve the user clipboard.",
                 props(prop("reason", "string", "why copy is needed")),
                 required()));
         tools.add(tool("select_all_text", "Select all text in the focused input field before replacing or deleting it.",

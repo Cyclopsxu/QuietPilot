@@ -701,6 +701,7 @@ public final class AutomationEngine {
         public volatile VideoStreamer videoStreamer;
         public volatile AiClient ai;
         public boolean completed;
+        public String agentClipboard = "";
         public String searchText = "";
         public String pendingInputText = "";
         public boolean searchInputActive;

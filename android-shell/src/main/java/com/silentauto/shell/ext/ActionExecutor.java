@@ -1,5 +1,6 @@
 package com.silentauto.shell.ext;
 
+import com.silentauto.shell.ext.guard.ClipboardGuard;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import java.util.Locale;
@@ -37,16 +38,23 @@ public final class ActionExecutor {
         } else if ("text".equals(action.action)) {
             inputText(ctx.taskId, ctx.ui, ctx.input, ctx.clipboard, ctx.displayId, action.text);
         } else if ("set_clipboard".equals(action.action)) {
-            ctx.clipboard.setText(action.text);
+            task.agentClipboard = action.text;
             logs.task(ctx.taskId, "clipboard set");
         } else if ("paste".equals(action.action)) {
-            pasteClipboard(ctx.ui, ctx.input, ctx.displayId);
+            ClipboardGuard.withTemporaryClip(ctx.clipboard, task.agentClipboard,
+                    () -> pasteClipboard(ctx.ui, ctx.input, ctx.displayId));
+            logs.task(ctx.taskId, "clipboard restored");
         } else if ("copy".equals(action.action)) {
-            if (ctx.ui.copySelection(ctx.displayId)) {
-                logs.task(ctx.taskId, "copied selection: " + truncate(ctx.clipboard.getText(), 80));
-            } else {
-                logs.task(ctx.taskId, "copy selection failed");
-            }
+            ClipboardGuard.preservingClipboard(ctx.clipboard, () -> {
+                if (ctx.ui.copySelection(ctx.displayId)) {
+                    task.agentClipboard = ctx.clipboard.getText();
+                    logs.task(ctx.taskId, "copied selection: " + truncate(task.agentClipboard, 80));
+                } else {
+                    logs.task(ctx.taskId, "copy selection failed");
+                }
+                return null;
+            });
+            logs.task(ctx.taskId, "clipboard restored");
         } else if ("select_all".equals(action.action)) {
             if (ctx.ui.selectAll(ctx.displayId)) {
                 logs.task(ctx.taskId, "selected all text by accessibility");
@@ -119,8 +127,10 @@ public final class ActionExecutor {
             logs.task(taskId, "text set by accessibility");
             return;
         }
-        clipboard.setText(text);
-        if (pasteClipboard(bridge, input, displayId)) {
+        boolean pasted = ClipboardGuard.withTemporaryClip(clipboard, text,
+                () -> pasteClipboard(bridge, input, displayId));
+        logs.task(taskId, "clipboard restored");
+        if (pasted) {
             logs.task(taskId, "text pasted from clipboard");
             return;
         }
