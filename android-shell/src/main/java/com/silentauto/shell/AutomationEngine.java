@@ -2,6 +2,7 @@
 package com.silentauto.shell;
 
 import com.silentauto.shell.ext.*;
+import com.silentauto.shell.ext.verify.ResultVerifier;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -162,6 +163,7 @@ public final class AutomationEngine {
             ctx = new ExecutionContext(task.taskId, task.display.displayId, task.display.width, task.display.height,
                     bridge, input, clipboard, logs);
             ActionExecutor actionExecutor = new ActionExecutor(logs);
+            ResultVerifier verifier = new ResultVerifier(ai::complete, () -> screenOcrJson(task));
             for (int step = 1; step <= MAX_STEPS && !task.stop.get(); step++) {
                 String dump = bridge.dump(task.display.displayId, task.display.width, task.display.height, UiBridge.MODE_SIMPLE);
                 rememberUiObservation(task, dump);
@@ -170,17 +172,34 @@ public final class AutomationEngine {
                 action = applyAutoCorrections(task, action);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason));
                 if ("done".equals(action.action)) {
-                    task.completed = true;
-                    break;
+                    ResultVerifier.Result verification = verifier.verify(ctx, request.goal, action.expectedEvidence);
+                    if (verification.verified) {
+                        task.completed = true;
+                        task.resultStatus = "verified";
+                        logs.task(task.taskId, "VERIFIED: " + verification.evidence);
+                        logs.result(task.taskId, "verified", verification.evidence);
+                        break;
+                    }
+                    task.lastAction = "verification_failed";
+                    task.lastReason = verification.missing;
+                    logs.task(task.taskId, "verification failed: " + verification.missing);
+                    if (++task.verificationFailures >= 3) {
+                        task.resultStatus = "unverified";
+                        logs.result(task.taskId, "unverified", verification.missing);
+                        break;
+                    }
+                    continue;
                 }
                 StepResult result = actionExecutor.execute(ctx, task, action);
                 for (StepListener listener : listeners) listener.afterAction(ctx, step, action, result, dump);
                 rememberAction(task, action, result.clickResult, result.focusResult);
                 sleep(task, 900);
             }
-            task.state = "idle";
+            task.state = task.resultStatus.isEmpty() ? "idle" : task.resultStatus;
             if (task.stop.get()) {
                 doneMessage = "automation cancelled";
+            } else if ("unverified".equals(task.resultStatus)) {
+                doneMessage = "automation unverified: " + task.lastReason;
             } else if (task.completed) {
                 doneMessage = "automation finished";
             } else {
@@ -701,6 +720,8 @@ public final class AutomationEngine {
         public volatile VideoStreamer videoStreamer;
         public volatile AiClient ai;
         public boolean completed;
+        public String resultStatus = "";
+        public int verificationFailures;
         public String agentClipboard = "";
         public String searchText = "";
         public String pendingInputText = "";

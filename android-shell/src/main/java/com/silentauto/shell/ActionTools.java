@@ -68,8 +68,8 @@ final class ActionTools {
                 props(prop("ms", "integer", "milliseconds to wait"), prop("reason", "string", "why waiting is needed")),
                 required("ms")));
         tools.add(tool("finish", "Mark the automation goal as complete.",
-                props(prop("reason", "string", "completion evidence")),
-                required()));
+                props(prop("reason", "string", "completion reason"), prop("expected_evidence", "string", "visible UI evidence that must prove the goal is complete")),
+                required("expected_evidence")));
         return tools;
     }
 

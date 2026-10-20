@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: log verified task result events. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.controller;
 
 import android.app.Activity;
@@ -258,7 +259,10 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 return;
             }
             String type = params.optString("type");
-            if ("video.config".equals(type)) {
+            if ("result".equals(type)) {
+                task.append("RESULT " + params.optString("status") + ": " + params.optString("evidence"));
+                task.setRunning(false);
+            } else if ("video.config".equals(type)) {
                 task.showVideoConfig(params);
             } else if ("video.sample".equals(type)) {
                 task.showVideoSample(params);

@@ -125,6 +125,15 @@ public final class LogHub {
         emit(params);
     }
 
+    public void result(String taskId, String status, String evidence) {
+        JsonObject params = new JsonObject();
+        params.addProperty("type", "result");
+        params.addProperty("taskId", taskId);
+        params.addProperty("status", status);
+        params.addProperty("evidence", evidence);
+        emit(params);
+    }
+
     private void emit(JsonObject params) {
         JsonObject event = new JsonObject();
         event.addProperty("jsonrpc", "2.0");

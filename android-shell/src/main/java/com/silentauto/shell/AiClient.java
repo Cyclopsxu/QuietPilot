@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: support isolated verifier system messages. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.google.gson.JsonArray;
@@ -50,11 +51,15 @@ final class AiClient {
     }
 
     String complete(String prompt) throws Exception {
+        return complete(JSON_SYSTEM_PROMPT, prompt);
+    }
+
+    String complete(String system, String prompt) throws Exception {
         JsonObject body = new JsonObject();
         body.addProperty("model", config.model);
         body.addProperty("stream", true);
         JsonArray messages = new JsonArray();
-        messages.add(message("system", JSON_SYSTEM_PROMPT));
+        messages.add(message("system", system));
         messages.add(message("user", prompt));
         body.add("messages", messages);
         return stream(body).content;
