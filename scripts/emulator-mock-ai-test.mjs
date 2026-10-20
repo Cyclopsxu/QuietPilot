@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: cover isolated completion verification. Original: ShadowAuto (Apache-2.0).
 import { execFileSync } from 'node:child_process';
 import http from 'node:http';
 import net from 'node:net';
@@ -57,6 +58,10 @@ const server = http.createServer((req, res) => {
   let body = '';
   req.on('data', chunk => body += chunk);
   req.on('end', () => {
+    if (body.includes('严格的验收员')) {
+      sse(res, [content('{"verified":true,"evidence":"Settings search UI shows wifi","missing":""}')]);
+      return;
+    }
     if (!body.includes('"tools"')) {
       sse(res, [content('{"packageName":"com.android.settings","reason":"mock"}')]);
       return;
@@ -96,7 +101,7 @@ const server = http.createServer((req, res) => {
     } else {
       sse(res, [
         content('done by mock'),
-        tool(0, 'finish', '{"reason":"mock finish"}')
+        tool(0, 'finish', '{"reason":"mock finish","expected_evidence":"Settings search UI shows wifi"}')
       ]);
     }
   });
@@ -209,7 +214,7 @@ async function main() {
   const checks = [
     ['startTask taskId result', output.includes(`"taskId":"${taskId}"`)],
     ['taskId event routing', output.includes(`"taskId":"${taskId}"`)],
-    ['frame event', output.includes('"type":"frame"')],
+    ['video stream events', output.includes('"type":"video.config"') && output.includes('"type":"video.sample"')],
     ['virtual display local IME enabled', output.includes('virtual display local IME enabled')],
     ['window dump display metadata', sawWindowDumpMeta],
     ['scroll tool available', sawScrollTool],
@@ -219,6 +224,7 @@ async function main() {
     ['text set or pasted', output.includes('text set by accessibility') || output.includes('text pasted from clipboard')],
     ['typed text visible in UI', sawTypedTextInUi],
     ['tool_call finish', output.includes('tool_call finish')],
+    ['verified result event', output.includes('VERIFIED:') && output.includes('"status":"verified"')],
     ['automation finished', output.includes('automation finished')],
     ['idle status', status.includes('"state":"idle"') && status.includes('"displayId":-1')]
   ];
