@@ -76,6 +76,8 @@ final class AutomationTaskView {
         return taskId;
     }
 
+    void restoreGoal(String value) { goal.setText(value); showLiveUi(true); }
+
     String goalText() {
         return goal.getText().toString();
     }
@@ -175,7 +177,7 @@ final class AutomationTaskView {
 
     private String handoffMessage(JSONObject status) {
         return status.optBoolean("protectedScreen")
-                ? "该页面受系统保护，请在 " + status.optString("app") + " 中完成"
+                ? "该页面受系统保护，请在 " + status.optString("appName", status.optString("app")) + " 中完成"
                 : "处理完成后会自动继续\n" + status.optString("message");
     }
 
@@ -229,7 +231,11 @@ final class AutomationTaskView {
                 dialogDecoder = null; screenDialog = null; handoffHint = null; openOnMain = null;
             });
             screenDialog.setOnShowListener(dialog -> {
-                if (screenDialog.getWindow() != null) screenDialog.getWindow().setLayout(-1, -1);
+                if (screenDialog.getWindow() != null) {
+                    screenDialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.WHITE));
+                    screenDialog.getWindow().getDecorView().setPadding(0, 0, 0, 0);
+                    screenDialog.getWindow().setLayout(-1, -1);
+                }
             });
             screenDialog.show();
         });

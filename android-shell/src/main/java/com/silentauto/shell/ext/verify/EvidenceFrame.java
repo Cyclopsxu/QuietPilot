@@ -4,7 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Base64;
 import java.io.ByteArrayOutputStream;
-import java.util.Arrays;
 
 public final class EvidenceFrame {
     public final byte[] png;

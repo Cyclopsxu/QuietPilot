@@ -13,6 +13,7 @@ public final class TaskProgress {
     private long ended;
     private boolean protectedScreen;
     private TaskStatus status = TaskStatus.QUEUED;
+    private String appName = "";
     private String app = "", stepText = "", source = "model", message = "", evidence = "", boundary = "";
     private final Map<String, Integer> calls = new LinkedHashMap<>();
 
@@ -21,13 +22,15 @@ public final class TaskProgress {
         calls.put("executor", 0); calls.put("verifier", 0); calls.put("intake", 0);
     }
     public synchronized void protectedScreen(boolean value) {
+        if (status.terminal()) return;
         if (protectedScreen != value) { protectedScreen = value; publish(); }
     }
     public synchronized boolean protectedScreen() { return protectedScreen; }
     public synchronized TaskStatus status() { return status; }
-    public synchronized void app(String value) { app = value; }
+    public synchronized void app(String value, String name) { app = value; appName = name; }
     public synchronized void call(String role) { calls.put(role, calls.get(role) + 1); }
     public synchronized void action(String reason, String actionSource) {
+        if (status.terminal()) return;
         String text = reason == null ? "" : reason.replaceAll("\\s+", " ").trim();
         stepText = text.codePointCount(0, text.length()) <= 20 ? text : text.substring(0, text.offsetByCodePoints(0, 20));
         source = actionSource;
@@ -53,7 +56,7 @@ public final class TaskProgress {
     public synchronized JsonObject json() {
         JsonObject o = new JsonObject();
         o.addProperty("taskId", taskId); o.addProperty("status", status.name());
-        o.addProperty("goal", goal); o.addProperty("app", app); o.addProperty("stepText", stepText);
+        o.addProperty("goal", goal); o.addProperty("app", app); o.addProperty("appName", appName); o.addProperty("stepText", stepText);
         o.addProperty("source", source); o.addProperty("message", message); o.addProperty("evidence", evidence); o.addProperty("boundary", boundary);
         JsonObject counts = new JsonObject();
         for (Map.Entry<String,Integer> entry : calls.entrySet()) counts.addProperty(entry.getKey(), entry.getValue());

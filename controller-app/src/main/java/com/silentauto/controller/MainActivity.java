@@ -70,7 +70,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 23);
         }
-        if (config.isConfigured()) {
+        if (config.isConfigured() || getIntent().hasExtra("handoffTaskId")) {
             showMain();
         } else {
             openConfig(false);
@@ -92,7 +92,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
             return;
         }
         config = configStore.load();
-        if (!config.isConfigured() && !configOpen) {
+        if (!config.isConfigured() && !configOpen && pendingHandoffs.isEmpty() && !getIntent().hasExtra("handoffStatus")) {
             openConfig(false);
         }
     }
@@ -207,6 +207,10 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
         help.setOnClickListener(v -> startActivity(new Intent(this, HelpActivity.class)));
         add.setOnClickListener(v -> addEmptyTask());
         updateIndicator();
+        io.execute(() -> {
+            try { rpcClient.send("listTasks", new JSONObject()); }
+            catch (Exception e) { appendGlobal("[连接] " + rpcErrorMessage(e)); }
+        });
     }
 
     private void ensureTaskPage() {
@@ -293,17 +297,51 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     private void handleRpcLine(String line) {
         try {
             JSONObject object = new JSONObject(line);
-            if (!"event".equals(object.optString("method"))) {
-                return;
+            if ("event".equals(object.optString("method"))) {
+                JSONObject params = object.getJSONObject("params");
+                main.post(() -> handleEvent(params));
+            } else {
+                Object result = object.opt("result");
+                org.json.JSONArray array = result instanceof org.json.JSONArray ? (org.json.JSONArray) result
+                        : result instanceof JSONObject ? ((JSONObject) result).optJSONArray("tasks") : null;
+                if (array != null) main.post(() -> {
+                    for (int i = 0; i < array.length(); i++) {
+                        JSONObject task = array.optJSONObject(i);
+                        if (task == null || java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(task.optString("status"))) continue;
+                        try { task.put("type", "status"); handleEvent(task); } catch (Exception ignored) {}
+                    }
+                });
             }
-            JSONObject params = object.getJSONObject("params");
+        } catch (Exception ignored) {}
+    }
+
+    private AutomationTaskView ensureTask(JSONObject params) {
+        String taskId = params.optString("taskId");
+        if (taskId.isEmpty()) return null;
+        AutomationTaskView task = taskById(taskId);
+        if (task == null) {
+            task = new AutomationTaskView(this, main, taskId, this);
+            synchronized (tasks) { tasks.add(task); }
+            if (pagerAdapter != null) pagerAdapter.notifyDataSetChanged();
+            if (taskId.startsWith("app-")) {
+                try { nextTask.accumulateAndGet(Integer.parseInt(taskId.substring(4)) + 1, Math::max); } catch (NumberFormatException ignored) {}
+            }
+        }
+        if (params.has("goal")) task.restoreGoal(params.optString("goal"));
+        return task;
+    }
+
+    private void handleEvent(JSONObject params) {
+        try {
             AutomationTaskView task = taskById(params.optString("taskId"));
-            if (task == null) {
-                return;
-            }
+            if (task == null && ("status".equals(params.optString("type")) || "video.config".equals(params.optString("type")))) task = ensureTask(params);
+            if (task == null) return;
+            final AutomationTaskView currentTask = task;
             String type = params.optString("type");
             if ("status".equals(type)) {
                 String status = params.optString("status");
+                if (params.has("goal")) task.restoreGoal(params.optString("goal"));
+                task.setRunning(!java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status));
                 task.updateStatus(params);
                 task.append(status + " " + params.optString("stepText") + " " + params.optString("message"));
                 if ("WAITING_USER".equals(status)) {
@@ -312,7 +350,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                         main.post(() -> notifyHandoff(params));
                 } else {
                     pendingHandoffs.remove(task.taskId());
-                    main.post(() -> getSystemService(NotificationManager.class).cancel(task.taskId(), 23));
+                    main.post(() -> getSystemService(NotificationManager.class).cancel(currentTask.taskId(), 23));
                 }
                 if (java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status)) task.setRunning(false);
             } else if ("handoff".equals(type)) {
@@ -320,7 +358,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 task.append("等待用户: " + params.optString("message"));
             } else if ("result".equals(type)) {
                 pendingHandoffs.remove(task.taskId());
-                main.post(() -> getSystemService(NotificationManager.class).cancel(task.taskId(), 23));
+                main.post(() -> getSystemService(NotificationManager.class).cancel(currentTask.taskId(), 23));
                 task.append("RESULT " + params.optString("status") + ": " + params.optString("evidence"));
                 task.setRunning(false);
             } else if ("video.config".equals(type)) {

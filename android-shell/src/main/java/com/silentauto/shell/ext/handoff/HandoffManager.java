@@ -8,6 +8,10 @@ import com.silentauto.shell.ext.verify.ResultVerifier;
 import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.atomic.AtomicLong;
 
 public final class HandoffManager {
     private final CountDownLatch response = new CountDownLatch(1);
@@ -29,36 +33,60 @@ public final class HandoffManager {
         response.countDown();
     }
     public String awaitResponse(ExecutionContext ctx, ResultVerifier verifier, String boundary, TaskProgress progress) throws Exception {
-        long deadline = SystemClock.elapsedRealtime() + timeoutMs;
-        long lastChange = SystemClock.elapsedRealtime();
-        Long previous = null;
-        while (SystemClock.elapsedRealtime() < deadline) {
-            long wait = Math.min(1500, Math.max(1, deadline - SystemClock.elapsedRealtime()));
-            if (response.await(wait, TimeUnit.MILLISECONDS)) return outcome;
-            EvidenceFrame frame = verifier.observe();
-            progress.protectedScreen(frame.protectedScreen);
-            if (frame.protectedScreen) { previous = null; continue; }
-            long now = SystemClock.elapsedRealtime();
-            if (previous == null || previous.longValue() != frame.fingerprint) {
-                previous = frame.fingerprint; lastChange = now; continue;
+        return awaitResponse(ctx, verifier, boundary, progress, () -> {});
+    }
+
+    public String awaitResponse(ExecutionContext ctx, ResultVerifier verifier, String boundary, TaskProgress progress,
+                                Runnable cancelVerification) throws Exception {
+        if (outcome != null) return outcome;
+        AtomicReference<EvidenceFrame> latest = new AtomicReference<>();
+        AtomicLong lastChange = new AtomicLong(SystemClock.elapsedRealtime());
+        ScheduledExecutorService observer = Executors.newSingleThreadScheduledExecutor();
+        observer.schedule(() -> {
+            boolean expired;
+            synchronized (this) {
+                expired = outcome == null;
+                if (expired) { outcome = "timeout"; response.countDown(); }
             }
-            if (now - lastChange < 2000) continue;
-            // A manual answer always wins over an in-flight read-only assessment.
-            ResultVerifier.Result atBoundary = verifier.verifyBoundary(ctx, boundary);
-            if (outcome != null) return outcome;
-            if (atBoundary.frame != null && atBoundary.frame.protectedScreen) {
-                progress.protectedScreen(true); continue;
+            if (expired) cancelVerification.run();
+        }, timeoutMs, TimeUnit.MILLISECONDS);
+        if (verifier != null) observer.scheduleAtFixedRate(() -> {
+            try {
+                EvidenceFrame frame = verifier.observe();
+                EvidenceFrame previous = latest.getAndSet(frame);
+                if (previous == null || previous.fingerprint != frame.fingerprint || frame.protectedScreen)
+                    lastChange.set(SystemClock.elapsedRealtime());
+                progress.protectedScreen(frame.protectedScreen);
+            } catch (Exception unavailable) {
+                latest.set(null);
+                lastChange.set(SystemClock.elapsedRealtime());
+                progress.protectedScreen(true);
             }
-            if (!atBoundary.verified && atBoundary.assessed) {
-                ResultVerifier.Result ready = verifier.verifyReady(ctx, boundary);
+        }, 0, 1500, TimeUnit.MILLISECONDS);
+        try {
+            while (true) {
+                if (response.await(1500, TimeUnit.MILLISECONDS)) return outcome;
+                EvidenceFrame frame = latest.get();
+                if (frame == null || frame.protectedScreen || SystemClock.elapsedRealtime() - lastChange.get() < 2000) continue;
+                long epoch = lastChange.get();
+                ResultVerifier.Result atBoundary = verifier.verifyBoundary(ctx, boundary);
                 if (outcome != null) return outcome;
-                if (ready.verified) {
-                    ctx.logs.task(ctx.taskId, "handoff automatically resumed: " + ready.evidence);
-                    return "done";
+                if (epoch != lastChange.get()) continue;
+                if (!atBoundary.verified && atBoundary.assessed) {
+                    ResultVerifier.Result ready = verifier.verifyReady(ctx, boundary);
+                    if (outcome != null) return outcome;
+                    if (epoch == lastChange.get() && ready.verified) {
+                        synchronized (this) {
+                            if (outcome != null) return outcome;
+                            outcome = "done";
+                        }
+                        ctx.logs.task(ctx.taskId, "handoff automatically resumed: " + ready.evidence);
+                        return "done";
+                    }
                 }
+                // Bound repeated verifier calls while retaining 1.5-second read-only observations.
+                lastChange.set(SystemClock.elapsedRealtime());
             }
-            lastChange = SystemClock.elapsedRealtime();
-        }
-        return "timeout";
+        } finally { observer.shutdownNow(); }
     }
 }

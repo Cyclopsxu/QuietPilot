@@ -103,6 +103,7 @@ final class AiClient {
     }
 
     private ToolResult stream(JsonObject body) throws Exception {
+        if (Thread.currentThread().isInterrupted()) throw new InterruptedException("AI call cancelled");
         config.executor.validate();
         onCall.run();
         Request request = new Request.Builder()

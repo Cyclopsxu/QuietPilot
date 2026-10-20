@@ -24,6 +24,7 @@ final class AiConfig {
             boolean local = "127.0.0.1".equals(host) || "localhost".equals(host);
             if (!configured() || (!local && !("https".equals(uri.getScheme())
                     && ("api.deepseek.com".equals(host) || "dashscope.aliyuncs.com".equals(host))))
+                    || (local && !"http".equals(uri.getScheme()) && !"https".equals(uri.getScheme()))
                     || uri.getUserInfo() != null || uri.getQuery() != null || uri.getFragment() != null) {
                 throw new IllegalArgumentException("请填写 DeepSeek 官方或阿里云百炼国内接口、API Key 和模型");
             }

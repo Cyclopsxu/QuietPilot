@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: open a protected handoff on the main display without force-stopping the app. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.content.ComponentName;
@@ -60,6 +61,14 @@ final class AppCatalog {
     }
 
     void launchPackage(String taskId, String packageName, int displayId) throws Exception {
+        launchPackage(taskId, packageName, displayId, true);
+    }
+
+    void openOnMain(String taskId, String packageName) throws Exception {
+        launchPackage(taskId, packageName, 0, false);
+    }
+
+    private void launchPackage(String taskId, String packageName, int displayId, boolean forceStop) throws Exception {
         PackageManager pm = ShellContext.get().getPackageManager();
         Intent intent = pm.getLaunchIntentForPackage(packageName);
         if (intent == null) {
@@ -69,9 +78,9 @@ final class AppCatalog {
         if (component == null) {
             throw new IllegalStateException("no launch component for " + packageName);
         }
-        new ProcessBuilder("sh", "-c", "am force-stop " + shellQuote(packageName)).start().waitFor();
+        if (forceStop) new ProcessBuilder("sh", "-c", "am force-stop " + shellQuote(packageName)).start().waitFor();
         String command = "am start --display " + displayId
-                + " -f 0x10008000 -n " + shellQuote(component.flattenToShortString());
+                + (forceStop ? " -f 0x10008000 -n " : " -f 0x10000000 -n ") + shellQuote(component.flattenToShortString());
         Process process = new ProcessBuilder("sh", "-c", command).redirectErrorStream(true).start();
         StringBuilder output = new StringBuilder();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {

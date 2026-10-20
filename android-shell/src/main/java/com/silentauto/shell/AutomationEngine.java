@@ -160,8 +160,7 @@ public final class AutomationEngine {
         object.addProperty("displayId", running ? displayId : -1);
         JsonArray array = new JsonArray();
         for (TaskState task : tasks.values()) {
-            JsonObject item = new JsonObject();
-            item.addProperty("taskId", task.taskId);
+            JsonObject item = task.progress.json();
             item.addProperty("state", task.state);
             item.addProperty("status", task.progress.status().name());
             item.addProperty("displayId", task.display == null ? -1 : task.display.displayId);
@@ -205,7 +204,11 @@ public final class AutomationEngine {
             }
 
             task.packageName = app.packageName;
-            task.progress.app(app.packageName);
+            task.appName = app.packageName;
+            for (AppCatalog.AppInfo installed : apps) {
+                if (app.packageName.equals(installed.packageName)) { task.appName = installed.name; break; }
+            }
+            task.progress.app(app.packageName, task.appName);
             awaitAdmission(task);
             if (task.stop.get()) throw new InterruptedException("task cancelled before launch");
             transition(task, TaskStatus.RUNNING, "开始执行", "", "");
@@ -234,6 +237,7 @@ public final class AutomationEngine {
                 for (StepListener listener : listeners) listener.beforeStep(ctx, step, dump);
                 ActionDecision action = firstNonNull(ctx, task, step, dump);
                 if (action == null) action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
+                if (task.stop.get() || Thread.currentThread().isInterrupted()) throw new InterruptedException("task cancelled");
                 action = applyAutoCorrections(task, action);
                 task.progress.action(action.reason, action.source);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason) + " source=" + action.source);
@@ -256,16 +260,16 @@ public final class AutomationEngine {
                     task.handoff = handoff;
                     task.progress.protectedScreen(protectedScreen);
                     transition(task, TaskStatus.WAITING_USER, protectedScreen
-                            ? "该页面受系统保护，请在 " + task.packageName + " 中完成。" + action.message
+                            ? "该页面受系统保护，请在 " + task.appName + " 中完成。" + action.message
                             : action.message, boundary.evidence, action.boundary);
                     logs.task(task.taskId, "HANDOFF " + action.kind + ": " + action.message);
                     logs.handoff(task.taskId, action.kind, action.message, action.boundary);
-                    String outcome = handoff.awaitResponse(ctx, verifier, action.boundary, task.progress);
+                    String outcome = handoff.awaitResponse(ctx, verifier, action.boundary, task.progress, verifierAi::cancel);
                     task.handoff = null;
                     if (!"done".equals(outcome)) {
                         task.resultStatus = "handoff";
                         if ("open_main".equals(outcome)) {
-                            appCatalog.launchPackage(task.taskId, task.packageName, 0);
+                            appCatalog.openOnMain(task.taskId, task.packageName);
                             task.lastReason = "已交给你在主屏完成";
                         } else {
                             task.lastReason = "已停在 " + action.boundary + "，等待用户: " + action.message + " (" + outcome + ")";
@@ -358,6 +362,7 @@ public final class AutomationEngine {
                 reason = "暂时无法确认主屏 App，等待安全启动";
             }
             if (reason == null) return;
+            reason = reason.replace(task.packageName, task.appName);
             if (!reason.equals(previous)) {
                 transition(task, TaskStatus.QUEUED, reason, "", "");
                 logs.task(task.taskId, reason);
@@ -861,6 +866,7 @@ public final class AutomationEngine {
         public volatile String state = "queued";
         public final TaskProgress progress;
         public String packageName = "";
+        public String appName = "";
         public volatile AiClient verifierAi;
         public volatile Future<?> future;
         public volatile VirtualDisplaySession display;

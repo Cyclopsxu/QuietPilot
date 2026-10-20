@@ -21,10 +21,15 @@ public final class LogHub {
     }
 
     private final Set<Sink> sinks = new CopyOnWriteArraySet<>();
+    private final java.util.Map<String, JsonObject> videoConfigs = new java.util.concurrent.ConcurrentHashMap<>();
     private final List<String> ring = new ArrayList<>();
 
     void add(Sink sink) {
         sinks.add(sink);
+        for (JsonObject config : videoConfigs.values()) {
+            JsonObject event = new JsonObject(); event.addProperty("jsonrpc", "2.0"); event.addProperty("method", "event"); event.add("params", config.deepCopy());
+            sink.send(event);
+        }
     }
 
     void remove(Sink sink) {
@@ -85,6 +90,7 @@ public final class LogHub {
         params.addProperty("height", format.getInteger(MediaFormat.KEY_HEIGHT));
         addBuffer(params, format, "csd-0", "csd0");
         addBuffer(params, format, "csd-1", "csd1");
+        videoConfigs.put(taskId, params.deepCopy());
         emit(params);
     }
 
@@ -136,6 +142,9 @@ public final class LogHub {
     }
 
     public void status(JsonObject task) {
+        String state = task.get("status").getAsString();
+        if (java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(state))
+            videoConfigs.remove(task.get("taskId").getAsString());
         JsonObject params = task.deepCopy();
         params.addProperty("type", "status");
         emit(params);
