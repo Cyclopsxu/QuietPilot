@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: copy live image rows into owned memory before bitmap conversion. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.graphics.Bitmap;
@@ -17,15 +18,21 @@ final class ScreenCapture {
         int width = image.getWidth();
         int height = image.getHeight();
         Image.Plane plane = image.getPlanes()[0];
-        ByteBuffer buffer = plane.getBuffer();
+        ByteBuffer buffer = plane.getBuffer().duplicate();
         int pixelStride = plane.getPixelStride();
         int rowStride = plane.getRowStride();
-        int bitmapWidth = rowStride / pixelStride;
-
-        Bitmap padded = Bitmap.createBitmap(bitmapWidth, height, Bitmap.Config.ARGB_8888);
-        padded.copyPixelsFromBuffer(buffer);
-        Bitmap cropped = Bitmap.createBitmap(padded, 0, 0, width, height);
-        padded.recycle();
-        return cropped;
+        int rowBytes = Math.multiplyExact(width, 4);
+        if (pixelStride != 4 || rowStride < rowBytes)
+            throw new IllegalArgumentException("Unsupported RGBA image stride");
+        byte[] pixels = new byte[Math.multiplyExact(rowBytes, height)];
+        for (int y = 0; y < height; y++) {
+            int offset = Math.multiplyExact(y, rowStride);
+            if (offset > buffer.limit() - rowBytes) throw new IllegalArgumentException("Truncated RGBA image row");
+            buffer.position(offset);
+            buffer.get(pixels, y * rowBytes, rowBytes);
+        }
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.copyPixelsFromBuffer(ByteBuffer.wrap(pixels));
+        return bitmap;
     }
 }

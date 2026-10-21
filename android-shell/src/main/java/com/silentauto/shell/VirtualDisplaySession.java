@@ -26,6 +26,7 @@ final class VirtualDisplaySession {
     private final WindowManagerBridge windowManager;
     private final int previousImePolicy;
     private final boolean localImeEnabled;
+    private boolean released;
 
     private VirtualDisplaySession(int width, int height, int dpi, ImageReader captureReader, Surface outputSurface, VirtualDisplay display) {
         this.width = width;
@@ -79,6 +80,7 @@ final class VirtualDisplaySession {
     }
 
     synchronized Bitmap captureBitmap(int retries, long delayMs) {
+        if (released) return null;
         Surface restoreSurface = outputSurface;
         Image image = null;
         try {
@@ -124,7 +126,9 @@ final class VirtualDisplaySession {
         }
     }
 
-    void release() {
+    synchronized void release() {
+        if (released) return;
+        released = true;
         try {
             if (previousImePolicy != -1) {
                 windowManager.setDisplayImePolicy(displayId, previousImePolicy);

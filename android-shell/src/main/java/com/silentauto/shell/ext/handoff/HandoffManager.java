@@ -36,6 +36,11 @@ public final class HandoffManager {
         return awaitResponse(ctx, verifier, boundary, progress, () -> {});
     }
 
+    public String awaitAcknowledgement() throws InterruptedException {
+        response.await();
+        return outcome;
+    }
+
     public String awaitResponse(ExecutionContext ctx, ResultVerifier verifier, String boundary, TaskProgress progress,
                                 Runnable cancelVerification) throws Exception {
         if (outcome != null) return outcome;

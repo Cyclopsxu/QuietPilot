@@ -184,13 +184,14 @@ final class AutomationTaskView {
     }
     private String handoffMessage(JSONObject status) {
         String prefix = otherWaiting > 0 ? "还有 " + otherWaiting + " 个任务等你处理\n" : "";
-        return prefix + ( status.optBoolean("protectedScreen")
+        return prefix + (status.optBoolean("resultReady") ? "任务已完成，后台页面已保留。你可以在此查看和操作，看完后点击结束查看。\n" + status.optString("evidence") : status.optBoolean("protectedScreen")
                 ? "该页面受系统保护，请在 " + status.optString("appName", status.optString("app")) + " 中完成"
                 : "处理完成后会自动继续\n" + status.optString("message"));
     }
 
     void showHandoff(JSONObject status) {
         activity.runOnUiThread(() -> {
+            if (activity.isFinishing() || activity.isDestroyed()) return;
             handoffStatus = status;
             if (screenDialog != null) screenDialog.dismiss();
             android.widget.LinearLayout content = new android.widget.LinearLayout(activity);
@@ -229,23 +230,27 @@ final class AutomationTaskView {
             openOnMain = new Button(activity); openOnMain.setText("在主屏打开");
             openOnMain.setVisibility(status.optBoolean("protectedScreen") ? View.VISIBLE : View.GONE);
             openOnMain.setOnClickListener(v -> listener.onHandoffAction(taskId, "openTaskOnMain", "")); content.addView(openOnMain);
-            Button done = new Button(activity); done.setText("我处理好了"); content.addView(done);
+            Button done = new Button(activity); done.setText(status.optBoolean("resultReady") ? "结束查看" : "我处理好了"); content.addView(done);
             done.setOnClickListener(v -> listener.onHandoffAction(taskId, "resumeTask", "done"));
-            Button cancel = new Button(activity); cancel.setText("取消任务"); content.addView(cancel);
+            Button cancel = new Button(activity); cancel.setText("取消任务"); cancel.setVisibility(status.optBoolean("resultReady") ? View.GONE : View.VISIBLE); content.addView(cancel);
             cancel.setOnClickListener(v -> listener.onHandoffAction(taskId, "resumeTask", "cancel"));
-            screenDialog = new AlertDialog.Builder(activity).setView(content).create();
-            screenDialog.setOnDismissListener(dialog -> {
-                if (dialogDecoder != null) dialogDecoder.release();
-                dialogDecoder = null; screenDialog = null; handoffHint = null; openOnMain = null;
-            });
-            screenDialog.setOnShowListener(dialog -> {
-                if (screenDialog.getWindow() != null) {
-                    screenDialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.WHITE));
-                    screenDialog.getWindow().getDecorView().setPadding(0, 0, 0, 0);
-                    screenDialog.getWindow().setLayout(-1, -1);
+            AlertDialog handoffDialog = new AlertDialog.Builder(activity).setView(content).create();
+            H264VideoDecoder handoffDecoder = dialogDecoder;
+            screenDialog = handoffDialog;
+            handoffDialog.setOnDismissListener(dialog -> {
+                handoffDecoder.release();
+                if (screenDialog == handoffDialog) {
+                    dialogDecoder = null; screenDialog = null; handoffHint = null; openOnMain = null;
                 }
             });
-            screenDialog.show();
+            handoffDialog.setOnShowListener(dialog -> {
+                if (handoffDialog.isShowing() && handoffDialog.getWindow() != null) {
+                    handoffDialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(android.graphics.Color.WHITE));
+                    handoffDialog.getWindow().getDecorView().setPadding(0, 0, 0, 0);
+                    handoffDialog.getWindow().setLayout(-1, -1);
+                }
+            });
+            handoffDialog.show();
         });
     }
 
@@ -271,27 +276,28 @@ final class AutomationTaskView {
         if (videoConfig != null) {
             videoConfig.apply(decoder);
         }
-        screenDialog = new AlertDialog.Builder(activity)
+        AlertDialog previewDialog = new AlertDialog.Builder(activity)
                 .setTitle(activity.getString(R.string.screen_preview_title))
                 .setView(holder)
                 .setPositiveButton(activity.getString(R.string.close), null)
                 .create();
-        screenDialog.setOnDismissListener(dialog -> {
-            if (dialogDecoder != null) {
-                dialogDecoder.release();
+        screenDialog = previewDialog;
+        previewDialog.setOnDismissListener(dialog -> {
+            decoder.release();
+            if (screenDialog == previewDialog) {
+                dialogDecoder = null;
+                screenDialog = null;
             }
-            dialogDecoder = null;
-            screenDialog = null;
         });
-        screenDialog.setOnShowListener(dialog -> {
-            android.view.Window window = screenDialog.getWindow();
+        previewDialog.setOnShowListener(dialog -> {
+            android.view.Window window = previewDialog.getWindow();
             if (window != null) {
                 int width = (int) (activity.getResources().getDisplayMetrics().widthPixels * 0.94f);
                 int height = (int) (activity.getResources().getDisplayMetrics().heightPixels * 0.78f);
                 window.setLayout(width, height);
             }
         });
-        screenDialog.show();
+        previewDialog.show();
     }
 
     private void resetVideo() {

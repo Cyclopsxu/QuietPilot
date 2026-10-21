@@ -17,7 +17,7 @@ public final class TaskProgress {
     private String skillId = "", comparison = "", evidenceScreenshot = "";
     private JsonObject sourceSteps = new JsonObject();
     private JsonObject disturbance = new JsonObject();
-    private boolean protectedScreen, finalized;
+    private boolean protectedScreen, finalized, resultReady;
     private TaskStatus status = TaskStatus.QUEUED;
     private String appName = "";
     private String app = "", stepText = "", source = "model", message = "", evidence = "", boundary = "";
@@ -42,6 +42,7 @@ public final class TaskProgress {
         if (protectedScreen != value) { protectedScreen = value; publish(); }
     }
     public synchronized boolean protectedScreen() { return protectedScreen; }
+    public synchronized void resultReady(boolean value) { resultReady = value; }
     public synchronized TaskStatus status() { return status; }
     public synchronized void app(String value, String name) { app = value; appName = name; }
     public synchronized void call(String role) { calls.put(role, calls.get(role) + 1); }
@@ -89,6 +90,7 @@ public final class TaskProgress {
         o.addProperty("pendingConfirmation", pendingConfirmation && !status.terminal()); o.addProperty("requiresConfirmation", requiresConfirmation);
         o.addProperty("confirmDeadlineMs", confirmDeadlineMs);
         o.addProperty("protectedScreen", protectedScreen);
+        o.addProperty("resultReady", resultReady && !status.terminal());
         o.addProperty("elapsedMs", (ended == 0 ? SystemClock.elapsedRealtime() : ended) - started);
         return o;
     }

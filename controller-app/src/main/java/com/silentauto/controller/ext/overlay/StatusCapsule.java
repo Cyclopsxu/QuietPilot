@@ -48,7 +48,7 @@ public final class StatusCapsule implements StatusSurface {
         if(attached)windows.updateViewLayout(surface,layout);else{windows.addView(surface,layout);attached=true;}surface.invalidate();
     }
     private String word(){String state=task.optString("status");if(task.optBoolean("pendingConfirmation"))return task.optBoolean("requiresConfirmation")?"待确认":"即将开始";
-        switch(state){case "RUNNING":return "执行中";case "WAITING_USER":return "待处理";case "QUEUED":return "排队中";case "PAUSED":return "已暂停";case "VERIFIED":return "已完成";case "FAILED":return "失败";case "CANCELLED":return "已取消";default:return "处理超时";}}
+        switch(state){case "RUNNING":return "执行中";case "WAITING_USER":return task.optBoolean("resultReady")?"已完成 · 去查看":"待处理";case "QUEUED":return "排队中";case "PAUSED":return "已暂停";case "VERIFIED":return "已完成";case "FAILED":return "失败";case "CANCELLED":return "已取消";default:return "处理超时";}}
     @Override public void close(){closed=true;main.removeCallbacksAndMessages(null);if(attached){windows.removeView(surface);attached=false;}}
     private final class Surface extends View {
         private final Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);private final TextPaint text=new TextPaint(Paint.ANTI_ALIAS_FLAG);
@@ -69,7 +69,7 @@ public final class StatusCapsule implements StatusSurface {
                 String detail=waiting||terminal(task.optString("status"))?task.optString("message"):task.optString("stepText");
                 line(canvas,detail,dp(14),dp(105),12,0xffccd8df,w-dp(28));
                 if(pending){if(task.optBoolean("requiresConfirmation")){yes.set(dp(14),dp(116),w/2-dp(6),h-dp(8));button(canvas,yes,"确认",0xff266b60);}no.set(yes.isEmpty()?dp(14):w/2+dp(6),dp(116),w-dp(14),h-dp(8));button(canvas,no,"取消",0xff703f4b);}
-                else{open.set(dp(14),dp(116),w-dp(14),h-dp(8));button(canvas,open,waiting?"去处理":"查看任务",0xff35485e);}
+                else{open.set(dp(14),dp(116),w-dp(14),h-dp(8));button(canvas,open,task.optBoolean("resultReady")?"去查看":waiting?"去处理":"查看任务",0xff35485e);}
             }
             if(pending)postInvalidateDelayed(500);
         }

@@ -430,6 +430,20 @@ public final class AutomationEngine {
                         logs.task(task.taskId, "evidence saved: " + evidencePath);
                         task.completed = true;
                         task.resultStatus = "verified";
+                        if (com.silentauto.shell.ext.handoff.ResultRetention.requested(request.goal)) {
+                            task.handoff = new HandoffManager();
+                            task.progress.resultReady(true);
+                            transition(task, TaskStatus.WAITING_USER, "已完成，后台页面已保留，点击去查看", verification.evidence, "结果已验收，等待查看");
+                            logs.task(task.taskId, "result retained until user acknowledgement");
+                            String reviewed = task.handoff.awaitAcknowledgement();
+                            task.handoff = null;
+                            task.progress.resultReady(false);
+                            if (task.stop.get() || !"done".equals(reviewed)) {
+                                transition(task, TaskStatus.CANCELLED, "已关闭结果页面", verification.evidence, "");
+                                break;
+                            }
+                            transition(task, TaskStatus.RUNNING, "查看结束，正在保存结果", verification.evidence, "");
+                        }
                         transition(task, TaskStatus.VERIFIED, "任务已验收", verification.evidence, "");
                         logs.task(task.taskId, "VERIFIED: " + verification.evidence);
                         logs.result(task.taskId, "verified", verification.evidence);

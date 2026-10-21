@@ -404,12 +404,12 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         Notification notification = new Notification.Builder(this, HANDOFF_CHANNEL)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle("任务等待处理")
+                .setContentTitle(params.optBoolean("resultReady") ? "任务已完成，去查看" : "任务等待处理")
                 .setContentText(params.optString("message"))
                 .setStyle(new Notification.BigTextStyle().bigText(params.optString("message")))
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 .setContentIntent(show)
-                .addAction(new Notification.Action.Builder(null, "去处理", show).build())
+                .addAction(new Notification.Action.Builder(null, params.optBoolean("resultReady") ? "去查看" : "去处理", show).build())
                 .addAction(new Notification.Action.Builder(null, "取消任务", dismiss).build())
                 .setAutoCancel(true).build();
         try {
