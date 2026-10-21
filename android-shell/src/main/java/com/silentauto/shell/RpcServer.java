@@ -68,6 +68,8 @@ final class RpcServer {
             if ("status".equals(method)) {
                 return JsonRpc.result(id, engine.statusJson());
             }
+            if ("submitVoiceTask".equals(method)) return JsonRpc.result(id,engine.submitVoiceTask(params));
+            if ("confirmTask".equals(method)) { engine.confirmTask(JsonRpc.text(params,"taskId"),params.get("ok").getAsBoolean()); return JsonRpc.result(id,"confirmed"); }
             if ("captureContext".equals(method)) return JsonRpc.result(id, engine.captureContext());
             if ("discardContext".equals(method)) { engine.discardContext(JsonRpc.text(params,"contextId")); return JsonRpc.result(id,"discarded"); }
             if ("setContextReading".equals(method)) { engine.setContextReading(params.get("enabled").getAsBoolean()); return JsonRpc.result(id,"saved"); }

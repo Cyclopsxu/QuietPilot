@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: preserve explicit nulls in RPC contracts. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.google.gson.Gson;
@@ -8,7 +9,7 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 final class JsonRpc {
-    static final Gson GSON = new Gson();
+    static final Gson GSON = new com.google.gson.GsonBuilder().serializeNulls().create();
 
     private JsonRpc() {
     }

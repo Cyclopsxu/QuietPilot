@@ -51,6 +51,8 @@ public final class AutomationEngine {
     private final com.silentauto.shell.ext.skill.TrajectoryRecorder recorder = new com.silentauto.shell.ext.skill.TrajectoryRecorder();
     private final com.silentauto.shell.ext.skill.SkillStore skills = new com.silentauto.shell.ext.skill.SkillStore();
     private com.silentauto.shell.ext.context.ScreenContextReader contexts;
+    private final Map<String, TaskRequest> voicePending = new LinkedHashMap<>();
+    private final java.util.concurrent.ScheduledExecutorService voiceTimers = Executors.newSingleThreadScheduledExecutor();
     private UiBridge ui;
     private PaddleOcrEngine ocr;
 
@@ -90,6 +92,7 @@ public final class AutomationEngine {
             return;
         }
         task.stop.set(true);
+        voicePending.remove(taskId);
         transition(task, TaskStatus.CANCELLED, "automation cancelled", "", "");
         if (task.ai != null) task.ai.cancel();
         if (task.verifierAi != null) task.verifierAi.cancel();
@@ -194,6 +197,47 @@ public final class AutomationEngine {
     }
     void setContextReading(boolean enabled) throws Exception { contexts().reading(enabled); }
     void discardContext(String id) { contexts().discard(id); }
+
+    JsonObject submitVoiceTask(JsonObject params) throws Exception {
+        String id = "voice-" + java.util.UUID.randomUUID();
+        Config config = baseConfig.withOverrides(JsonRpc.text(params,"apiKey"),JsonRpc.text(params,"apiBase"),JsonRpc.text(params,"model")).withProfiles(params.getAsJsonObject("models"));
+        config.intake.validate();
+        JsonObject context = contexts().take(JsonRpc.text(params,"contextId"));
+        long started = SystemClock.elapsedRealtime();
+        JsonObject result;
+        try {
+            AiClient intake = new AiClient(config.forRole(config.intake),logs,id);
+            result = new com.silentauto.shell.ext.voice.VoiceIntake().understand(JsonRpc.text(params,"audioBase64"),
+                    JsonRpc.text(params,"audioFormat"),context,appCatalog.appsText(appCatalog.installedApps()),skills.list(true),intake::completeParts);
+        } finally { contexts().deleteConsumed(context); }
+        if (!result.has("understood") || !result.get("understood").getAsBoolean()) return result;
+        String pkg = JsonRpc.text(result,"app"); boolean installed = false;
+        for (AppCatalog.AppInfo app : appCatalog.installedApps()) if (app.packageName.equals(pkg)) installed = true;
+        if (!installed) return com.silentauto.shell.ext.voice.VoiceIntake.rejected("不确定要做什么");
+        TaskRequest request = new TaskRequest(id,JsonRpc.text(result,"task"),JsonRpc.text(params,"apiKey"),JsonRpc.text(params,"apiBase"),JsonRpc.text(params,"model"));
+        request.models = params.getAsJsonObject("models");
+        boolean confirm = !"high".equals(JsonRpc.text(result,"confidence"));
+        synchronized (this) {
+            TaskState task = new TaskState(id,request.goal,logs); tasks.put(id,task); recorder.prepare(id,request.goal);
+            task.progress.call("intake");
+            task.progress.voice(JsonRpc.text(result,"transcript"),SystemClock.elapsedRealtime()-started,confirm,System.currentTimeMillis()+(confirm?10_000:3_000));
+            voicePending.put(id,request);
+            task.future = voiceTimers.schedule(()->{
+                synchronized (AutomationEngine.this) {
+                    if (!voicePending.containsKey(id) || task.stop.get() || task.progress.status().terminal()) return;
+                    if (confirm) { voicePending.remove(id); stopTask(id); }
+                    else confirmTask(id,true);
+                }
+            },confirm?10:3,java.util.concurrent.TimeUnit.SECONDS);
+        }
+        result.addProperty("taskId",id); return result;
+    }
+    synchronized void confirmTask(String id, boolean ok) {
+        TaskRequest request = voicePending.remove(id); TaskState task = tasks.get(id);
+        if (request == null || task == null || task.stop.get() || task.progress.status().terminal()) return;
+        if (!ok) { stopTask(id); return; }
+        task.progress.confirmed(); task.future = executor.submit(()->runTask(task,request));
+    }
 
     private void runTask(TaskState task, TaskRequest request) {
         Config config = baseConfig.withOverrides(request.apiKey, request.apiBase, request.model).withProfiles(request.models);

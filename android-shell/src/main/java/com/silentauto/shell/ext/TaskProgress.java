@@ -15,12 +15,21 @@ public final class TaskProgress {
     private TaskStatus status = TaskStatus.QUEUED;
     private String appName = "";
     private String app = "", stepText = "", source = "model", message = "", evidence = "", boundary = "";
+    private String transcript = "";
+    private long intakeElapsedMs, confirmDeadlineMs;
+    private boolean pendingConfirmation, requiresConfirmation;
     private final Map<String, Integer> calls = new LinkedHashMap<>();
 
     public TaskProgress(String taskId, String goal, LogHub logs) {
         this.taskId = taskId; this.goal = goal; this.logs = logs;
         calls.put("executor", 0); calls.put("verifier", 0); calls.put("intake", 0);
     }
+    public synchronized void voice(String original, long elapsed, boolean confirm, long deadline) {
+        transcript = original; intakeElapsedMs = elapsed; pendingConfirmation = true; requiresConfirmation = confirm; confirmDeadlineMs = deadline;
+        message = confirm ? "请确认任务，10 秒未确认将取消" : "3 秒后开始，可取消";
+        publish();
+    }
+    public synchronized void confirmed() { pendingConfirmation = false; publish(); }
     public synchronized void protectedScreen(boolean value) {
         if (status.terminal()) return;
         if (protectedScreen != value) { protectedScreen = value; publish(); }
@@ -61,6 +70,9 @@ public final class TaskProgress {
         JsonObject counts = new JsonObject();
         for (Map.Entry<String,Integer> entry : calls.entrySet()) counts.addProperty(entry.getKey(), entry.getValue());
         o.add("llmCalls", counts);
+        o.addProperty("transcript", transcript); o.addProperty("intakeElapsedMs", intakeElapsedMs);
+        o.addProperty("pendingConfirmation", pendingConfirmation && !status.terminal()); o.addProperty("requiresConfirmation", requiresConfirmation);
+        o.addProperty("confirmDeadlineMs", confirmDeadlineMs);
         o.addProperty("protectedScreen", protectedScreen);
         o.addProperty("elapsedMs", (ended == 0 ? SystemClock.elapsedRealtime() : ended) - started);
         return o;
