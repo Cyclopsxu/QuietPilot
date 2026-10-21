@@ -37,7 +37,8 @@ public final class TrajectoryRecorder implements StepListener {
             if(target==null && result!=null){
                 ActionDecision indexed=new ActionDecision();
                 if(result.clickResult!=null){indexed.action="tap_target";indexed.targetIndex=result.clickResult.targetIndex;target=s.before.target(indexed);}
-                else if(result.focusResult!=null){indexed.action="focus_input";indexed.inputIndex=result.focusResult.inputIndex;target=s.before.target(indexed);}
+                else if(result.focusResult!=null){indexed.action="focus_input";indexed.inputIndex=result.focusResult.inputIndex;target=s.before.target(indexed);
+                    if(target==null && result.focusResult.targetIndex>0){indexed.action="tap_target";indexed.targetIndex=result.focusResult.targetIndex;target=s.before.target(indexed);}}
             }
             record.add("target",target==null?JsonNull.INSTANCE:target);
             record.addProperty("source",action.source);record.addProperty("reason",action.reason);record.addProperty("uiChanged",false);

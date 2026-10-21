@@ -66,5 +66,10 @@ public final class TaskProgress {
         return o;
     }
     public synchronized TaskOutcome outcome() { return new TaskOutcome(status.name(), message, evidence, boundary); }
+    public synchronized void learned(String name) {
+        if (status != TaskStatus.VERIFIED) return;
+        message = "已学会：" + name;
+        publish();
+    }
     public synchronized void publish() { logs.status(json()); }
 }

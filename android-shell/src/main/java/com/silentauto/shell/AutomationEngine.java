@@ -49,6 +49,7 @@ public final class AutomationEngine {
     private final com.silentauto.shell.ext.guard.TaskScheduler scheduler = new com.silentauto.shell.ext.guard.TaskScheduler();
     private final com.silentauto.shell.ext.guard.ForegroundWatcher foreground = new com.silentauto.shell.ext.guard.ForegroundWatcher();
     private final com.silentauto.shell.ext.skill.TrajectoryRecorder recorder = new com.silentauto.shell.ext.skill.TrajectoryRecorder();
+    private final com.silentauto.shell.ext.skill.SkillStore skills = new com.silentauto.shell.ext.skill.SkillStore();
     private UiBridge ui;
     private PaddleOcrEngine ocr;
 
@@ -342,6 +343,8 @@ public final class AutomationEngine {
                 logs.error(task.taskId, "automation failed", e);
             }
         } finally {
+            JsonObject recorded = recorder.trajectory(task.taskId);
+            if (recorded != null) recorded.add("outcome", new com.google.gson.Gson().toJsonTree(task.progress.outcome()));
             if (ctx != null) {
                 for (StepListener listener : listeners) {
                     try { listener.onTaskEnd(ctx, task.progress.outcome()); }
@@ -349,6 +352,18 @@ public final class AutomationEngine {
                 }
             }
             if (ctx == null) recorder.finish(task.taskId, task.progress.outcome());
+            if (recorded != null && task.ai != null && !task.stop.get()) {
+                try {
+                    JsonObject metrics = task.progress.json();
+                    int calls = 0;
+                    for (JsonElement count : metrics.getAsJsonObject("llmCalls").asMap().values()) calls += count.getAsInt();
+                    JsonObject learned = new com.silentauto.shell.ext.skill.SkillCompiler(skills).compile(recorded,
+                            task.ai::complete, metrics.get("elapsedMs").getAsLong(), calls);
+                    if (learned != null) task.progress.learned(learned.get("name").getAsString());
+                } catch (Exception compileError) {
+                    logs.task(task.taskId, "skill compile skipped: " + compileError.getMessage());
+                }
+            }
             task.ai = null;
             task.verifierAi = null;
             releaseTask(task);

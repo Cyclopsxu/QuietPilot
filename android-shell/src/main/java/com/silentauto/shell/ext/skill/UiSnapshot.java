@@ -3,7 +3,7 @@ package com.silentauto.shell.ext.skill;
 import com.google.gson.*;
 import java.util.*;
 
-/** UI structure shared by recording and semantic target matching. Bounds are never persisted as locators. */
+/** UI structure shared by recording and semantic target matching. Bounds are recorded only as reference, never used as persistent locators. */
 public final class UiSnapshot {
     public final List<JsonObject> nodes = new ArrayList<>();
     public final JsonObject dump;
@@ -31,6 +31,7 @@ public final class UiSnapshot {
     public JsonObject target(com.silentauto.shell.ActionDecision action) {
         JsonObject best = null; long area = Long.MAX_VALUE;
         for (JsonObject node : nodes) {
+            if (("text".equals(action.action) || "input_text".equals(action.action)) && bool(node,"editable") && bool(node,"focused")) return features(node);
             if ("tap_target".equals(action.action) && integer(node,"targetIndex") == action.targetIndex && action.targetIndex > 0) return features(node);
             if ("focus_input".equals(action.action) && integer(node,"inputIndex") == action.inputIndex && action.inputIndex > 0) return features(node);
             if ("tap".equals(action.action) || "long_press".equals(action.action)) {
