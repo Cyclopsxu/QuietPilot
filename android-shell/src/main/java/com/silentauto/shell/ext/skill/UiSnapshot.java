@@ -42,6 +42,15 @@ public final class UiSnapshot {
         }
         return best == null ? null : features(best);
     }
+    public UiSnapshot foreground() {
+        for (JsonElement item : array(dump, "windows")) {
+            JsonObject window = item.getAsJsonObject();
+            if (integer(window, "type") != 1 || !window.has("root")) continue;
+            JsonObject selected = new JsonObject(); JsonArray windows = new JsonArray();
+            windows.add(window); selected.add("windows", windows); return new UiSnapshot(selected.toString());
+        }
+        return this;
+    }
     public static JsonObject features(JsonObject node) {
         JsonObject out = new JsonObject();
         String[][] fields = {{"text","text"},{"contentDesc","desc"},{"resourceId","id"},{"className","class"},{"hint","hint"},{"parentResourceId","parentId"},{"parentText","parentText"},{"bounds","bounds"}};

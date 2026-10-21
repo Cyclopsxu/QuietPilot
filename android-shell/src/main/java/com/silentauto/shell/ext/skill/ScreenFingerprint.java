@@ -19,7 +19,7 @@ public final class ScreenFingerprint {
         }
         if (pkg.isEmpty()) pkg=fallbackPackage;
         SortedSet<String> texts=new TreeSet<>();
-        for (JsonObject node:ui.nodes) {
+        for (JsonObject node:ui.foreground().nodes) {
             String nodePackage=UiSnapshot.text(node,"package");
             if (!nodePackage.isEmpty() && !pkg.equals(nodePackage)) continue;
             String text=UiSnapshot.text(node,"text").trim(); int[] b=UiSnapshot.bounds(node);

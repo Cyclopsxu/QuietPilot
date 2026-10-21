@@ -205,7 +205,12 @@ public final class AutomationEngine {
             catch (Exception matchError) { logs.task(task.taskId, "skill match skipped: " + matchError.getMessage()); }
             ActionDecision app;
             if (match != null) {
-                task.skillRunner = new com.silentauto.shell.ext.skill.SkillRunner(match.skill, match.args);
+                String skillPackage = match.skill.get("packageName").getAsString(), skillId = match.skill.get("skillId").getAsString();
+                task.skillRunner = new com.silentauto.shell.ext.skill.SkillRunner(match.skill, match.args, () -> {
+                    try { skills.abandoned(skillPackage, skillId); }
+                    catch (Exception e) { logs.task(task.taskId, "skill abandon persistence failed: " + e.getMessage()); }
+                    logs.task(task.taskId, "skill ABANDONED: " + skillId);
+                });
                 app = new ActionDecision(); app.packageName = match.skill.get("packageName").getAsString();
                 logs.task(task.taskId, "skill matched: " + task.skillRunner.skillId());
             } else app = chooseApp(ai, request.goal, apps);
@@ -250,9 +255,16 @@ public final class AutomationEngine {
                 for (StepListener listener : listeners) listener.beforeStep(ctx, step, dump);
                 ActionDecision action = task.skillRunner == null ? null : task.skillRunner.next(ctx, task, step, dump);
                 if (action == null) action = firstNonNull(ctx, task, step, dump);
-                if (action == null) action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
+                if (action == null) {
+                    boolean rescuing = task.skillRunner != null && task.skillRunner.state() == com.silentauto.shell.ext.skill.SkillRunner.State.RESCUING;
+                    action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
+                    if (rescuing) {
+                        if ("done".equals(action.action)) action = ActionDecision.wait(300, "救援只恢复界面，重新观察");
+                        action.source = "rescue"; task.skillRunner.rescueAction();
+                    }
+                }
                 if (task.stop.get() || Thread.currentThread().isInterrupted()) throw new InterruptedException("task cancelled");
-                if (!"skill".equals(action.source)) action = applyAutoCorrections(task, action);
+                if ("model".equals(action.source)) action = applyAutoCorrections(task, action);
                 task.progress.action(action.reason, action.source);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason) + " source=" + action.source);
                 if ("request_user".equals(action.action) || "done".equals(action.action)) {
@@ -373,6 +385,10 @@ public final class AutomationEngine {
                     logs.task(task.taskId, "skill compile skipped: " + compileError.getMessage());
                 }
             }
+            if (task.skillRunner != null && task.completed && task.skillRunner.state() != com.silentauto.shell.ext.skill.SkillRunner.State.ABANDONED) {
+                try { skills.succeeded(task.packageName, task.skillRunner.skillId()); }
+                catch (Exception e) { logs.task(task.taskId, "skill success persistence failed: " + e.getMessage()); }
+            }
             task.ai = null;
             task.verifierAi = null;
             releaseTask(task);
@@ -471,6 +487,8 @@ public final class AutomationEngine {
                 %s""", task.display.width, task.display.height, task.display.width, task.display.height,
                 goal, packageName, step, safe(task.searchText), safe(task.lastAction), safe(task.lastReason), task.consecutiveWaits,
                 task.lastUiWindows, task.lastUiInputs, task.lastUiTargets, task.sparseUiAfterSearch, safe(task.lastUiWindowSource), truncate(uiDump, MAX_UI_CHARS));
+        if (task.skillRunner != null && task.skillRunner.state() == com.silentauto.shell.ext.skill.SkillRunner.State.RESCUING)
+            prompt += task.skillRunner.rescuePrompt();
         JsonArray messages = new JsonArray();
         messages.add(AiClient.message("system", TOOL_SYSTEM_PROMPT));
         messages.add(AiClient.message("user", prompt));
@@ -482,7 +500,8 @@ public final class AutomationEngine {
             }
             AiClient.ToolCall call = result.toolCalls.get(0);
             logs.task(task.taskId, "tool_call " + call.name + " " + call.arguments);
-            if (task.pendingSearchSubmit && task.searchSubmitAttempts < 2 && ActionTools.isObservationTool(call)) {
+            if ((task.skillRunner == null || task.skillRunner.state() == com.silentauto.shell.ext.skill.SkillRunner.State.ABANDONED)
+                    && task.pendingSearchSubmit && task.searchSubmitAttempts < 2 && ActionTools.isObservationTool(call)) {
                 logs.task(task.taskId, "auto submit search before observation");
                 return ActionDecision.submitSearch("submit focused search before reading more layout");
             }

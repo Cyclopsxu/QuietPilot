@@ -66,6 +66,22 @@ public final class SkillStore {
         write(skill); return skill;
     }
 
+    public synchronized void abandoned(String pkg, String id) throws IOException {
+        JsonObject skill = get(pkg, id);
+        if (skill == null) return;
+        JsonObject stats = skill.getAsJsonObject("stats");
+        int count = Math.max(0, UiSnapshot.integer(stats, "consecutiveAbandons")) + 1;
+        stats.addProperty("consecutiveAbandons", count);
+        if (count >= 3 && !"disabled".equals(UiSnapshot.text(skill, "status"))) skill.addProperty("status", "suspect");
+        write(skill);
+    }
+    public synchronized void succeeded(String pkg, String id) throws IOException {
+        JsonObject skill = get(pkg, id);
+        if (skill == null) return;
+        skill.getAsJsonObject("stats").addProperty("consecutiveAbandons", 0);
+        write(skill);
+    }
+
     private static void addUse(JsonObject stats, long elapsed, int calls, boolean success) {
         int uses = Math.max(0, UiSnapshot.integer(stats, "uses"));
         double avgMs = stats.has("avgElapsedMs") ? stats.get("avgElapsedMs").getAsDouble() : 0;

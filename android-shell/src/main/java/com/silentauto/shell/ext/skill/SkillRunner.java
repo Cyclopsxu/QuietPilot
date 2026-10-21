@@ -8,17 +8,37 @@ import com.silentauto.shell.ext.*;
 public final class SkillRunner implements ActionSource {
     private final JsonObject skill, args;
     private int cursor;
-    private boolean mismatched;
-    public SkillRunner(JsonObject skill, JsonObject args) { this.skill = skill.deepCopy(); this.args = args.deepCopy(); }
+    public enum State { FOLLOWING, RESCUING, ABANDONED }
+    private State state = State.FOLLOWING;
+    private int rescueSteps;
+    private final Runnable onAbandon;
+    public SkillRunner(JsonObject skill, JsonObject args) { this(skill, args, () -> {}); }
+    public SkillRunner(JsonObject skill, JsonObject args, Runnable onAbandon) {
+        this.skill = skill.deepCopy(); this.args = args.deepCopy(); this.onAbandon = onAbandon;
+    }
     public String skillId() { return UiSnapshot.text(skill, "skillId"); }
-    public boolean mismatched() { return mismatched; }
+    public State state() { return state; }
+    public String rescuePrompt() {
+        JsonArray steps = UiSnapshot.array(skill, "steps");
+        JsonObject expected = expand(steps.get(cursor), args).getAsJsonObject().getAsJsonObject("expect");
+        return "\n你正在执行技能『" + UiSnapshot.text(skill, "name")
+                + "』，当前界面与预期不符。目标是回到下面这个界面：" + expected
+                + "。然后停止救援，不要推进任务本身，不要输入或发送任务消息，不要点击完成。仅恢复界面或关闭打断弹窗。"
+                + "这是第 " + (rescueSteps + 1) + "/3 个救援动作。";
+    }
+    public void rescueAction() { if (state == State.RESCUING) rescueSteps++; }
+    private ActionDecision mismatch() {
+        if (state == State.FOLLOWING) { state = State.RESCUING; rescueSteps = 0; }
+        if (rescueSteps >= 3) { state = State.ABANDONED; onAbandon.run(); }
+        return null;
+    }
 
     @Override public ActionDecision next(ExecutionContext ctx, AutomationEngine.TaskState task, int step, String dump) {
         return next(new UiSnapshot(ctx.ui.dump(ctx.displayId, ctx.width, ctx.height, UiBridge.MODE_FULL)), ctx.height);
     }
 
     public ActionDecision next(UiSnapshot current, int height) {
-        if (mismatched) return null;
+        if (state == State.ABANDONED) return null;
         JsonArray steps = UiSnapshot.array(skill, "steps");
         ActionDecision action = new ActionDecision(); action.source = "skill";
         action.reason = UiSnapshot.text(skill, "name") + " · " + (cursor + 1) + "/" + steps.size();
@@ -29,7 +49,7 @@ public final class SkillRunner implements ActionSource {
         JsonObject recorded = expand(steps.get(cursor), args).getAsJsonObject();
         ScreenFingerprint expected = ScreenFingerprint.parse(recorded.getAsJsonObject("expect"));
         if (expected.similarity(ScreenFingerprint.from(current, UiSnapshot.text(skill,"packageName"), height)) < .6) {
-            mismatched = true; return null;
+            return mismatch();
         }
         String type = UiSnapshot.text(recorded, "action");
         action.action = SkillCompiler.isText(type) ? "text" : type;
@@ -41,17 +61,18 @@ public final class SkillRunner implements ActionSource {
         if (needsTarget) {
             JsonObject target = recorded.has("target") && recorded.get("target").isJsonObject() ? recorded.getAsJsonObject("target") : null;
             JsonObject node = findTarget(current, target, SkillCompiler.isText(type) || "focus_input".equals(type));
-            if (node == null) { mismatched = true; return null; }
+            if (node == null) { return mismatch(); }
             if (SkillCompiler.isText(type) || "focus_input".equals(type)) {
                 action.inputIndex = UiSnapshot.integer(node,"inputIndex");
-                if (action.inputIndex <= 0) { mismatched = true; return null; }
+                if (action.inputIndex <= 0) { return mismatch(); }
             } else if ("long_press".equals(type)) {
                 int[] b = UiSnapshot.bounds(node); action.x = (b[0] + b[2]) / 2; action.y = (b[1] + b[3]) / 2;
             } else {
                 action.targetIndex = UiSnapshot.integer(node,"targetIndex");
-                if (action.targetIndex <= 0) { mismatched = true; return null; }
+                if (action.targetIndex <= 0) { return mismatch(); }
             }
         }
+        state = State.FOLLOWING; rescueSteps = 0;
         cursor++; return action;
     }
 
@@ -68,7 +89,7 @@ public final class SkillRunner implements ActionSource {
     public static JsonObject findTarget(UiSnapshot ui, JsonObject target, boolean input) {
         if (target == null) return null;
         JsonObject best = null; int highest = -1, second = -1;
-        for (JsonObject node : ui.nodes) {
+        for (JsonObject node : ui.foreground().nodes) {
             if (node.has("visible") && !UiSnapshot.bool(node,"visible")) continue;
             if (node.has("enabled") && !UiSnapshot.bool(node,"enabled")) continue;
             if (input ? UiSnapshot.integer(node,"inputIndex") <= 0 : UiSnapshot.integer(node,"targetIndex") <= 0) continue;
