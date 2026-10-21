@@ -4,7 +4,7 @@ package com.silentauto.controller;
 import org.json.JSONObject;
 import java.net.URI;
 
-final class AiConfig {
+public final class AiConfig {
     static final String DEEPSEEK = "https://api.deepseek.com/v1";
     static final String QWEN = "https://dashscope.aliyuncs.com/compatible-mode/v1";
     static final class Model {
@@ -38,7 +38,7 @@ final class AiConfig {
         apiKey = executor.apiKey; apiBase = executor.apiBase; model = executor.model;
     }
     boolean isConfigured() { return executor.configured() && verifier.configured(); }
-    JSONObject profilesJson() throws Exception {
+    public JSONObject profilesJson() throws Exception {
         return new JSONObject().put("executor", executor.json()).put("verifier", verifier.json()).put("intake", intake.json());
     }
 }

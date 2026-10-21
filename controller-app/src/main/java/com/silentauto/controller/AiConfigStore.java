@@ -4,10 +4,10 @@ package com.silentauto.controller;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-final class AiConfigStore {
+public final class AiConfigStore {
     private final SharedPreferences prefs;
-    AiConfigStore(Context context) { prefs = context.getApplicationContext().getSharedPreferences("ai_config", Context.MODE_PRIVATE); }
-    AiConfig load() {
+    public AiConfigStore(Context context) { prefs = context.getApplicationContext().getSharedPreferences("ai_config", Context.MODE_PRIVATE); }
+    public AiConfig load() {
         String legacyKey = prefs.getString("apiKey", "");
         if (!prefs.contains("executor.model") && !legacyKey.isEmpty()) {
             return new AiConfig(legacyKey, prefs.getString("apiBase", ""), prefs.getString("model", ""));

@@ -42,7 +42,10 @@ final class RpcServer {
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
             String line;
             while ((line = reader.readLine()) != null) {
-                client.send(dispatch(JsonParser.parseString(line).getAsJsonObject()));
+                JsonObject request = JsonParser.parseString(line).getAsJsonObject();
+                if ("subscribeStatus".equals(JsonRpc.text(request,"method"))) {
+                    client.statusOnly = true; client.send(JsonRpc.result(JsonRpc.id(request),engine.statusJson()));
+                } else client.send(dispatch(request));
             }
         } catch (Throwable e) {
             logs.error("rpc client closed", e);
@@ -146,6 +149,7 @@ final class RpcServer {
 
     private static final class Client implements LogHub.Sink {
         private final BufferedWriter writer;
+        private volatile boolean statusOnly;
 
         Client(Socket socket) throws Exception {
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
@@ -153,6 +157,10 @@ final class RpcServer {
 
         @Override
         public synchronized void send(JsonObject object) {
+            if (statusOnly && object.has("params")) {
+                JsonObject event = object.getAsJsonObject("params");
+                if (!"status".equals(JsonRpc.text(event,"type"))) return;
+            }
             try {
                 writer.write(JsonRpc.GSON.toJson(object));
                 writer.write('\n');

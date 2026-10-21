@@ -30,7 +30,10 @@ final class AiConfigScreen {
         close.setOnClickListener(v -> listener.onConfigCancelled());
         LinearLayout card = activity.findViewById(R.id.configCard);
         card.removeAllViews();
-        String[] names = {"执行模型 executor（DeepSeek 官方）", "验收模型 verifier（百炼视觉）", "语音理解 intake（预留）"};
+        Button voice = new Button(activity); voice.setText("语音悬浮球与权限");
+        voice.setOnClickListener(v -> activity.startActivity(new android.content.Intent(activity,com.silentauto.controller.ext.overlay.OverlayPermissionActivity.class)));
+        card.addView(voice);
+        String[] names = {"执行模型 executor（DeepSeek 官方）", "验收模型 verifier（百炼视觉）", "语音理解 intake（百炼 Omni）"};
         AiConfig.Model[] values = {config.executor, config.verifier, config.intake};
         EditText[][] inputs = new EditText[3][3];
         for (int i = 0; i < 3; i++) {
