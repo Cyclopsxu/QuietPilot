@@ -20,6 +20,7 @@ public final class FloatingBallService extends Service {
     private final Handler main=new Handler(Looper.getMainLooper());
     private final ExecutorService io=Executors.newCachedThreadPool();
     private final LinkedHashMap<String,JSONObject> tasks=new LinkedHashMap<>();
+    private StatusSurface capsule;
     private WindowManager windows;private WindowManager.LayoutParams layout;private Ball ball;private OverlayRpc rpc;
     private boolean down,dragging,cancelled,recording,understanding,destroyed;
     private long pressed;private float startX,startY;private int originX,originY,generation;
@@ -40,6 +41,10 @@ public final class FloatingBallService extends Service {
         layout.setTitle("ShadowAuto voice ball");layout.gravity=Gravity.TOP|Gravity.LEFT;layout.x=screenWidth()-dp(44);layout.y=dp(180);windows.addView(ball,layout);
         ball.setOnTouchListener((v,event)->touch(event));main.postDelayed(idle,3000);
         rpc=new OverlayRpc(status->main.post(()->status(status)));
+        capsule=new StatusCapsule(this,new StatusCapsule.Actions(){
+            public void open(JSONObject task){openTask(task);}
+            public void confirm(String id,boolean ok){io.execute(()->{try{rpc.request("confirmTask",new JSONObject().put("taskId",id).put("ok",ok));}catch(Exception e){main.post(()->message(e.getMessage()));}});}
+        });
     }
     @Override public int onStartCommand(Intent intent,int flags,int id){return START_NOT_STICKY;}
     private int dp(float n){return Math.round(n*getResources().getDisplayMetrics().density);}private int screenWidth(){return getResources().getDisplayMetrics().widthPixels;}
@@ -90,12 +95,13 @@ public final class FloatingBallService extends Service {
     private void message(String text){if(destroyed)return;Toast.makeText(this,text==null?"操作失败":text,Toast.LENGTH_LONG).show();}
     private void status(JSONObject value){if(destroyed)return;String id=value.optString("taskId");if(id.isEmpty())return;JSONObject old=tasks.put(id,value);
         String state=value.optString("status");if((old==null||!state.equals(old.optString("status")))&&(state.equals("VERIFIED")||state.equals("FAILED"))){flash=state.equals("VERIFIED")?"done":"failed";flashUntil=SystemClock.elapsedRealtime()+5000;}
-        if(ball!=null)ball.invalidate();
+        if(ball!=null)ball.invalidate();if(capsule!=null)capsule.update(tasks.values());
     }
     private JSONObject waiting(){for(JSONObject task:tasks.values())if("WAITING_USER".equals(task.optString("status")))return task;return null;}
     private int running(){int count=0;for(JSONObject task:tasks.values())if(!Arrays.asList("VERIFIED","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(task.optString("status")))count++;return count;}
-    private void openTask(){if(!OverlayPermissionActivity.ready(this)){startActivity(new Intent(this,OverlayPermissionActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));return;}Intent open=new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);JSONObject task=waiting();if(task!=null)open.putExtra("handoffTaskId",task.optString("taskId")).putExtra("handoffStatus",task.toString());startActivity(open);}
-    @Override public void onDestroy(){destroyed=true;if(down)finishGesture(true);main.removeCallbacksAndMessages(null);if(rpc!=null)rpc.close();if(windows!=null&&ball!=null)windows.removeView(ball);io.shutdown();super.onDestroy();}
+    private void openTask(){openTask(waiting());}
+    private void openTask(JSONObject target){if(!OverlayPermissionActivity.ready(this)){startActivity(new Intent(this,OverlayPermissionActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));return;}Intent open=new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);if(target!=null){open.putExtra("handoffTaskId",target.optString("taskId"));if("WAITING_USER".equals(target.optString("status")))open.putExtra("handoffStatus",target.toString());}startActivity(open);}
+    @Override public void onDestroy(){destroyed=true;if(down)finishGesture(true);main.removeCallbacksAndMessages(null);if(rpc!=null)rpc.close();if(capsule!=null)capsule.close();if(windows!=null&&ball!=null)windows.removeView(ball);io.shutdown();super.onDestroy();}
     @Override public IBinder onBind(Intent intent){return null;}
     private final class Ball extends View {
         private final Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);
