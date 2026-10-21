@@ -54,6 +54,7 @@ public final class AutomationEngine {
     private final Map<String, TaskRequest> voicePending = new LinkedHashMap<>();
     private final java.util.concurrent.ScheduledExecutorService voiceTimers = Executors.newSingleThreadScheduledExecutor();
     private final com.silentauto.shell.ext.history.TaskArchive history = new com.silentauto.shell.ext.history.TaskArchive();
+    private final com.silentauto.shell.ext.metrics.DisturbanceMonitor disturbance = new com.silentauto.shell.ext.metrics.DisturbanceMonitor();
     private UiBridge ui;
     private PaddleOcrEngine ocr;
 
@@ -62,6 +63,7 @@ public final class AutomationEngine {
         this.logs = logs;
         this.appCatalog = new AppCatalog(logs);
         listeners.add(recorder);
+        listeners.add(disturbance);
     }
 
     synchronized String startTask(TaskRequest request) {
@@ -302,20 +304,22 @@ public final class AutomationEngine {
                     }},()->{if(task.ai!=null)task.ai.cancel();if(task.verifierAi!=null)task.verifierAi.cancel();});
             input.inputAllowed(()->task.conflict.inputAllowed()&&!task.stop.get()&&!task.progress.status().terminal());
             task.conflict.awaitClear();
+            disturbance.prepare(task.taskId,clipboard);
+            if(task.stop.get()||Thread.currentThread().isInterrupted())throw new InterruptedException("Task stopped before display creation");
             DisplaySpec displaySpec = DisplaySpec.current(logs);
             task.videoStreamer = new VideoStreamer(logs, task.taskId, displaySpec.width, displaySpec.height);
             task.display = VirtualDisplaySession.create(task.videoStreamer.width(), task.videoStreamer.height(), displaySpec.dpi, task.videoStreamer.inputSurface());
             task.videoStreamer.start();
             logs.task(task.taskId, "virtual display created: " + task.display.displayId + " " + task.display.width + "x" + task.display.height + " dpi=" + task.display.dpi);
             logs.task(task.taskId, "virtual display local IME " + (task.display.localImeEnabled() ? "enabled" : "unavailable"));
+            ctx = new ExecutionContext(task.taskId, task.display.displayId, task.display.width, task.display.height,
+                    bridge, input, clipboard, logs);
+            for (StepListener listener : listeners) listener.onTaskStart(ctx, request.goal, app.packageName);
             task.conflict.awaitClear();
             appCatalog.launchPackage(task.taskId, app.packageName, task.display.displayId);
             logs.task(task.taskId, "launched " + app.packageName);
             sleep(task, 1800);
 
-            ctx = new ExecutionContext(task.taskId, task.display.displayId, task.display.width, task.display.height,
-                    bridge, input, clipboard, logs);
-            for (StepListener listener : listeners) listener.onTaskStart(ctx, request.goal, app.packageName);
             task.touch = new com.silentauto.shell.ext.handoff.TouchSession(input, ctx.displayId);
             ActionExecutor actionExecutor = new ActionExecutor(logs);
             AiClient verifierAi = new AiClient(config.forRole(config.verifier), logs, task.taskId, () -> task.progress.call("verifier"));
@@ -348,6 +352,7 @@ public final class AutomationEngine {
                 if ("model".equals(action.source)) action = applyAutoCorrections(task, action);
                 task.progress.action(step, action.reason, action.source);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason) + " source=" + action.source);
+                for(StepListener listener:listeners)listener.beforeAction(ctx,step,action);
                 if ("request_user".equals(action.action) || "done".equals(action.action)) {
                     for (StepListener listener : listeners) listener.afterAction(ctx, step, action, new StepResult(null, null), dump);
                 }
@@ -475,12 +480,13 @@ public final class AutomationEngine {
                     logs.task(task.taskId, "skill compile skipped: " + compileError.getMessage());
                 }
             }
-            finishMetrics(task, recorded);
-            archive(task);
             task.ai = null;
             task.verifierAi = null;
             releaseTask(task);
             scheduler.release(task);
+            task.progress.disturbance(disturbance.finish(task.taskId));
+            finishMetrics(task, recorded);
+            archive(task);
             logs.task(task.taskId, "task metrics " + task.progress.json());
             if (doneMessage != null) {
                 logs.task(task.taskId, doneMessage);

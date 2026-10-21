@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: preserve main focus and destroy virtual content on removal. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.content.Context;
@@ -49,11 +50,14 @@ final class VirtualDisplaySession {
         ImageReader captureReader = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 3);
         int baseFlags = DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC
                 | DisplayManager.VIRTUAL_DISPLAY_FLAG_PRESENTATION
-                | DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY;
+                | DisplayManager.VIRTUAL_DISPLAY_FLAG_OWN_CONTENT_ONLY
+                | hiddenFlag("VIRTUAL_DISPLAY_FLAG_DESTROY_CONTENT_ON_REMOVAL");
         int touchFlag = hiddenFlag("VIRTUAL_DISPLAY_FLAG_SUPPORTS_TOUCH");
         int focusFlag = hiddenFlag("VIRTUAL_DISPLAY_FLAG_OWN_FOCUS");
         int trustedFlag = hiddenFlag("VIRTUAL_DISPLAY_FLAG_TRUSTED");
+        int noStealFlag = hiddenFlag("VIRTUAL_DISPLAY_FLAG_STEAL_TOP_FOCUS_DISABLED");
         int[] candidates = new int[]{
+                baseFlags | touchFlag | focusFlag | trustedFlag | noStealFlag,
                 baseFlags | touchFlag | focusFlag | trustedFlag,
                 baseFlags | touchFlag | focusFlag,
                 baseFlags | touchFlag,
