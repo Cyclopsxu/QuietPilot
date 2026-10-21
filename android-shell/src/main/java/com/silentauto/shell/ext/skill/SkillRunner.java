@@ -16,6 +16,8 @@ public final class SkillRunner implements ActionSource {
     public SkillRunner(JsonObject skill, JsonObject args, Runnable onAbandon) {
         this.skill = skill.deepCopy(); this.args = args.deepCopy(); this.onAbandon = onAbandon;
     }
+    public void retryUnexecuted(ActionDecision action){if("skill".equals(action.source)&&!"done".equals(action.action)&&cursor>0)cursor--;}
+    public void forceRescue(){if(state!=State.ABANDONED){state=State.RESCUING;rescueSteps=0;}}
     public String skillId() { return UiSnapshot.text(skill, "skillId"); }
     public State state() { return state; }
     public String rescuePrompt() {

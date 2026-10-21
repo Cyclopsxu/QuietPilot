@@ -15,6 +15,7 @@ public final class ActionExecutor {
     }
 
     public StepResult execute(ExecutionContext ctx, TaskState task, ActionDecision action) throws Exception {
+        ctx.input.checkAllowed();
         UiBridge.ClickResult clickResult = null;
         UiBridge.FocusResult focusResult = null;
         if ("tap_target".equals(action.action)) {

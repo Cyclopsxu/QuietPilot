@@ -16,6 +16,9 @@ public final class InputBridge {
     private final Object inputManager;
     private final Method inject;
     private final Method setDisplayId;
+    private java.util.function.BooleanSupplier allowed=()->true;
+    public void inputAllowed(java.util.function.BooleanSupplier check){allowed=check;}
+    public void checkAllowed(){if(!allowed.getAsBoolean())throw new com.silentauto.shell.ext.guard.MainAppConflictGuard.PausedInputException();}
 
     InputBridge() throws Exception {
         inputManager = ShellContext.get().getSystemService(Context.INPUT_SERVICE);
@@ -110,6 +113,7 @@ public final class InputBridge {
     }
 
     private boolean send(int displayId, InputEvent event) throws Exception {
+        checkAllowed();
         setDisplayId.invoke(event, displayId);
         Object result = inject.invoke(inputManager, event, INJECT_WAIT_FOR_FINISH);
         return !(result instanceof Boolean) || (Boolean) result;

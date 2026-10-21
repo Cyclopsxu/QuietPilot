@@ -11,6 +11,12 @@ public final class ForegroundWatcher {
     private static final Pattern DISPLAY = Pattern.compile("^\\s*Display #([0-9]+).*");
     private static final Pattern RESUMED = Pattern.compile("(?:topResumedActivity|mResumedActivity|ResumedActivity).*?\\s([A-Za-z0-9_.]+)/([A-Za-z0-9_.$]+)");
 
+    public boolean appOnDisplay(int displayId,String pkg) throws Exception {
+        Process process=new ProcessBuilder("dumpsys","activity","activities").redirectErrorStream(true).start();boolean selected=false,found=false;
+        try(BufferedReader reader=new BufferedReader(new InputStreamReader(process.getInputStream(),StandardCharsets.UTF_8))){String line;
+            while((line=reader.readLine())!=null){Matcher display=DISPLAY.matcher(line);if(display.matches())selected=String.valueOf(displayId).equals(display.group(1));if(selected&&line.contains(pkg+"/")&&(line.contains("Hist #")||line.contains("topResumedActivity")||line.contains("mResumedActivity")))found=true;}
+        }finally{if(!process.waitFor(2,TimeUnit.SECONDS))process.destroy();}return found;
+    }
     public String foregroundPackage() throws Exception { return foregroundActivity().split("/")[0]; }
     public String foregroundActivity() throws Exception {
         // ActivityManager exposes display sections on Android 10+, without occupying UiAutomation.

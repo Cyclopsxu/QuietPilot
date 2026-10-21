@@ -127,6 +127,7 @@ public final class AutomationEngine {
         if (task == null || task.progress.status() != TaskStatus.WAITING_USER || task.display == null)
             throw new IllegalStateException("touch is only allowed while waiting for user");
         if (!Float.isFinite(x) || !Float.isFinite(y)) throw new IllegalArgumentException("finite coordinates required");
+        if (task.packageName.equals(foreground.foregroundPackage())) throw new IllegalStateException("同一 App 正在主屏使用，暂停预览触摸");
         task.touch.inject(action, Math.max(0, Math.min(task.display.width - 1, x)),
                 Math.max(0, Math.min(task.display.height - 1, y)));
     }
@@ -292,12 +293,22 @@ public final class AutomationEngine {
             awaitAdmission(task);
             if (task.stop.get()) throw new InterruptedException("task cancelled before launch");
             transition(task, TaskStatus.RUNNING, "开始执行", "", "");
+            task.conflict = new com.silentauto.shell.ext.guard.MainAppConflictGuard(task.packageName,task.appName,
+                    foreground::foregroundPackage,task.progress::status,()->task.progress.json().get("stepText").getAsString(),
+                    (state,detail)->{synchronized(task.progress){
+                        if(state==TaskStatus.PAUSED&&task.progress.status()!=TaskStatus.RUNNING)return;
+                        if(state==TaskStatus.RUNNING&&task.progress.status()!=TaskStatus.PAUSED)return;
+                        transition(task,state,detail,"","");
+                    }},()->{if(task.ai!=null)task.ai.cancel();if(task.verifierAi!=null)task.verifierAi.cancel();});
+            input.inputAllowed(()->task.conflict.inputAllowed()&&!task.stop.get()&&!task.progress.status().terminal());
+            task.conflict.awaitClear();
             DisplaySpec displaySpec = DisplaySpec.current(logs);
             task.videoStreamer = new VideoStreamer(logs, task.taskId, displaySpec.width, displaySpec.height);
             task.display = VirtualDisplaySession.create(task.videoStreamer.width(), task.videoStreamer.height(), displaySpec.dpi, task.videoStreamer.inputSurface());
             task.videoStreamer.start();
             logs.task(task.taskId, "virtual display created: " + task.display.displayId + " " + task.display.width + "x" + task.display.height + " dpi=" + task.display.dpi);
             logs.task(task.taskId, "virtual display local IME " + (task.display.localImeEnabled() ? "enabled" : "unavailable"));
+            task.conflict.awaitClear();
             appCatalog.launchPackage(task.taskId, app.packageName, task.display.displayId);
             logs.task(task.taskId, "launched " + app.packageName);
             sleep(task, 1800);
@@ -312,6 +323,8 @@ public final class AutomationEngine {
             ResultVerifier verifier = new ResultVerifier(verifierAi::completeVision, () -> screenOcrJson(task),
                     () -> EvidenceFrame.from(task.display.captureBitmap(8, 120)));
             for (int step = 1; step <= MAX_STEPS && !task.stop.get(); step++) {
+                if (task.conflict.awaitClear()) recoverAfterConflict(task);
+                long planningEpoch=task.conflict.epoch();
                 String dump = bridge.dump(task.display.displayId, task.display.width, task.display.height, UiBridge.MODE_SIMPLE);
                 rememberUiObservation(task, dump);
                 for (StepListener listener : listeners) listener.beforeStep(ctx, step, dump);
@@ -322,12 +335,18 @@ public final class AutomationEngine {
                     action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
                     if (rescuing) {
                         if ("done".equals(action.action)) action = ActionDecision.wait(300, "救援只恢复界面，重新观察");
-                        action.source = "rescue"; task.skillRunner.rescueAction();
+                        action.source = "rescue";
                     }
                 }
                 if (task.stop.get() || Thread.currentThread().isInterrupted()) throw new InterruptedException("task cancelled");
+                boolean recovered=task.conflict.awaitClear();
+                if (recovered || planningEpoch!=task.conflict.epoch()) {
+                    if(task.skillRunner!=null)task.skillRunner.retryUnexecuted(action);
+                    recoverAfterConflict(task);step--;continue;
+                }
+                if("rescue".equals(action.source))task.skillRunner.rescueAction();
                 if ("model".equals(action.source)) action = applyAutoCorrections(task, action);
-                task.progress.action(action.reason, action.source);
+                task.progress.action(step, action.reason, action.source);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason) + " source=" + action.source);
                 if ("request_user".equals(action.action) || "done".equals(action.action)) {
                     for (StepListener listener : listeners) listener.afterAction(ctx, step, action, new StepResult(null, null), dump);
@@ -339,6 +358,7 @@ public final class AutomationEngine {
                         continue;
                     }
                     ResultVerifier.Result boundary = verifier.verifyBoundary(ctx, action.boundary);
+                    if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
                     logs.task(task.taskId, "handoff boundary verified=" + boundary.verified + ": "
                             + (boundary.verified ? boundary.evidence : boundary.missing));
                     boolean protectedScreen = boundary.frame != null && boundary.frame.protectedScreen;
@@ -378,6 +398,7 @@ public final class AutomationEngine {
                 }
                 if ("done".equals(action.action)) {
                     ResultVerifier.Result verification = verifier.verify(ctx, request.goal, action.expectedEvidence);
+                    if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
                     if (verification.verified) {
                         String evidencePath = verifier.saveEvidence(ctx, verification);
                         task.progress.evidenceScreenshot(evidencePath);
@@ -400,9 +421,14 @@ public final class AutomationEngine {
                     }
                     continue;
                 }
-                StepResult result = null;
+                StepResult result = null;boolean interruptedInput=false;
                 try { result = actionExecutor.execute(ctx, task, action); }
+                catch (com.silentauto.shell.ext.guard.MainAppConflictGuard.PausedInputException paused) { interruptedInput=true; }
                 finally { for (StepListener listener : listeners) listener.afterAction(ctx, step, action, result, dump); }
+                if(interruptedInput){
+                    if(task.skillRunner!=null){task.skillRunner.retryUnexecuted(action);task.skillRunner.forceRescue();}
+                    task.conflict.awaitClear();recoverAfterConflict(task);continue;
+                }
                 rememberAction(task, action, result.clickResult, result.focusResult);
                 sleep(task, 900);
             }
@@ -427,6 +453,7 @@ public final class AutomationEngine {
                 logs.error(task.taskId, "automation failed", e);
             }
         } finally {
+            if(task.conflict!=null)task.conflict.close();
             JsonObject recorded = recorder.trajectory(task.taskId);
             if (recorded != null) recorded.add("outcome", new com.google.gson.Gson().toJsonTree(task.progress.outcome()));
             if (ctx != null) {
@@ -459,6 +486,29 @@ public final class AutomationEngine {
                 logs.task(task.taskId, doneMessage);
             }
         }
+    }
+
+    private void recoverAfterConflict(TaskState task) throws Exception {
+        if(task.stop.get())throw new InterruptedException("Task stopped during conflict");
+        boolean visible=false;
+        JsonObject fresh=JsonParser.parseString(getUi().dump(task.display.displayId,task.display.width,task.display.height,UiBridge.MODE_FULL)).getAsJsonObject();
+        for(JsonElement item:com.silentauto.shell.ext.skill.UiSnapshot.array(fresh,"windows")){
+            JsonObject window=item.getAsJsonObject();
+            if(com.silentauto.shell.ext.skill.UiSnapshot.integer(window,"type")==1&&window.has("root")&&window.get("root").isJsonObject()
+                    &&com.silentauto.shell.ext.skill.UiSnapshot.bool(window.getAsJsonObject("root"),"visible"))visible=true;
+        }
+        boolean moved=!visible||!foreground.appOnDisplay(task.display.displayId,task.packageName);
+        if(moved){
+            task.conflict.awaitClear();appCatalog.launchPackage(task.taskId,task.packageName,task.display.displayId);sleep(task,1800);
+            if(task.skillRunner!=null)task.skillRunner.forceRescue();
+        }
+        JsonObject trace=recorder.trajectory(task.taskId);JsonArray completed=new JsonArray();
+        if(trace!=null)for(JsonElement value:com.silentauto.shell.ext.skill.UiSnapshot.array(trace,"steps")){
+            JsonObject step=value.getAsJsonObject(),summary=new JsonObject();summary.addProperty("step",step.get("step").getAsInt());summary.addProperty("stepText",JsonRpc.text(step,"stepText"));completed.add(summary);
+        }
+        task.lastAction="app_resumed";
+        task.lastReason=(moved?"虚拟屏应用已移走，已重新启动。":"应用仍在虚拟屏。")+"从头观察，结合已完成的步骤继续。已完成步骤："+completed;
+        logs.task(task.taskId,task.lastReason);
     }
 
     private void archive(TaskState task) {
@@ -1027,6 +1077,7 @@ public final class AutomationEngine {
         public final AtomicBoolean stop = new AtomicBoolean(false);
         public volatile String state = "queued";
         public final TaskProgress progress;
+        public com.silentauto.shell.ext.guard.MainAppConflictGuard conflict;
         public com.silentauto.shell.ext.skill.SkillRunner skillRunner;
         public String packageName = "";
         public String appName = "";
