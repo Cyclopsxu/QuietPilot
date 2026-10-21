@@ -75,10 +75,12 @@ public final class SkillStore {
         if (count >= 3 && !"disabled".equals(UiSnapshot.text(skill, "status"))) skill.addProperty("status", "suspect");
         write(skill);
     }
-    public synchronized void succeeded(String pkg, String id) throws IOException {
+    public synchronized void recordUse(String pkg, String id, long elapsed, int calls, boolean success) throws IOException {
         JsonObject skill = get(pkg, id);
         if (skill == null) return;
-        skill.getAsJsonObject("stats").addProperty("consecutiveAbandons", 0);
+        JsonObject stats = skill.getAsJsonObject("stats");
+        addUse(stats,elapsed,calls,success);
+        if (success) stats.addProperty("consecutiveAbandons", 0);
         write(skill);
     }
 

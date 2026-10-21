@@ -11,6 +11,10 @@ public final class TaskProgress {
     private final LogHub logs;
     private final long started = SystemClock.elapsedRealtime();
     private long ended, waitingSinceMs;
+    private final long createdAtMs = System.currentTimeMillis();
+    private long finishedAtMs;
+    private String skillId = "", comparison = "", evidenceScreenshot = "";
+    private JsonObject sourceSteps = new JsonObject();
     private boolean protectedScreen;
     private TaskStatus status = TaskStatus.QUEUED;
     private String appName = "";
@@ -23,6 +27,7 @@ public final class TaskProgress {
     public TaskProgress(String taskId, String goal, LogHub logs) {
         this.taskId = taskId; this.goal = goal; this.logs = logs;
         calls.put("executor", 0); calls.put("verifier", 0); calls.put("intake", 0);
+        for (String source : new String[]{"model","skill","rescue"}) sourceSteps.addProperty(source,0);
     }
     public synchronized void voice(String original, long elapsed, boolean confirm, long deadline) {
         transcript = original; intakeElapsedMs = elapsed; pendingConfirmation = true; requiresConfirmation = confirm; confirmDeadlineMs = deadline;
@@ -53,7 +58,7 @@ public final class TaskProgress {
         message = detail == null ? "" : detail;
         evidence = proof == null ? "" : proof;
         boundary = targetBoundary == null ? "" : targetBoundary;
-        if (next.terminal()) ended = SystemClock.elapsedRealtime();
+        if (next.terminal()) { ended = SystemClock.elapsedRealtime(); finishedAtMs = System.currentTimeMillis(); }
         publish();
     }
     private static boolean allowed(TaskStatus from, TaskStatus to) {
@@ -71,6 +76,8 @@ public final class TaskProgress {
         JsonObject counts = new JsonObject();
         for (Map.Entry<String,Integer> entry : calls.entrySet()) counts.addProperty(entry.getKey(), entry.getValue());
         o.add("llmCalls", counts);
+        o.addProperty("skillId", skillId); o.add("sourceSteps",sourceSteps.deepCopy()); o.addProperty("comparison",comparison);
+        o.addProperty("evidenceScreenshot",evidenceScreenshot); o.addProperty("createdAtMs",createdAtMs); o.addProperty("finishedAtMs",finishedAtMs);
         o.addProperty("waitingSinceMs", waitingSinceMs);
         o.addProperty("transcript", transcript); o.addProperty("intakeElapsedMs", intakeElapsedMs);
         o.addProperty("pendingConfirmation", pendingConfirmation && !status.terminal()); o.addProperty("requiresConfirmation", requiresConfirmation);
@@ -80,6 +87,10 @@ public final class TaskProgress {
         return o;
     }
     public synchronized TaskOutcome outcome() { return new TaskOutcome(status.name(), message, evidence, boundary); }
+    public synchronized void evidenceScreenshot(String path) { evidenceScreenshot = path; }
+    public synchronized void metrics(String id,JsonObject sources,String baseline) {
+        skillId = id; sourceSteps = sources.deepCopy(); comparison = baseline; publish();
+    }
     public synchronized void learned(String name) {
         if (status != TaskStatus.VERIFIED) return;
         message = "已学会：" + name;

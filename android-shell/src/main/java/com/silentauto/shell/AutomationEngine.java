@@ -102,6 +102,7 @@ public final class AutomationEngine {
         releaseTask(task);
         scheduler.release(task);
         recorder.snapshotOutcome(taskId, task.progress.outcome());
+        logs.task(taskId, "task metrics " + task.progress.json());
         logs.task(taskId, "automation stopped");
     }
 
@@ -377,6 +378,7 @@ public final class AutomationEngine {
                     ResultVerifier.Result verification = verifier.verify(ctx, request.goal, action.expectedEvidence);
                     if (verification.verified) {
                         String evidencePath = verifier.saveEvidence(ctx, verification);
+                        task.progress.evidenceScreenshot(evidencePath);
                         logs.task(task.taskId, "evidence saved: " + evidencePath);
                         task.completed = true;
                         task.resultStatus = "verified";
@@ -444,10 +446,7 @@ public final class AutomationEngine {
                     logs.task(task.taskId, "skill compile skipped: " + compileError.getMessage());
                 }
             }
-            if (task.skillRunner != null && task.completed && task.skillRunner.state() != com.silentauto.shell.ext.skill.SkillRunner.State.ABANDONED) {
-                try { skills.succeeded(task.packageName, task.skillRunner.skillId()); }
-                catch (Exception e) { logs.task(task.taskId, "skill success persistence failed: " + e.getMessage()); }
-            }
+            finishMetrics(task, recorded);
             task.ai = null;
             task.verifierAi = null;
             releaseTask(task);
@@ -457,6 +456,30 @@ public final class AutomationEngine {
                 logs.task(task.taskId, doneMessage);
             }
         }
+    }
+
+    private void finishMetrics(TaskState task, JsonObject recorded) {
+        JsonObject sources = new JsonObject();
+        for (String source : new String[]{"model","skill","rescue"}) sources.addProperty(source,0);
+        if (recorded != null) for (JsonElement item : com.silentauto.shell.ext.skill.UiSnapshot.array(recorded,"steps")) {
+            String source = com.silentauto.shell.ext.skill.UiSnapshot.text(item.getAsJsonObject(),"source");
+            if (sources.has(source)) sources.addProperty(source,sources.get(source).getAsInt()+1);
+        }
+        String id = task.skillRunner == null ? "" : task.skillRunner.skillId(), comparison = "";
+        if (!id.isEmpty()) try {
+            JsonObject metrics = task.progress.json(); int calls = 0;
+            for (JsonElement value : metrics.getAsJsonObject("llmCalls").asMap().values()) calls += value.getAsInt();
+            long elapsed = metrics.get("elapsedMs").getAsLong();
+            JsonObject skill = skills.get(task.packageName,id);
+            if (skill != null) {
+                JsonObject first = skill.getAsJsonObject("stats");
+                comparison = String.format(Locale.ROOT,"模型调用 %d → %d 次，耗时 %.1f → %.1f 秒",
+                        first.get("firstLlmCalls").getAsInt(),calls,first.get("firstElapsedMs").getAsDouble()/1000,elapsed/1000.0);
+                skills.recordUse(task.packageName,id,elapsed,calls,task.completed && task.skillRunner.state()!=com.silentauto.shell.ext.skill.SkillRunner.State.ABANDONED);
+            }
+        } catch (Exception e) { logs.task(task.taskId,"skill statistics unavailable: "+e.getMessage()); }
+        task.progress.metrics(id,sources,comparison);
+        if (!comparison.isEmpty()) logs.task(task.taskId,comparison);
     }
 
     private void awaitAdmission(TaskState task) throws Exception {

@@ -13,6 +13,7 @@ public final class TrajectoryRecorder implements StepListener {
     private final ConcurrentHashMap<String,Session> sessions=new ConcurrentHashMap<>();
     private static final class Session {
         final JsonObject root=new JsonObject(); final JsonArray steps=new JsonArray();
+        final long started=System.nanoTime();
         UiSnapshot before; ScreenFingerprint fingerprint; JsonObject pending;
         Session(String id,String goal){ root.addProperty("taskId",id);root.addProperty("goal",goal);root.addProperty("packageName","");root.addProperty("handedOff",false);root.add("steps",steps); }
     }
@@ -41,6 +42,9 @@ public final class TrajectoryRecorder implements StepListener {
                     if(target==null && result.focusResult.targetIndex>0){indexed.action="tap_target";indexed.targetIndex=result.focusResult.targetIndex;target=s.before.target(indexed);}}
             }
             record.add("target",target==null?JsonNull.INSTANCE:target);
+            record.addProperty("elapsedMs",(System.nanoTime()-s.started)/1_000_000);
+            String stepText=action.reason==null?"":action.reason.replaceAll("\\s+"," ").trim();
+            record.addProperty("stepText",stepText.codePointCount(0,stepText.length())<=20?stepText:stepText.substring(0,stepText.offsetByCodePoints(0,20)));
             record.addProperty("source",action.source);record.addProperty("reason",action.reason);record.addProperty("uiChanged",false);
             s.steps.add(record);s.pending=record;
         }
