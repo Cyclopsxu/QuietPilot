@@ -48,6 +48,7 @@ public final class AutomationEngine {
     private final List<ActionSource> sources = new ArrayList<>();
     private final com.silentauto.shell.ext.guard.TaskScheduler scheduler = new com.silentauto.shell.ext.guard.TaskScheduler();
     private final com.silentauto.shell.ext.guard.ForegroundWatcher foreground = new com.silentauto.shell.ext.guard.ForegroundWatcher();
+    private final com.silentauto.shell.ext.skill.TrajectoryRecorder recorder = new com.silentauto.shell.ext.skill.TrajectoryRecorder();
     private UiBridge ui;
     private PaddleOcrEngine ocr;
 
@@ -55,6 +56,7 @@ public final class AutomationEngine {
         this.baseConfig = config;
         this.logs = logs;
         this.appCatalog = new AppCatalog(logs);
+        listeners.add(recorder);
     }
 
     synchronized String startTask(TaskRequest request) {
@@ -67,6 +69,7 @@ public final class AutomationEngine {
         stopTask(taskId);
         TaskState task = new TaskState(taskId, request.goal, logs);
         tasks.put(taskId, task);
+        recorder.prepare(taskId, request.goal);
         task.progress.publish();
         task.future = executor.submit(() -> runTask(task, request));
         return taskId;
@@ -93,6 +96,7 @@ public final class AutomationEngine {
         }
         releaseTask(task);
         scheduler.release(task);
+        recorder.snapshotOutcome(taskId, task.progress.outcome());
         logs.task(taskId, "automation stopped");
     }
 
@@ -241,6 +245,9 @@ public final class AutomationEngine {
                 action = applyAutoCorrections(task, action);
                 task.progress.action(action.reason, action.source);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason) + " source=" + action.source);
+                if ("request_user".equals(action.action) || "done".equals(action.action)) {
+                    for (StepListener listener : listeners) listener.afterAction(ctx, step, action, new StepResult(null, null), dump);
+                }
                 if ("request_user".equals(action.action)) {
                     if (!HandoffManager.valid(action.kind, action.message, action.boundary)) {
                         task.lastAction = "handoff_failed";
@@ -258,6 +265,7 @@ public final class AutomationEngine {
                     }
                     HandoffManager handoff = new HandoffManager();
                     task.handoff = handoff;
+                    recorder.handedOff(task.taskId);
                     task.progress.protectedScreen(protectedScreen);
                     transition(task, TaskStatus.WAITING_USER, protectedScreen
                             ? "该页面受系统保护，请在 " + task.appName + " 中完成。" + action.message
@@ -307,8 +315,9 @@ public final class AutomationEngine {
                     }
                     continue;
                 }
-                StepResult result = actionExecutor.execute(ctx, task, action);
-                for (StepListener listener : listeners) listener.afterAction(ctx, step, action, result, dump);
+                StepResult result = null;
+                try { result = actionExecutor.execute(ctx, task, action); }
+                finally { for (StepListener listener : listeners) listener.afterAction(ctx, step, action, result, dump); }
                 rememberAction(task, action, result.clickResult, result.focusResult);
                 sleep(task, 900);
             }
@@ -335,9 +344,11 @@ public final class AutomationEngine {
         } finally {
             if (ctx != null) {
                 for (StepListener listener : listeners) {
-                    listener.onTaskEnd(ctx, task.progress.outcome());
+                    try { listener.onTaskEnd(ctx, task.progress.outcome()); }
+                    catch (Throwable recordingError) { logs.error(task.taskId, "task listener failed", recordingError); }
                 }
             }
+            if (ctx == null) recorder.finish(task.taskId, task.progress.outcome());
             task.ai = null;
             task.verifierAi = null;
             releaseTask(task);
