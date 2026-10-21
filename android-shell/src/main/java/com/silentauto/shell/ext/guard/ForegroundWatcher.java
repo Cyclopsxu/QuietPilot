@@ -9,9 +9,10 @@ import java.util.regex.Pattern;
 
 public final class ForegroundWatcher {
     private static final Pattern DISPLAY = Pattern.compile("^\\s*Display #([0-9]+).*");
-    private static final Pattern RESUMED = Pattern.compile("(?:topResumedActivity|mResumedActivity|ResumedActivity).*?\\s([A-Za-z0-9_.]+)/");
+    private static final Pattern RESUMED = Pattern.compile("(?:topResumedActivity|mResumedActivity|ResumedActivity).*?\\s([A-Za-z0-9_.]+)/([A-Za-z0-9_.$]+)");
 
-    public String foregroundPackage() throws Exception {
+    public String foregroundPackage() throws Exception { return foregroundActivity().split("/")[0]; }
+    public String foregroundActivity() throws Exception {
         // ActivityManager exposes display sections on Android 10+, without occupying UiAutomation.
         Process process = new ProcessBuilder("dumpsys", "activity", "activities").redirectErrorStream(true).start();
         boolean main = false;
@@ -23,7 +24,7 @@ public final class ForegroundWatcher {
                 if (display.matches()) main = "0".equals(display.group(1));
                 if (!main) continue;
                 Matcher resumed = RESUMED.matcher(line);
-                if (resumed.find() && result.isEmpty()) result = resumed.group(1);
+                if (resumed.find() && result.isEmpty()) result = resumed.group(1) + "/" + resumed.group(2);
             }
         } finally {
             if (!process.waitFor(2, TimeUnit.SECONDS)) process.destroy();

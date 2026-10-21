@@ -650,6 +650,8 @@ public final class UiBridge {
 
     private Map<String, Object> commonNodeMap(AccessibilityNodeInfo node, Rect rect, Target target, InputTarget input) {
         Map<String, Object> out = object();
+        out.put("package", text(node.getPackageName()));
+        out.put("password", node.isPassword());
         out.put("class", text(node.getClassName()));
         out.put("label", label(node));
         out.put("text", text(node.getText()));

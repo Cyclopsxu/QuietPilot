@@ -40,6 +40,11 @@ final class AiConfigScreen {
             inputs[i][1] = field(card, "API Key", values[i].apiKey, true);
             inputs[i][2] = field(card, "Model ID", values[i].model, false);
         }
+        android.widget.CheckBox privacy = new android.widget.CheckBox(activity);
+        privacy.setText("不读取屏幕");
+        privacy.setChecked(com.silentauto.controller.ext.context.ScreenPrivacy.disabled(activity));
+        privacy.setOnCheckedChangeListener((button, checked) -> com.silentauto.controller.ext.context.ScreenPrivacy.save(activity,checked));
+        card.addView(privacy);
         TextView status = new TextView(activity); card.addView(status);
         Button save = new Button(activity); save.setText("保存三组配置"); card.addView(save);
         save.setOnClickListener(v -> {

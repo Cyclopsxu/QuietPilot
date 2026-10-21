@@ -50,6 +50,7 @@ public final class AutomationEngine {
     private final com.silentauto.shell.ext.guard.ForegroundWatcher foreground = new com.silentauto.shell.ext.guard.ForegroundWatcher();
     private final com.silentauto.shell.ext.skill.TrajectoryRecorder recorder = new com.silentauto.shell.ext.skill.TrajectoryRecorder();
     private final com.silentauto.shell.ext.skill.SkillStore skills = new com.silentauto.shell.ext.skill.SkillStore();
+    private com.silentauto.shell.ext.context.ScreenContextReader contexts;
     private UiBridge ui;
     private PaddleOcrEngine ocr;
 
@@ -179,6 +180,20 @@ public final class AutomationEngine {
         String value = getUi().dump(displayId, width, height, mode);
         return JsonParser.parseString(value).getAsJsonObject();
     }
+
+    private synchronized com.silentauto.shell.ext.context.ScreenContextReader contexts() {
+        if (contexts == null) contexts = new com.silentauto.shell.ext.context.ScreenContextReader(getUi(), bitmap -> {
+            List<String> texts = new ArrayList<>();
+            synchronized (this) { for (PaddleOcrResult item : getOcrEngine().recognize(bitmap)) texts.add(item.getText()); }
+            return texts;
+        });
+        return contexts;
+    }
+    JsonObject captureContext() throws Exception {
+        DisplaySpec display = DisplaySpec.current(logs); return contexts().capture(display.width,display.height);
+    }
+    void setContextReading(boolean enabled) throws Exception { contexts().reading(enabled); }
+    void discardContext(String id) { contexts().discard(id); }
 
     private void runTask(TaskState task, TaskRequest request) {
         Config config = baseConfig.withOverrides(request.apiKey, request.apiBase, request.model).withProfiles(request.models);
