@@ -98,7 +98,7 @@ public final class ResultVerifier {
                     scope=handoff_ready 时必须看到用户已成功处理或可安全继续；验证码/密码/确认的下一中间页不能通过。
                     只输出 JSON: {"verified":true/false,"evidence":"界面上看到的具体证据","missing":"如果没通过，缺什么"}
                     """, observation.toString(), frame.dataUrl());
-            JsonObject answer = JsonParser.parseString(raw).getAsJsonObject();
+            JsonObject answer = parseAnswer(raw);
             boolean verified = answer.has("verified") && answer.get("verified").isJsonPrimitive()
                     && answer.getAsJsonPrimitive("verified").isBoolean() && answer.get("verified").getAsBoolean();
             String evidence = text(answer, "evidence");
@@ -121,6 +121,18 @@ public final class ResultVerifier {
         }
         result.frame = frame;
         return result;
+    }
+
+    static JsonObject parseAnswer(String raw) {
+        String json = raw.trim();
+        int newline = json.indexOf('\n');
+        if (newline >= 0 && json.endsWith("```")) {
+            String header = json.substring(0, newline).trim();
+            if ("```".equals(header) || "```json".equalsIgnoreCase(header)) {
+                json = json.substring(newline + 1, json.length() - 3).trim();
+            }
+        }
+        return JsonParser.parseString(json).getAsJsonObject();
     }
 
     private static int size(JsonObject object, String key) {

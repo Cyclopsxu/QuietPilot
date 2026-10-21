@@ -13,7 +13,7 @@ public final class VoiceIntake {
         if (audio.isEmpty() || audio.length()>2_000_000 || Base64.getDecoder().decode(audio).length<44) throw new IllegalArgumentException("Invalid or oversized recording");
         JsonArray parts=new JsonArray();
         JsonObject sound=new JsonObject();sound.addProperty("type","input_audio");
-        JsonObject data=new JsonObject();data.addProperty("data",audio);data.addProperty("format",format);sound.add("input_audio",data);parts.add(sound);
+        JsonObject data=new JsonObject();data.addProperty("data","data:audio/"+("mp3".equals(format)?"mpeg":"wav")+";base64,"+audio);data.addProperty("format",format);sound.add("input_audio",data);parts.add(sound);
         String path=UiSnapshot.text(context,"screenshotPath");
         if(!path.isEmpty()){
             JsonObject image=new JsonObject();image.addProperty("type","image_url");JsonObject url=new JsonObject();

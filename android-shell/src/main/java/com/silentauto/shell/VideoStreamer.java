@@ -1,3 +1,4 @@
+// Modified by Codex for ShadowAuto: retry vendor encoders with basic AVC parameters. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.media.MediaCodec;
@@ -45,31 +46,38 @@ final class VideoStreamer implements Runnable {
         Exception last = null;
         int[][] candidates = candidates(preferredWidth, preferredHeight);
         for (int[] candidate : candidates) {
-            try {
-                return prepareOne(candidate[0], candidate[1]);
-            } catch (Exception e) {
-                last = e;
+            for (boolean basic : new boolean[]{false, true}) {
+                try {
+                    Prepared prepared = prepareOne(candidate[0], candidate[1], basic);
+                    if (basic) logs.info(taskId, "video encoder using basic AVC configuration");
+                    return prepared;
+                } catch (Exception e) {
+                    last = e;
+                    logs.info(taskId, "video encoder rejected " + candidate[0] + "x" + candidate[1] + " basic=" + basic + ": " + e);
+                }
             }
         }
         throw last == null ? new IllegalStateException("No video encoder size available") : last;
     }
 
-    private Prepared prepareOne(int width, int height) throws Exception {
+    private Prepared prepareOne(int width, int height, boolean basic) throws Exception {
         MediaCodec codec = MediaCodec.createEncoderByType(MIME);
         MediaFormat format = MediaFormat.createVideoFormat(MIME, width, height);
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
         format.setInteger(MediaFormat.KEY_BIT_RATE, bitRateFor(width, height));
-        format.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR);
         format.setInteger(MediaFormat.KEY_FRAME_RATE, FRAME_RATE);
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, I_FRAME_INTERVAL_SECONDS);
-        format.setLong(MediaFormat.KEY_REPEAT_PREVIOUS_FRAME_AFTER, REPEAT_PREVIOUS_FRAME_AFTER_US);
-        format.setInteger(MediaFormat.KEY_PRIORITY, 0);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            format.setInteger(MediaFormat.KEY_MAX_B_FRAMES, 0);
-            format.setFloat(MediaFormat.KEY_MAX_FPS_TO_ENCODER, FRAME_RATE);
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            format.setInteger(MediaFormat.KEY_LOW_LATENCY, 1);
+        if (!basic) {
+            format.setInteger(MediaFormat.KEY_BITRATE_MODE, MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR);
+            format.setLong(MediaFormat.KEY_REPEAT_PREVIOUS_FRAME_AFTER, REPEAT_PREVIOUS_FRAME_AFTER_US);
+            format.setInteger(MediaFormat.KEY_PRIORITY, 0);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                format.setInteger(MediaFormat.KEY_MAX_B_FRAMES, 0);
+                format.setFloat(MediaFormat.KEY_MAX_FPS_TO_ENCODER, FRAME_RATE);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                format.setInteger(MediaFormat.KEY_LOW_LATENCY, 1);
+            }
         }
         try {
             codec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
