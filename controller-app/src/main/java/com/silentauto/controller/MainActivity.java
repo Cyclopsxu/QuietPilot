@@ -202,6 +202,12 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
             }
         });
 
+        android.widget.LinearLayout tabs = new android.widget.LinearLayout(this);
+        String[] tabNames = {"执行","历史","技能"};
+        for (int i=0;i<tabNames.length;i++) { final int index=i; Button tab=new Button(this);tab.setText(tabNames[i]);tab.setEnabled(i!=0);
+            tab.setOnClickListener(v -> startActivity(new Intent(this,com.silentauto.controller.ext.history.TaskCenterActivity.class).putExtra("tab",index==1?"history":"skills")));
+            tabs.addView(tab,new android.widget.LinearLayout.LayoutParams(0,-2,1)); }
+        ((android.widget.LinearLayout)findViewById(R.id.mainPage)).addView(tabs,1);
         stopAll.setOnClickListener(v -> confirmStopAll());
         settings.setOnClickListener(v -> openConfig(true));
         help.setOnClickListener(v -> startActivity(new Intent(this, HelpActivity.class)));

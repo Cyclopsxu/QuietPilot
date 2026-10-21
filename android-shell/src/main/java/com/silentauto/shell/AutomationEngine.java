@@ -53,6 +53,7 @@ public final class AutomationEngine {
     private com.silentauto.shell.ext.context.ScreenContextReader contexts;
     private final Map<String, TaskRequest> voicePending = new LinkedHashMap<>();
     private final java.util.concurrent.ScheduledExecutorService voiceTimers = Executors.newSingleThreadScheduledExecutor();
+    private final com.silentauto.shell.ext.history.TaskArchive history = new com.silentauto.shell.ext.history.TaskArchive();
     private UiBridge ui;
     private PaddleOcrEngine ocr;
 
@@ -102,6 +103,7 @@ public final class AutomationEngine {
         releaseTask(task);
         scheduler.release(task);
         recorder.snapshotOutcome(taskId, task.progress.outcome());
+        archive(task);
         logs.task(taskId, "task metrics " + task.progress.json());
         logs.task(taskId, "automation stopped");
     }
@@ -447,6 +449,7 @@ public final class AutomationEngine {
                 }
             }
             finishMetrics(task, recorded);
+            archive(task);
             task.ai = null;
             task.verifierAi = null;
             releaseTask(task);
@@ -457,6 +460,29 @@ public final class AutomationEngine {
             }
         }
     }
+
+    private void archive(TaskState task) {
+        try { history.save(task.progress.json()); }
+        catch (Exception e) { logs.task(task.taskId,"history save failed: "+e.getMessage()); }
+    }
+    JsonArray listHistory() throws Exception { return history.list(); }
+    synchronized JsonObject getTask(String id) throws Exception {
+        TaskState task=tasks.get(id);JsonObject detail=history.get(id);
+        if (task!=null && (!task.progress.status().terminal() || detail==null || !detail.has("createdAtMs") || detail.get("createdAtMs").getAsLong()!=task.progress.json().get("createdAtMs").getAsLong())) {
+            detail=task.progress.json();JsonObject trace=recorder.trajectory(id);
+            detail.add("steps",trace==null?history.steps(id):com.silentauto.shell.ext.skill.UiSnapshot.array(trace,"steps"));
+        }
+        if(detail==null)throw new IllegalArgumentException("Task not found");
+        return history.withEvidence(id,detail);
+    }
+    JsonArray listSkills() throws Exception {
+        JsonArray result=skills.list(false);List<AppCatalog.AppInfo> apps=appCatalog.installedApps();
+        for(JsonElement value:result){JsonObject skill=value.getAsJsonObject();String pkg=JsonRpc.text(skill,"packageName"),name=pkg;
+            for(AppCatalog.AppInfo app:apps)if(pkg.equals(app.packageName)){name=app.name;break;}skill.addProperty("appName",name);}
+        return result;
+    }
+    void setSkillStatus(String pkg,String id,String status) throws Exception { skills.status(pkg,id,status); }
+    void deleteSkill(String pkg,String id) throws Exception { skills.delete(pkg,id); }
 
     private void finishMetrics(TaskState task, JsonObject recorded) {
         JsonObject sources = new JsonObject();

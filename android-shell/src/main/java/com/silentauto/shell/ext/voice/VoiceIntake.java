@@ -17,7 +17,7 @@ public final class VoiceIntake {
         String path=UiSnapshot.text(context,"screenshotPath");
         if(!path.isEmpty()){
             JsonObject image=new JsonObject();image.addProperty("type","image_url");JsonObject url=new JsonObject();
-            url.addProperty("url","data:image/png;base64,"+Base64.getEncoder().encodeToString(Files.readAllBytes(Path.of(path))));image.add("image_url",url);parts.add(image);
+            url.addProperty("url","data:image/png;base64,"+Base64.getEncoder().encodeToString(Files.readAllBytes(new java.io.File(path).toPath())));image.add("image_url",url);parts.add(image);
         }
         JsonArray names=new JsonArray();for(JsonElement item:skills)names.add(UiSnapshot.text(item.getAsJsonObject(),"name"));
         JsonObject text=new JsonObject();text.addProperty("type","text");text.addProperty("text","主屏 App："+UiSnapshot.text(context,"foregroundPackage")

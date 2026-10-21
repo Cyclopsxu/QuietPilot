@@ -30,6 +30,7 @@ public final class OverlayRpc implements AutoCloseable {
         if(!closed)try{Thread.sleep(1000);}catch(InterruptedException e){return;}
     }}
     public JSONObject request(String method,JSONObject params)throws Exception{
+        for(int i=0;i<60;i++){synchronized(this){if(writer!=null)break;if(closed)throw new IOException("连接已关闭");}Thread.sleep(50);}
         int id=ids.getAndIncrement();CompletableFuture<JSONObject> future=new CompletableFuture<>();waiting.put(id,future);
         try{ synchronized(this){if(writer==null)throw new IOException("后台未连接，请先启动 shell");write(method,params,id);}return future.get(110,TimeUnit.SECONDS);}
         finally{waiting.remove(id);}

@@ -66,6 +66,13 @@ public final class SkillStore {
         write(skill); return skill;
     }
 
+    public synchronized void status(String pkg,String id,String status) throws IOException {
+        if (!"active".equals(status) && !"disabled".equals(status)) throw new IllegalArgumentException("status must be active or disabled");
+        JsonObject skill=get(pkg,id);if(skill==null)throw new IllegalArgumentException("Skill not found");
+        skill.addProperty("status",status);write(skill);
+    }
+    public synchronized void delete(String pkg,String id) throws IOException { Files.deleteIfExists(file(pkg,id).toPath()); }
+
     public synchronized void abandoned(String pkg, String id) throws IOException {
         JsonObject skill = get(pkg, id);
         if (skill == null) return;

@@ -44,7 +44,7 @@ public final class SkillCompiler {
                 String following = UiSnapshot.text(source.get(i + 1).getAsJsonObject().getAsJsonObject("action"), "action");
                 if ("back".equals(following) || "press_back".equals(following)) { i++; continue; }
             } String action = UiSnapshot.text(step.getAsJsonObject("action"), "action");
-            if (Set.of("wait", "get_ui_layout", "screenshot", "ocr", "done", "finish", "request_user").contains(action)) continue;
+            if (Arrays.asList("wait", "get_ui_layout", "screenshot", "ocr", "done", "finish", "request_user").contains(action)) continue;
             if ("back".equals(action) || "press_back".equals(action)) {
                 continue;
             }
@@ -84,14 +84,14 @@ public final class SkillCompiler {
             if ("tap".equals(before)) before = "tap_target";
             if (isText(before)) before = "input_text";
             if (isText(type)) type = "input_text";
-            if (!Set.of("tap_target", "focus_input", "input_text", "long_press", "scroll", "back", "key", "submit_search", "clear_text").contains(type)
+            if (!Arrays.asList("tap_target", "focus_input", "input_text", "long_press", "scroll", "back", "key", "submit_search", "clear_text").contains(type)
                     || !type.equals(before)) throw new IllegalArgumentException("Compiler changed action at step " + i);
             if (!step.has("expect") || !step.get("expect").isJsonObject()) throw new IllegalArgumentException("Missing fingerprint");
             if (!substitute(UiSnapshot.text(step, "text"), examples).equals(isText(type) ? UiSnapshot.text(action, "text") : ""))
                 throw new IllegalArgumentException("Input consistency check failed at step " + i);
-            if (Set.of("tap_target", "focus_input", "long_press").contains(type)
+            if (Arrays.asList("tap_target", "focus_input", "long_press").contains(type)
                     && (!step.has("target") || !step.get("target").isJsonObject())) throw new IllegalArgumentException("Unlocatable skill target");
-            for (String key : List.of("x","y","startX","startY","endX","endY","targetIndex","inputIndex")) step.remove(key);
+            for (String key : Arrays.asList("x","y","startX","startY","endX","endY","targetIndex","inputIndex")) step.remove(key);
             step.addProperty("action", type);
         }
     }

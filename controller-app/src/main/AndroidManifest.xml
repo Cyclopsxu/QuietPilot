@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ext.history.TaskCenterActivity" android:exported="false" />
         <activity android:name=".ext.overlay.OverlayPermissionActivity" android:exported="false" />
         <service android:name=".ext.overlay.FloatingBallService" android:exported="false" android:foregroundServiceType="microphone|dataSync" />
         <receiver android:name=".MainActivity$HandoffCancelReceiver" android:exported="false" />
