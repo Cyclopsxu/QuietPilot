@@ -10,7 +10,7 @@ public final class TaskProgress {
     public final String taskId, goal;
     private final LogHub logs;
     private final long started = SystemClock.elapsedRealtime();
-    private long ended;
+    private long ended, waitingSinceMs;
     private boolean protectedScreen;
     private TaskStatus status = TaskStatus.QUEUED;
     private String appName = "";
@@ -48,6 +48,7 @@ public final class TaskProgress {
     public synchronized void transition(TaskStatus next, String detail, String proof, String targetBoundary) {
         if (status.terminal()) return;
         if (!allowed(status, next)) throw new IllegalStateException("Invalid status transition: " + status + " -> " + next);
+        if (next == TaskStatus.WAITING_USER && status != next) waitingSinceMs = System.currentTimeMillis();
         status = next;
         message = detail == null ? "" : detail;
         evidence = proof == null ? "" : proof;
@@ -70,6 +71,7 @@ public final class TaskProgress {
         JsonObject counts = new JsonObject();
         for (Map.Entry<String,Integer> entry : calls.entrySet()) counts.addProperty(entry.getKey(), entry.getValue());
         o.add("llmCalls", counts);
+        o.addProperty("waitingSinceMs", waitingSinceMs);
         o.addProperty("transcript", transcript); o.addProperty("intakeElapsedMs", intakeElapsedMs);
         o.addProperty("pendingConfirmation", pendingConfirmation && !status.terminal()); o.addProperty("requiresConfirmation", requiresConfirmation);
         o.addProperty("confirmDeadlineMs", confirmDeadlineMs);

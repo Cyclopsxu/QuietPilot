@@ -97,10 +97,10 @@ public final class FloatingBallService extends Service {
         String state=value.optString("status");if((old==null||!state.equals(old.optString("status")))&&(state.equals("VERIFIED")||state.equals("FAILED"))){flash=state.equals("VERIFIED")?"done":"failed";flashUntil=SystemClock.elapsedRealtime()+5000;}
         if(ball!=null)ball.invalidate();if(capsule!=null)capsule.update(tasks.values());
     }
-    private JSONObject waiting(){for(JSONObject task:tasks.values())if("WAITING_USER".equals(task.optString("status")))return task;return null;}
+    private JSONObject waiting(){JSONObject first=null;for(JSONObject task:tasks.values())if("WAITING_USER".equals(task.optString("status"))&&(first==null||task.optLong("waitingSinceMs",Long.MAX_VALUE)<first.optLong("waitingSinceMs",Long.MAX_VALUE)))first=task;return first;}
     private int running(){int count=0;for(JSONObject task:tasks.values())if(!Arrays.asList("VERIFIED","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(task.optString("status")))count++;return count;}
     private void openTask(){openTask(waiting());}
-    private void openTask(JSONObject target){if(!OverlayPermissionActivity.ready(this)){startActivity(new Intent(this,OverlayPermissionActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));return;}Intent open=new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);if(target!=null){open.putExtra("handoffTaskId",target.optString("taskId"));if("WAITING_USER".equals(target.optString("status")))open.putExtra("handoffStatus",target.toString());}startActivity(open);}
+    private void openTask(JSONObject target){if(capsule!=null)capsule.compact();if(!OverlayPermissionActivity.ready(this)){startActivity(new Intent(this,OverlayPermissionActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));return;}Intent open=new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);if(target!=null){open.putExtra("handoffTaskId",target.optString("taskId"));if("WAITING_USER".equals(target.optString("status")))open.putExtra("handoffStatus",target.toString());}startActivity(open);}
     @Override public void onDestroy(){destroyed=true;if(down)finishGesture(true);main.removeCallbacksAndMessages(null);if(rpc!=null)rpc.close();if(capsule!=null)capsule.close();if(windows!=null&&ball!=null)windows.removeView(ball);io.shutdown();super.onDestroy();}
     @Override public IBinder onBind(Intent intent){return null;}
     private final class Ball extends View {

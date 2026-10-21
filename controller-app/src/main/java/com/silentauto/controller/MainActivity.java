@@ -352,6 +352,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                     pendingHandoffs.remove(task.taskId());
                     main.post(() -> getSystemService(NotificationManager.class).cancel(currentTask.taskId(), 23));
                 }
+                synchronized (tasks) { for (AutomationTaskView page : tasks) page.otherWaiting(Math.max(0,pendingHandoffs.size()-(pendingHandoffs.containsKey(page.taskId())?1:0))); }
                 if (java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status)) task.setRunning(false);
             } else if ("handoff".equals(type)) {
                 // Compatibility event; v2 notifications are driven by the richer status event.
@@ -432,6 +433,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                         for (int i = 0; i < tasks.size(); i++) if (tasks.get(i).taskId().equals(taskId)) pager.setCurrentItem(i, false);
                     }
                 }
+                task.otherWaiting(Math.max(0,pendingHandoffs.size()-(pendingHandoffs.containsKey(taskId)?1:0)));
                 if (status != null) task.showHandoff(status);
                 io.execute(() -> { try { rpcClient.send("listTasks", new JSONObject()); } catch (Exception e) { reportRpcError(taskById(taskId), e); } });
             } catch (Exception e) { reportRpcError(taskById(taskId), e); }

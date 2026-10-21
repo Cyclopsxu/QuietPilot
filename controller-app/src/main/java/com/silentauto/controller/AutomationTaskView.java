@@ -46,6 +46,7 @@ final class AutomationTaskView {
     private VideoConfig videoConfig;
     private JSONObject handoffStatus;
     private TextView handoffHint;
+    private int otherWaiting;
     private Button openOnMain;
 
     AutomationTaskView(Activity activity, Handler main, String taskId, Listener listener) {
@@ -175,10 +176,15 @@ final class AutomationTaskView {
         });
     }
 
+    void otherWaiting(int count) {
+        otherWaiting = Math.max(0,count);
+        if (handoffHint != null && handoffStatus != null) handoffHint.setText(handoffMessage(handoffStatus));
+    }
     private String handoffMessage(JSONObject status) {
-        return status.optBoolean("protectedScreen")
+        String prefix = otherWaiting > 0 ? "还有 " + otherWaiting + " 个任务等你处理\n" : "";
+        return prefix + ( status.optBoolean("protectedScreen")
                 ? "该页面受系统保护，请在 " + status.optString("appName", status.optString("app")) + " 中完成"
-                : "处理完成后会自动继续\n" + status.optString("message");
+                : "处理完成后会自动继续\n" + status.optString("message"));
     }
 
     void showHandoff(JSONObject status) {
@@ -188,7 +194,7 @@ final class AutomationTaskView {
             android.widget.LinearLayout content = new android.widget.LinearLayout(activity);
             content.setOrientation(android.widget.LinearLayout.VERTICAL);
             int padding = (int) (16 * activity.getResources().getDisplayMetrics().density);
-            content.setPadding(padding, padding, padding, padding);
+            content.setPadding(padding, padding + (activity.getSharedPreferences("overlay",0).getBoolean("enabled",false) ? padding * 3 : 0), padding, padding);
             handoffHint = new TextView(activity); handoffHint.setText(handoffMessage(status));
             handoffHint.setTextSize(18); content.addView(handoffHint);
             FrameLayout frame = new FrameLayout(activity);

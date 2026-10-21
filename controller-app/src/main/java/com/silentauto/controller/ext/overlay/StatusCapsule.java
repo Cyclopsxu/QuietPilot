@@ -26,18 +26,20 @@ public final class StatusCapsule implements StatusSurface {
     private int dp(float value){return Math.round(value*context.getResources().getDisplayMetrics().density);}
     private static boolean terminal(String state){return Arrays.asList("VERIFIED","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(state);}
     @Override public void update(Collection<JSONObject> values){
-        if(closed)return;JSONObject chosen=null,finished=null;
-        for(JSONObject value:values){String id=value.optString("taskId"),state=value.optString("status");String old=previous.put(id,state);
+        if(closed)return;JSONObject chosen=null,finished=null;boolean handoffArrived=false;
+        for(JSONObject value:values){String id=value.optString("taskId"),state=value.optString("status");String old=previous.put(id,state);if("WAITING_USER".equals(state)&&!state.equals(old))handoffArrived=true;
             if(terminal(state)){if(old!=null&&!terminal(old)){finished=value;terminalUntil=SystemClock.elapsedRealtime()+5000;}continue;}
-            if(chosen==null||("WAITING_USER".equals(state)&&!"WAITING_USER".equals(chosen.optString("status"))))chosen=value;
+            if(chosen==null||priority(value)<priority(chosen)||(priority(value)==0&&priority(chosen)==0&&value.optLong("waitingSinceMs",Long.MAX_VALUE)<chosen.optLong("waitingSinceMs",Long.MAX_VALUE)))chosen=value;
         }
         if(chosen==null){if(finished!=null)chosen=finished;else if(task!=null&&terminal(task.optString("status"))&&SystemClock.elapsedRealtime()<terminalUntil)chosen=task;}
-        boolean changed=chosen!=null&&(task==null||!chosen.optString("taskId").equals(task.optString("taskId"))||!chosen.optString("status").equals(task.optString("status"))||chosen.optBoolean("pendingConfirmation")!=task.optBoolean("pendingConfirmation"));
+        boolean changed=chosen!=null&&(handoffArrived||task==null||!chosen.optString("taskId").equals(task.optString("taskId"))||!chosen.optString("status").equals(task.optString("status"))||chosen.optBoolean("pendingConfirmation")!=task.optBoolean("pendingConfirmation"));
         task=chosen;
         if(changed){expanded=true;main.removeCallbacks(collapse);if(!chosen.optBoolean("pendingConfirmation"))main.postDelayed(collapse,3000);}
         render();
         if(finished!=null)main.postDelayed(()->{if(task!=null&&terminal(task.optString("status"))&&SystemClock.elapsedRealtime()>=terminalUntil){task=null;render();}},5100);
     }
+    private static int priority(JSONObject task){if("WAITING_USER".equals(task.optString("status")))return 0;return task.optBoolean("pendingConfirmation")?1:2;}
+    @Override public void compact(){expanded=false;render();}
     private void render(){
         if(closed)return;
         if(task==null){if(attached){windows.removeView(surface);attached=false;}return;}
