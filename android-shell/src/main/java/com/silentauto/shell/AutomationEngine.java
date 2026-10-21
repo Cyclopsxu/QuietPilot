@@ -133,6 +133,34 @@ public final class AutomationEngine {
         task.handoff.resume("open_main");
     }
 
+    synchronized JsonObject takeResultOnMain(String taskId) {
+        TaskState task = tasks.get(taskId);
+        if (task == null) throw new IllegalStateException("Task not found");
+        JsonObject result = new JsonObject();
+        if (task.resultTransferred) { result.addProperty("moved",true); return result; }
+        if (task.display == null || task.handoff == null || !task.progress.json().get("resultReady").getAsBoolean())
+            throw new IllegalStateException("Result is no longer waiting to be viewed");
+        com.silentauto.shell.ext.handoff.TaskDisplayTransfer transfer = new com.silentauto.shell.ext.handoff.TaskDisplayTransfer(
+                new com.silentauto.shell.ext.handoff.TaskDisplayTransfer.Host() {
+                    public String command(String... args) throws Exception { return com.silentauto.shell.ext.handoff.TaskDisplayTransfer.command(args); }
+                    public com.silentauto.shell.ext.skill.ScreenFingerprint page(int displayId) {
+                        return com.silentauto.shell.ext.skill.ScreenFingerprint.from(
+                                new com.silentauto.shell.ext.skill.UiSnapshot(getUi().dump(displayId,task.display.width,task.display.height,UiBridge.MODE_FULL)),task.packageName,task.display.height);
+                    }
+                    public String foreground() throws Exception { return foreground.foregroundPackage(); }
+                });
+        com.silentauto.shell.ext.handoff.TaskDisplayTransfer.Result moved = transfer.move(task.display.displayId,task.packageName);
+        result.addProperty("moved",moved.moved); result.addProperty("message",moved.message);
+        result.addProperty("androidTaskId",moved.taskId); result.addProperty("rootTaskId",moved.rootId);
+        logs.task(taskId,"result transfer moved="+moved.moved+" root="+moved.rootId+" task="+moved.taskId+": "+moved.message);
+        if (moved.moved) {
+            task.resultTransferred=true;
+            if(task.conflict!=null)task.conflict.close();
+            task.handoff.resume("done");
+        }
+        return result;
+    }
+
     synchronized void injectTouch(String taskId, String action, float x, float y) throws Exception {
         TaskState task = tasks.get(taskId);
         if (task == null || task.progress.status() != TaskStatus.WAITING_USER || task.display == null)
@@ -444,7 +472,7 @@ public final class AutomationEngine {
                             }
                             transition(task, TaskStatus.RUNNING, "查看结束，正在保存结果", verification.evidence, "");
                         }
-                        transition(task, TaskStatus.VERIFIED, "任务已验收", verification.evidence, "");
+                        transition(task, TaskStatus.VERIFIED, task.resultTransferred ? "当前页面已交给你在主屏继续" : "任务已验收", verification.evidence, "");
                         logs.task(task.taskId, "VERIFIED: " + verification.evidence);
                         logs.result(task.taskId, "verified", verification.evidence);
                         break;
@@ -493,6 +521,8 @@ public final class AutomationEngine {
             }
         } finally {
             if(task.conflict!=null)task.conflict.close();
+            // A transferred result no longer needs a virtual display while learning is saved.
+            if(task.resultTransferred)releaseTask(task);
             JsonObject recorded = recorder.trajectory(task.taskId);
             if (recorded != null) recorded.add("outcome", new com.google.gson.Gson().toJsonTree(task.progress.outcome()));
             if (ctx != null) {
@@ -510,8 +540,8 @@ public final class AutomationEngine {
                     JsonObject learned = new com.silentauto.shell.ext.skill.SkillCompiler(skills).compile(recorded,
                             task.ai::complete, metrics.get("elapsedMs").getAsLong(), calls);
                     if (learned != null) task.progress.learned(learned.get("name").getAsString());
-                } catch (Exception compileError) {
-                    logs.task(task.taskId, "skill compile skipped: " + compileError.getMessage());
+                } catch (Throwable compileError) {
+                    logs.task(task.taskId, "skill compile skipped: " + compileError);
                 }
             }
             task.ai = null;
@@ -1129,6 +1159,7 @@ public final class AutomationEngine {
         public volatile VideoStreamer videoStreamer;
         public volatile AiClient ai;
         public boolean completed;
+        public volatile boolean resultTransferred;
         public volatile HandoffManager handoff;
         public com.silentauto.shell.ext.handoff.TouchSession touch;
         public String resultStatus = "";

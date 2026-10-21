@@ -441,7 +441,15 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                     }
                 }
                 task.otherWaiting(Math.max(0,pendingHandoffs.size()-(pendingHandoffs.containsKey(taskId)?1:0)));
-                if (status != null) task.showHandoff(status);
+                if (status != null && status.optBoolean("resultReady")) {
+                    JSONObject resultStatus=status;AutomationTaskView resultTask=task;
+                    io.execute(() -> {
+                        try (com.silentauto.controller.ext.overlay.OverlayRpc transfer=new com.silentauto.controller.ext.overlay.OverlayRpc(ignored -> {})) {
+                            JSONObject moved=transfer.request("takeResultOnMain",new JSONObject().put("taskId",taskId)).getJSONObject("result");
+                            if(!moved.optBoolean("moved"))main.post(() -> {resultTask.showHandoff(resultStatus);android.widget.Toast.makeText(this,moved.optString("message","已保留预览"),android.widget.Toast.LENGTH_LONG).show();});
+                        } catch(Exception error) {main.post(() -> {resultTask.showHandoff(resultStatus);reportRpcError(resultTask,error);});}
+                    });
+                } else if (status != null) task.showHandoff(status);
                 io.execute(() -> { try { rpcClient.send("listTasks", new JSONObject()); } catch (Exception e) { reportRpcError(taskById(taskId), e); } });
             } catch (Exception e) { reportRpcError(taskById(taskId), e); }
         });

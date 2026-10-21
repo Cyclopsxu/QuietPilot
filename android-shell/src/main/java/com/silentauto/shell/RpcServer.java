@@ -108,6 +108,7 @@ final class RpcServer {
                 engine.openTaskOnMain(JsonRpc.text(params, "taskId"));
                 return JsonRpc.result(id, "opening");
             }
+            if ("takeResultOnMain".equals(method)) return JsonRpc.result(id,engine.takeResultOnMain(JsonRpc.text(params,"taskId")));
             if ("resumeTask".equals(method)) {
                 engine.resumeTask(JsonRpc.text(params, "taskId"), JsonRpc.text(params, "outcome"));
                 return JsonRpc.result(id, "resumed");
