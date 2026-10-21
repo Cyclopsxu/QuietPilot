@@ -75,6 +75,7 @@ public final class ActionExecutor {
                 logs.task(ctx.taskId, "delete key sent");
             }
         } else if ("clear_text".equals(action.action)) {
+            if(action.inputIndex>0){focusResult=focusInput(ctx.taskId,ctx.ui,ctx.input,ctx.displayId,ctx.width,ctx.height,action.inputIndex,"");if(focusResult==null)throw new IllegalStateException("Skill clear target disappeared");}
             clearText(ctx.taskId, ctx.ui, ctx.input, ctx.displayId);
         } else if ("back".equals(action.action)) {
             ctx.input.key(ctx.displayId, KeyEvent.KEYCODE_BACK);

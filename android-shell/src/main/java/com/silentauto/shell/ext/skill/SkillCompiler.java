@@ -40,14 +40,17 @@ public final class SkillCompiler {
         List<JsonObject> kept = new ArrayList<>();
         for (int i = 0; i < source.size(); i++) {
             JsonObject step = source.get(i).getAsJsonObject();
-            if (i + 1 < source.size()) {
-                String following = UiSnapshot.text(source.get(i + 1).getAsJsonObject().getAsJsonObject("action"), "action");
-                if ("back".equals(following) || "press_back".equals(following)) { i++; continue; }
-            } String action = UiSnapshot.text(step.getAsJsonObject("action"), "action");
-            if (Arrays.asList("wait", "get_ui_layout", "screenshot", "ocr", "done", "finish", "request_user").contains(action)) continue;
-            if ("back".equals(action) || "press_back".equals(action)) {
-                continue;
+            String action = UiSnapshot.text(step.getAsJsonObject("action"), "action");
+            if (i + 1 < source.size() && !isText(action)) {
+                JsonObject following=source.get(i+1).getAsJsonObject();
+                String next=UiSnapshot.text(following.getAsJsonObject("action"),"action");
+                if (("back".equals(next)||"press_back".equals(next)) && step.has("fingerprint") && following.has("fingerprintAfter")) {
+                    ScreenFingerprint before=ScreenFingerprint.parse(step.getAsJsonObject("fingerprint"));
+                    ScreenFingerprint after=ScreenFingerprint.parse(following.getAsJsonObject("fingerprintAfter"));
+                    if(before.similarity(after)==1 && before.title.equals(after.title)){i++;continue;}
+                }
             }
+            if (Arrays.asList("wait", "get_ui_layout", "screenshot", "ocr", "done", "finish", "request_user").contains(action)) continue;
             if (!UiSnapshot.bool(step, "uiChanged") && !isText(action)) continue;
             kept.add(step.deepCopy());
         }
@@ -55,6 +58,16 @@ public final class SkillCompiler {
     }
 
     public static boolean isText(String action) { return "text".equals(action) || "input_text".equals(action); }
+    public static JsonElement expand(JsonElement value, JsonObject args) {
+        if (value == null || value.isJsonNull()) return JsonNull.INSTANCE;
+        if (value.isJsonObject()) {
+            JsonObject out = new JsonObject(); for (String key : value.getAsJsonObject().keySet()) out.add(key, expand(value.getAsJsonObject().get(key), args)); return out;
+        }
+        if (value.isJsonArray()) { JsonArray out = new JsonArray(); for (JsonElement item : value.getAsJsonArray()) out.add(expand(item,args)); return out; }
+        if (value.getAsJsonPrimitive().isString()) return new JsonPrimitive(substitute(value.getAsString(),args));
+        return value.deepCopy();
+    }
+
     public static String substitute(String text, JsonObject args) {
         java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("\\{([A-Za-z][A-Za-z0-9_]*)\\}").matcher(text);
         StringBuffer result = new StringBuffer();
@@ -77,6 +90,8 @@ public final class SkillCompiler {
         }
         JsonArray steps = UiSnapshot.array(compiled, "steps");
         if (steps.isEmpty() || steps.size() != original.size()) throw new IllegalArgumentException("Compiler changed step count");
+        substitute(UiSnapshot.text(compiled,"evidence"),examples);
+        for(String key:examples.keySet())if(!steps.toString().contains("{"+key+"}"))throw new IllegalArgumentException("Unused skill parameter: "+key);
         for (int i = 0; i < steps.size(); i++) {
             JsonObject step = steps.get(i).getAsJsonObject(), record = original.get(i).getAsJsonObject();
             JsonObject action = record.getAsJsonObject("action"); String type = UiSnapshot.text(step, "action");
@@ -87,6 +102,15 @@ public final class SkillCompiler {
             if (!Arrays.asList("tap_target", "focus_input", "input_text", "long_press", "scroll", "back", "key", "submit_search", "clear_text").contains(type)
                     || !type.equals(before)) throw new IllegalArgumentException("Compiler changed action at step " + i);
             if (!step.has("expect") || !step.get("expect").isJsonObject()) throw new IllegalArgumentException("Missing fingerprint");
+            ScreenFingerprint restored=ScreenFingerprint.parse(expand(step.get("expect"),examples).getAsJsonObject());
+            ScreenFingerprint observed=ScreenFingerprint.parse(record.getAsJsonObject("fingerprint"));
+            if(restored.similarity(observed)!=1||!restored.title.equals(observed.title))throw new IllegalArgumentException("Compiler changed screen fingerprint");
+            JsonElement target=expand(step.get("target"),examples),originalTarget=record.has("target")?record.get("target"):JsonNull.INSTANCE;
+            if(!target.equals(originalTarget))throw new IllegalArgumentException("Compiler changed target features");
+            String required="scroll".equals(type)?"direction":"key".equals(type)?"key":"";
+            if(!required.isEmpty()&&!UiSnapshot.text(action,required).equals(UiSnapshot.text(step,required)))throw new IllegalArgumentException("Compiler changed "+required);
+            String numeric="scroll".equals(type)?"distance":"long_press".equals(type)?"durationMs":"";
+            if(!numeric.isEmpty()&&UiSnapshot.integer(action,numeric)>0&&UiSnapshot.integer(action,numeric)!=UiSnapshot.integer(step,numeric))throw new IllegalArgumentException("Compiler changed "+numeric);
             if (!substitute(UiSnapshot.text(step, "text"), examples).equals(isText(type) ? UiSnapshot.text(action, "text") : ""))
                 throw new IllegalArgumentException("Input consistency check failed at step " + i);
             if (Arrays.asList("tap_target", "focus_input", "long_press").contains(type)

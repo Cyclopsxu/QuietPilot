@@ -59,12 +59,16 @@ public final class SkillRunner implements ActionSource {
         action.key = UiSnapshot.text(recorded,"key");
         action.distance = Math.max(0, UiSnapshot.integer(recorded,"distance"));
         action.durationMs = Math.max(0, UiSnapshot.integer(recorded,"durationMs"));
-        boolean needsTarget = "tap_target".equals(type) || "focus_input".equals(type) || "long_press".equals(type) || SkillCompiler.isText(type);
+        boolean needsTarget = "tap_target".equals(type) || "focus_input".equals(type) || "long_press".equals(type) || SkillCompiler.isText(type) || "clear_text".equals(type);
         if (needsTarget) {
             JsonObject target = recorded.has("target") && recorded.get("target").isJsonObject() ? recorded.getAsJsonObject("target") : null;
-            JsonObject node = findTarget(current, target, SkillCompiler.isText(type) || "focus_input".equals(type));
+            JsonObject node = findTarget(current, target, SkillCompiler.isText(type) || "focus_input".equals(type) || "clear_text".equals(type));
+            if(node==null&&"focus_input".equals(type)){
+                node=findTarget(current,target,false);
+                if(node!=null&&UiSnapshot.integer(node,"inputIndex")<=0){action.action="tap_target";action.targetIndex=UiSnapshot.integer(node,"targetIndex");state=State.FOLLOWING;rescueSteps=0;cursor++;return action;}
+            }
             if (node == null) { return mismatch(); }
-            if (SkillCompiler.isText(type) || "focus_input".equals(type)) {
+            if (SkillCompiler.isText(type) || "focus_input".equals(type) || "clear_text".equals(type)) {
                 action.inputIndex = UiSnapshot.integer(node,"inputIndex");
                 if (action.inputIndex <= 0) { return mismatch(); }
             } else if ("long_press".equals(type)) {
@@ -78,15 +82,7 @@ public final class SkillRunner implements ActionSource {
         cursor++; return action;
     }
 
-    public static JsonElement expand(JsonElement value, JsonObject args) {
-        if (value == null || value.isJsonNull()) return JsonNull.INSTANCE;
-        if (value.isJsonObject()) {
-            JsonObject out = new JsonObject(); for (String key : value.getAsJsonObject().keySet()) out.add(key, expand(value.getAsJsonObject().get(key), args)); return out;
-        }
-        if (value.isJsonArray()) { JsonArray out = new JsonArray(); for (JsonElement item : value.getAsJsonArray()) out.add(expand(item,args)); return out; }
-        if (value.getAsJsonPrimitive().isString()) return new JsonPrimitive(SkillCompiler.substitute(value.getAsString(),args));
-        return value.deepCopy();
-    }
+    public static JsonElement expand(JsonElement value,JsonObject args){return SkillCompiler.expand(value,args);}
 
     public static JsonObject findTarget(UiSnapshot ui, JsonObject target, boolean input) {
         if (target == null) return null;
