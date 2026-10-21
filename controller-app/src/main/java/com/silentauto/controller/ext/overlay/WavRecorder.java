@@ -16,7 +16,9 @@ public final class WavRecorder {
         if(minimum<=0)throw new IllegalStateException("设备不支持 16kHz 录音");
         audio=new AudioRecord(MediaRecorder.AudioSource.MIC,16000,AudioFormat.CHANNEL_IN_MONO,AudioFormat.ENCODING_PCM_16BIT,Math.max(minimum*2,8192));
         if(audio.getState()!=AudioRecord.STATE_INITIALIZED){audio.release();audio=null;throw new IllegalStateException("麦克风初始化失败");}
-        audio.startRecording();running=true;
+        audio.startRecording();
+        if(audio.getRecordingState()!=AudioRecord.RECORDSTATE_RECORDING){audio.release();audio=null;throw new IllegalStateException("麦克风未开始录音");}
+        running=true;
         reader=new Thread(()->{byte[] buffer=new byte[4096];while(running&&pcm.size()<960000){int count=audio.read(buffer,0,buffer.length);if(count<=0)break;
             pcm.write(buffer,0,Math.min(count,960000-pcm.size()));long sum=0;for(int i=0;i+1<count;i+=2)sum+=Math.abs((short)((buffer[i]&255)|(buffer[i+1]<<8)));level=Math.min(1,sum/(float)Math.max(1,count/2)/10000);
         }},"voice-pcm");reader.start();
