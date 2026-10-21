@@ -1,0 +1,26 @@
+ShadowAuto — Derivative Distribution
+
+This distribution is based on ShadowAuto, published by android-notes and
+its contributors:
+https://github.com/android-notes/ShadowAuto
+
+Upstream baseline used for this derivative:
+611e5eb0e1c94befda3c17c97438912dfd30e8a8
+
+The original project is licensed under the Apache License, Version 2.0.
+A copy of that license is retained in LICENSE. Original authors retain
+their rights in the upstream work and its attribution notices.
+
+The upstream project supplies the Android shell/app_process architecture,
+VirtualDisplay automation, UI/OCR interaction, display-targeted input,
+H.264 preview, Android controller, and browser launcher.
+
+This derivative adds or changes execution extensions, independent result
+verification, manual handoffs, scheduling and conflict handling, reusable
+skills, voice and screen-context input, floating controls, task history,
+metrics, Huawei compatibility, and retained-result transfer. Details and
+revision references are in docs/DERIVATIVE_CHANGES.md and Git history.
+
+This NOTICE was added by the derivative project; it is not an upstream
+NOTICE. It is informational and does not modify the license. This
+independent derivative does not imply endorsement by the upstream project.

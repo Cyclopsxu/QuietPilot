@@ -1,10 +1,14 @@
-# 隐控 ShadowAuto
+# 隐控 ShadowAuto（二次开发版）
 
 [English](README.md) | 中文
+
+> 本项目基于 [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto) 二次开发，保留原项目及作者、贡献者署名，继续采用 [Apache-2.0](LICENSE)。上游基线为 `611e5eb`；本分支新增和修复详见 [二次开发改动说明](docs/DERIVATIVE_CHANGES.md) 与 [NOTICE](NOTICE)。
 
 隐控 ShadowAuto 是一个面向 Android 10 及以上设备的开源手机助手原型，支持后台自动化、技能学习和语音发起任务。它通过 `adb shell` 和 `app_process` 启动 AI 驱动的 shell 进程，把真实 App 打开在独立 VirtualDisplay 中运行；用户主屏幕可以继续正常使用，自动化任务则在后台虚拟屏里静默执行。
 
 ShadowAuto 的重点不是简单脚本点击，而是让 AI 具备类似手机助理的屏幕理解和操作能力：shell 进程可以读取虚拟屏上的 UiAutomation UI 节点树，也可以在无障碍节点缺失、自绘页面或复杂业务页面中调用离线 OCR 读取屏幕文字和坐标，再通过 InputManager 把触摸、按键和输入事件注入到指定 display。
+
+以下功能包含上游基础能力及本分支扩展；各自来源见[改动说明](docs/DERIVATIVE_CHANGES.md)。
 
 ## 已实现功能
 
@@ -33,13 +37,15 @@ ShadowAuto 的重点不是简单脚本点击，而是让 AI 具备类似手机�
 
 输入文字或按住悬浮球说话 → 可选读取当前屏幕 → 模型理解与确认 → 匹配技能或模型探索 → 独立视觉验收 → 直接结束，或保留结果等待“去查看”。遇到验证码等人工边界时暂停交接；结果需要查看时，将原页面交到主屏继续操作。
 
-## 演示视频
+## 上游演示视频
+
+以下视频沿用原项目素材，展示上游版本，不代表本分支全部新增功能。
 
 <video src="shadowauto.mp4" controls="controls" style="max-width: 100%;"></video>
 
 如果当前页面不支持直接播放视频，可以打开 [shadowauto.mp4](shadowauto.mp4) 查看。
 
-## 技术文章
+## 上游技术文章
 
 - [Android 虚拟投屏与 AI 后台静默自动化实践](docs/android-virtual-display-ai-automation.md)
 - [Android Virtual Display and AI Background Automation](docs/android-virtual-display-ai-automation.en.md)（英文）
@@ -86,7 +92,7 @@ adb install -r controller-app/build/outputs/apk/debug/controller-app-debug.apk
 
 ### 方式一：浏览器启动器
 
-线上启动器：[https://android-notes.github.io/ShadowAuto/](https://android-notes.github.io/ShadowAuto/)
+上游线上启动器：[https://android-notes.github.io/ShadowAuto/](https://android-notes.github.io/ShadowAuto/)。该站点由上游维护，不代表已部署本分支新增功能；使用本分支请构建并部署本地生成的产物。
 
 连接前请先完成手机准备：
 
@@ -237,4 +243,4 @@ node scripts/emulator-mock-ai-test.mjs
 
 ## 开源协议
 
-隐控 ShadowAuto 使用 [Apache License 2.0](LICENSE) 开源。
+本二次开发版本沿用上游 [Apache License 2.0](LICENSE)，保留原许可证和适用的原始署名。原项目：[android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto)。出处和修改范围见 [NOTICE](NOTICE) 与 [二次开发改动说明](docs/DERIVATIVE_CHANGES.md)。

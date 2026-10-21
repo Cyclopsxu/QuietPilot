@@ -1,12 +1,16 @@
-# ShadowAuto
+# ShadowAuto — Derived Edition
 
 English | [中文](README.zh-CN.md)
+
+> This project is an independently modified distribution of [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto). Upstream authorship and contributor attribution are retained, and this branch continues under [Apache-2.0](LICENSE). The upstream baseline is `611e5eb`; see [Derivative Changes](docs/DERIVATIVE_CHANGES.md) and [NOTICE](NOTICE) for downstream additions and fixes.
 
 ShadowAuto is an open-source phone-assistant prototype targeting Android 10 and later, with background automation, reusable skills, and voice task entry. It starts an AI-driven shell process through `adb shell` and `app_process`, launches real Android apps inside an isolated VirtualDisplay, and lets automation run quietly in the background while the physical screen remains usable.
 
 ShadowAuto is not just a click script. It gives the AI a phone-assistant-style loop for understanding and operating the screen: the shell process can read the UiAutomation UI node tree for the virtual display, fall back to offline OCR when accessibility nodes are missing or incomplete, and inject touch, key, clipboard, and text input events into the target display.
 
 The Chinese product name is **隐控**.
+
+The capabilities below include inherited upstream features and downstream extensions. Their provenance is separated in [Derivative Changes](docs/DERIVATIVE_CHANGES.md).
 
 ## Implemented Features
 
@@ -35,13 +39,15 @@ The Chinese product name is **隐控**.
 
 Type a goal or hold the floating ball to speak → optionally capture screen context → interpret and confirm → match a skill or explore with the model → independently verify → finish directly or retain the result for “Go view.” Manual boundaries pause for user handling; viewable results transfer their existing page to the main screen for continued use.
 
-## Demo Video
+## Upstream Demo Video
+
+This video is inherited from the original project and shows the upstream version, rather than all downstream additions.
 
 <video src="shadowauto.mp4" controls="controls" style="max-width: 100%;"></video>
 
 If the current page cannot play the embedded video, open [shadowauto.mp4](shadowauto.mp4).
 
-## Technical Deep Dive
+## Upstream Technical Deep Dive
 
 - [Android Virtual Display and AI Background Automation](docs/android-virtual-display-ai-automation.en.md)
 - [Android 虚拟投屏与 AI 后台静默自动化实践](docs/android-virtual-display-ai-automation.md) (Chinese)
@@ -88,7 +94,7 @@ adb install -r controller-app/build/outputs/apk/debug/controller-app-debug.apk
 
 ### Option 1: Browser Launcher
 
-Online launcher: [https://android-notes.github.io/ShadowAuto/](https://android-notes.github.io/ShadowAuto/)
+Upstream online launcher: [https://android-notes.github.io/ShadowAuto/](https://android-notes.github.io/ShadowAuto/). This upstream-maintained site does not establish deployment of this branch's additions. Build and deploy this branch's local artifacts to use the derivative version.
 
 Before connecting, prepare the phone:
 
@@ -239,4 +245,4 @@ Phase tasks, guides, reports, and regression artifacts in the local workspace li
 
 ## License
 
-ShadowAuto is licensed under the [Apache License 2.0](LICENSE).
+This derivative continues under the upstream [Apache License 2.0](LICENSE), retaining the original license and applicable attribution. Original project: [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto). See [NOTICE](NOTICE) and [Derivative Changes](docs/DERIVATIVE_CHANGES.md) for provenance and the scope of modifications.

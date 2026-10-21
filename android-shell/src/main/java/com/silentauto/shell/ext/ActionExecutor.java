@@ -1,3 +1,5 @@
+// Derived from android-notes/ShadowAuto AutomationEngine action logic (Apache-2.0).
+// Extracted and modified in this derivative; see docs/DERIVATIVE_CHANGES.md and NOTICE.
 package com.silentauto.shell.ext;
 
 import com.silentauto.shell.ext.guard.ClipboardGuard;
