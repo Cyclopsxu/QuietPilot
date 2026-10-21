@@ -20,6 +20,8 @@ public final class ResultVerifier {
         public final String evidence;
         public final String missing;
         public boolean assessed;
+        public String delivery = "view";
+        public final java.util.List<String> pageAnchors = new java.util.ArrayList<>();
         public EvidenceFrame frame;
 
         public Result(boolean verified, String evidence, String missing) {
@@ -96,7 +98,9 @@ public final class ResultVerifier {
                     若证据缺失、错误、模糊或无法观察，verified 必须为 false。
                     scope=complete 时验收整个用户目标；scope=boundary 时只确认仍在交接边界。
                     scope=handoff_ready 时必须看到用户已成功处理或可安全继续；验证码/密码/确认的下一中间页不能通过。
-                    只输出 JSON: {"verified":true/false,"evidence":"界面上看到的具体证据","missing":"如果没通过，缺什么"}
+                    scope=complete 时同时判断交付方式 delivery：选餐厅、挑商品、浏览/比较/查询结果等需要用户查看当前页面的任务为 view；发送成功、设置已更改等已经完成且无需继续操作的任务为 complete。不要因用户没说“停留”就选 complete。
+                    page_anchors 为当前结果实体的 1-3 个稳定、具体、可见文字，例如餐厅/商品全名、详细地址、订单号。必须包含实体名称或唯一编号；不要用导航、榜单标签、评分、价格、时间等通用或变化信息。无法确认则给空数组。
+                    只输出 JSON: {"verified":true/false,"evidence":"界面上看到的具体证据","missing":"如果没通过，缺什么","delivery":"view或complete","page_anchors":["结果实体全名","详细地址"]}
                     """, observation.toString(), frame.dataUrl());
             JsonObject answer = parseAnswer(raw);
             boolean verified = answer.has("verified") && answer.get("verified").isJsonPrimitive()
@@ -105,6 +109,15 @@ public final class ResultVerifier {
             String missing = text(answer, "missing");
             result = new Result(verified && !evidence.trim().isEmpty(), evidence,
                     missing.isEmpty() ? "Current UI does not prove the expected result" : missing);
+            if ("complete".equals(text(answer,"delivery"))) result.delivery="complete";
+            if (answer.has("page_anchors") && answer.get("page_anchors").isJsonArray()) {
+                for (com.google.gson.JsonElement anchor : answer.getAsJsonArray("page_anchors")) {
+                    if (anchor.isJsonPrimitive() && anchor.getAsJsonPrimitive().isString()) {
+                        String value=anchor.getAsString().trim();
+                        if (!value.isEmpty() && value.length()<=160 && result.pageAnchors.size()<3) result.pageAnchors.add(value);
+                    }
+                }
+            }
             result.assessed = answer.has("verified") && answer.get("verified").isJsonPrimitive()
                     && answer.getAsJsonPrimitive("verified").isBoolean() && !evidence.trim().isEmpty();
         } catch (InterruptedException e) {

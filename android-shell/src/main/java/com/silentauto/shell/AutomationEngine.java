@@ -99,6 +99,10 @@ public final class AutomationEngine {
             return;
         }
         synchronized(task){task.stop.set(true);}
+        if(task.transferInProgress) {
+            task.progress.transfer("cancelling","正在取消交接并恢复后台页面…");
+            return;
+        }
         voicePending.remove(taskId);
         transition(task, TaskStatus.CANCELLED, "automation cancelled", "", "");
         if (task.ai != null) task.ai.abort();
@@ -133,38 +137,69 @@ public final class AutomationEngine {
         task.handoff.resume("open_main");
     }
 
-    synchronized JsonObject takeResultOnMain(String taskId) {
-        TaskState task = tasks.get(taskId);
-        if (task == null) throw new IllegalStateException("Task not found");
-        JsonObject result = new JsonObject();
-        if (task.resultTransferred) { result.addProperty("moved",true); return result; }
-        if (task.display == null || task.handoff == null || !task.progress.json().get("resultReady").getAsBoolean())
-            throw new IllegalStateException("Result is no longer waiting to be viewed");
-        com.silentauto.shell.ext.handoff.TaskDisplayTransfer transfer = new com.silentauto.shell.ext.handoff.TaskDisplayTransfer(
-                new com.silentauto.shell.ext.handoff.TaskDisplayTransfer.Host() {
-                    public String command(String... args) throws Exception { return com.silentauto.shell.ext.handoff.TaskDisplayTransfer.command(args); }
-                    public com.silentauto.shell.ext.skill.ScreenFingerprint page(int displayId) {
-                        return com.silentauto.shell.ext.skill.ScreenFingerprint.from(
-                                new com.silentauto.shell.ext.skill.UiSnapshot(getUi().dump(displayId,task.display.width,task.display.height,UiBridge.MODE_FULL)),task.packageName,task.display.height);
-                    }
-                    public String foreground() throws Exception { return foreground.foregroundPackage(); }
-                });
-        com.silentauto.shell.ext.handoff.TaskDisplayTransfer.Result moved = transfer.move(task.display.displayId,task.packageName);
-        result.addProperty("moved",moved.moved); result.addProperty("message",moved.message);
-        result.addProperty("androidTaskId",moved.taskId); result.addProperty("rootTaskId",moved.rootId);
-        logs.task(taskId,"result transfer moved="+moved.moved+" root="+moved.rootId+" task="+moved.taskId+": "+moved.message);
-        if (moved.moved) {
-            task.resultTransferred=true;
-            if(task.conflict!=null)task.conflict.close();
-            task.handoff.resume("done");
+    JsonObject takeResultOnMain(String taskId) {
+        final TaskState task; final VirtualDisplaySession display;
+        synchronized(this) {
+            task=tasks.get(taskId);
+            if(task==null)throw new IllegalStateException("Task not found");
+            if(task.resultTransferred)return transferReply("already_moved","结果已经交接，请在应用中继续",false);
+            if(task.transferInProgress)return transferReply("busy","正在交接，请稍候",false);
+            if(task.stop.get()||task.progress.status()!=TaskStatus.WAITING_USER||task.display==null||task.handoff==null||!task.progress.json().get("resultReady").getAsBoolean())
+                throw new IllegalStateException("结果已失效或任务已结束，请刷新任务");
+            display=task.display; task.transferInProgress=true;
         }
-        return result;
+        boolean replied=false;
+        try {
+            task.progress.transfer("moving","正在交接到主屏…");
+            com.silentauto.shell.ext.handoff.TaskDisplayTransfer transfer=new com.silentauto.shell.ext.handoff.TaskDisplayTransfer(
+                    new com.silentauto.shell.ext.handoff.TaskDisplayTransfer.Host() {
+                        public String command(String...args)throws Exception{return com.silentauto.shell.ext.handoff.TaskDisplayTransfer.command(args);}
+                        public com.silentauto.shell.ext.skill.ScreenFingerprint page(int id) {
+                            return com.silentauto.shell.ext.handoff.PageIdentity.from(new com.silentauto.shell.ext.skill.UiSnapshot(
+                                    getUi().dump(id,display.width,display.height,UiBridge.MODE_FULL)),task.packageName);
+                        }
+                        public String foreground()throws Exception{return foreground.foregroundPackage();}
+                        public boolean cancelled(){return task.stop.get();}
+                    });
+            com.silentauto.shell.ext.handoff.TaskDisplayTransfer.Result moved=transfer.move(display.displayId,task.packageName,task.resultAnchors);
+            JsonObject result=transferReply(moved.outcome,moved.message,moved.previewAvailable);
+            result.addProperty("restored",moved.restored);result.addProperty("androidTaskId",moved.taskId);result.addProperty("rootTaskId",moved.rootId);
+            logs.task(taskId,"result transfer outcome="+moved.outcome+" restored="+moved.restored+" root="+moved.rootId+" task="+moved.taskId);
+            synchronized(this) {
+                // No process/UI operation above holds the engine-wide monitor.
+                task.transferInProgress=false;
+                if(task.stop.get()) {
+                    stopTask(taskId);
+                    return transferReply("cancelled","交接已取消",false);
+                }
+                task.progress.transfer(moved.outcome,moved.message);
+                if(moved.moved) {
+                    task.resultTransferred=true;
+                    if(task.conflict!=null)task.conflict.close();
+                    task.handoff.resume("done");
+                }
+                replied=true;
+            }
+            return result;
+        } finally {
+            synchronized(this) {
+                task.transferInProgress=false;
+                if(task.stop.get()&&!task.progress.status().terminal())stopTask(taskId);
+                else if(!replied&&!task.progress.status().terminal())task.progress.transfer("unavailable","交接状态未确认，请刷新任务后重试");
+            }
+        }
+    }
+
+    private static JsonObject transferReply(String outcome,String message,boolean preview) {
+        JsonObject result=new JsonObject();result.addProperty("outcome",outcome);result.addProperty("message",message);
+        result.addProperty("moved","moved".equals(outcome));result.addProperty("previewAvailable",preview);return result;
     }
 
     synchronized void injectTouch(String taskId, String action, float x, float y) throws Exception {
         TaskState task = tasks.get(taskId);
         if (task == null || task.progress.status() != TaskStatus.WAITING_USER || task.display == null)
             throw new IllegalStateException("touch is only allowed while waiting for user");
+        if(task.transferInProgress)throw new IllegalStateException("正在交接，请稍候再操作");
         if (!Float.isFinite(x) || !Float.isFinite(y)) throw new IllegalArgumentException("finite coordinates required");
         if (task.packageName.equals(foreground.foregroundPackage())) throw new IllegalStateException("同一 App 正在主屏使用，暂停预览触摸");
         task.touch.inject(action, Math.max(0, Math.min(task.display.width - 1, x)),
@@ -176,6 +211,7 @@ public final class AutomationEngine {
         if (task == null || !"waiting_user".equals(task.state) || task.handoff == null) {
             throw new IllegalStateException("task is not waiting for user");
         }
+        if(task.transferInProgress)throw new IllegalStateException("正在交接，请稍候再操作");
         task.handoff.resume(outcome);
         if (task.verifierAi != null) task.verifierAi.cancel();
     }
@@ -458,7 +494,8 @@ public final class AutomationEngine {
                         logs.task(task.taskId, "evidence saved: " + evidencePath);
                         task.completed = true;
                         task.resultStatus = "verified";
-                        if (com.silentauto.shell.ext.handoff.ResultRetention.requested(request.goal)) {
+                        if (com.silentauto.shell.ext.handoff.ResultRetention.requested(request.goal,verification.delivery)) {
+                            task.resultAnchors=java.util.List.copyOf(verification.pageAnchors);
                             task.handoff = new HandoffManager();
                             task.progress.resultReady(true);
                             transition(task, TaskStatus.WAITING_USER, "已完成，后台页面已保留，点击去查看", verification.evidence, "结果已验收，等待查看");
@@ -1096,6 +1133,7 @@ public final class AutomationEngine {
     }
 
     private void releaseTask(TaskState task) {
+        synchronized(task) {
         if (task.videoStreamer != null) {
             task.videoStreamer.stop();
             task.videoStreamer = null;
@@ -1103,6 +1141,7 @@ public final class AutomationEngine {
         if (task.display != null) {
             task.display.release();
             task.display = null;
+        }
         }
     }
 
@@ -1159,7 +1198,8 @@ public final class AutomationEngine {
         public volatile VideoStreamer videoStreamer;
         public volatile AiClient ai;
         public boolean completed;
-        public volatile boolean resultTransferred;
+        public volatile boolean resultTransferred, transferInProgress;
+        public volatile java.util.List<String> resultAnchors=java.util.List.of();
         public volatile HandoffManager handoff;
         public com.silentauto.shell.ext.handoff.TouchSession touch;
         public String resultStatus = "";

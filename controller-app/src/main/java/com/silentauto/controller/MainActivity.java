@@ -56,6 +56,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     private TextView indicator;
     private boolean configOpen;
     private final java.util.Map<String, JSONObject> pendingHandoffs = new java.util.concurrent.ConcurrentHashMap<>();
+    private final java.util.Set<String> openingHandoffs=java.util.concurrent.ConcurrentHashMap.newKeySet();
     private static final String HANDOFF_CHANNEL = "task-handoff";
 
     @Override
@@ -353,7 +354,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 task.append(status + " " + params.optString("stepText") + " " + params.optString("message"));
                 if ("WAITING_USER".equals(status)) {
                     JSONObject previous = pendingHandoffs.put(task.taskId(), params);
-                    if (previous == null || previous.optBoolean("protectedScreen") != params.optBoolean("protectedScreen"))
+                    if (previous == null || previous.optBoolean("protectedScreen") != params.optBoolean("protectedScreen") || !previous.optString("transferState").equals(params.optString("transferState")))
                         main.post(() -> notifyHandoff(params));
                 } else {
                     pendingHandoffs.remove(task.taskId());
@@ -402,18 +403,19 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 .setAction("cancel:" + taskId).putExtra("taskId", taskId);
         PendingIntent dismiss = PendingIntent.getBroadcast(this, taskId.hashCode(), cancel,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        Notification notification = new Notification.Builder(this, HANDOFF_CHANNEL)
+        boolean transferring=java.util.Arrays.asList("moving","cancelling").contains(params.optString("transferState"));
+        Notification.Builder builder = new Notification.Builder(this, HANDOFF_CHANNEL)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(params.optBoolean("resultReady") ? "任务已完成，去查看" : "任务等待处理")
+                .setContentTitle(java.util.Arrays.asList("moving","cancelling").contains(params.optString("transferState")) ? "正在交接…" : params.optBoolean("resultReady") ? "任务已完成，去查看" : "任务等待处理")
                 .setContentText(params.optString("message"))
                 .setStyle(new Notification.BigTextStyle().bigText(params.optString("message")))
                 .setPriority(Notification.PRIORITY_DEFAULT)
-                .setContentIntent(show)
-                .addAction(new Notification.Action.Builder(null, params.optBoolean("resultReady") ? "去查看" : "去处理", show).build())
+                .setContentIntent(transferring?null:show)
                 .addAction(new Notification.Action.Builder(null, "取消任务", dismiss).build())
-                .setAutoCancel(true).build();
+                .setAutoCancel(!transferring);
+        if(!transferring)builder.addAction(new Notification.Action.Builder(null,params.optBoolean("resultReady")?"去查看":"去处理",show).build());
         try {
-            manager.notify(taskId, 23, notification);
+            manager.notify(taskId, 23, builder.build());
         } catch (SecurityException e) {
             AutomationTaskView task = taskById(taskId);
             if (task != null) task.append("通知权限未开启，请在任务页处理: " + params.optString("message"));
@@ -421,38 +423,67 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     }
 
     private void handleHandoffIntent(Intent intent) {
-        String taskId = intent.getStringExtra("handoffTaskId");
-        if (taskId == null) return;
-        String rawStatus = intent.getStringExtra("handoffStatus");
+        String taskId=intent.getStringExtra("handoffTaskId");
+        if(taskId==null)return;
         intent.removeExtra("handoffTaskId");
-        main.post(() -> {
-            try {
-                JSONObject status = pendingHandoffs.get(taskId);
-                if (status == null && rawStatus != null) status = new JSONObject(rawStatus);
-                AutomationTaskView task = taskById(taskId);
-                if (task == null) {
-                    task = new AutomationTaskView(this, main, taskId, this);
-                    synchronized (tasks) { tasks.add(task); }
-                    if (pagerAdapter != null) pagerAdapter.notifyDataSetChanged();
+        main.post(() -> onOpenHandoff(taskId));
+    }
+
+    private static JSONObject liveHandoff(com.silentauto.controller.ext.overlay.OverlayRpc client,String taskId)throws Exception {
+        org.json.JSONArray values=client.request("listTasks",new JSONObject()).getJSONArray("result");
+        for(int i=0;i<values.length();i++)if(taskId.equals(values.getJSONObject(i).optString("taskId")))return values.getJSONObject(i);
+        return null;
+    }
+
+    @Override public void onOpenHandoff(String taskId) {
+        if(!openingHandoffs.add(taskId))return;
+        AutomationTaskView existing=taskById(taskId);
+        if(existing!=null)existing.setOpening(true);
+        io.execute(() -> {
+            try(com.silentauto.controller.ext.overlay.OverlayRpc client=new com.silentauto.controller.ext.overlay.OverlayRpc(ignored -> {})) {
+                JSONObject current=liveHandoff(client,taskId);
+                if(current==null||!"WAITING_USER".equals(current.optString("status"))) {
+                    main.post(() -> android.widget.Toast.makeText(this,"该任务已结束或已交接，请查看任务记录",android.widget.Toast.LENGTH_LONG).show());
+                    return;
                 }
-                if (pager != null) {
-                    synchronized (tasks) {
-                        for (int i = 0; i < tasks.size(); i++) if (tasks.get(i).taskId().equals(taskId)) pager.setCurrentItem(i, false);
-                    }
+                if(java.util.Arrays.asList("moving","cancelling").contains(current.optString("transferState")))return;
+                JSONObject live=current;main.post(() -> {AutomationTaskView task=ensureTask(live);if(task!=null)task.setOpening(true);});
+                if(!current.optBoolean("resultReady")) {
+                    JSONObject waiting=current;main.post(() -> showCurrentHandoff(waiting));return;
                 }
-                task.otherWaiting(Math.max(0,pendingHandoffs.size()-(pendingHandoffs.containsKey(taskId)?1:0)));
-                if (status != null && status.optBoolean("resultReady")) {
-                    JSONObject resultStatus=status;AutomationTaskView resultTask=task;
-                    io.execute(() -> {
-                        try (com.silentauto.controller.ext.overlay.OverlayRpc transfer=new com.silentauto.controller.ext.overlay.OverlayRpc(ignored -> {})) {
-                            JSONObject moved=transfer.request("takeResultOnMain",new JSONObject().put("taskId",taskId)).getJSONObject("result");
-                            if(!moved.optBoolean("moved"))main.post(() -> {resultTask.showHandoff(resultStatus);android.widget.Toast.makeText(this,moved.optString("message","已保留预览"),android.widget.Toast.LENGTH_LONG).show();});
-                        } catch(Exception error) {main.post(() -> {resultTask.showHandoff(resultStatus);reportRpcError(resultTask,error);});}
-                    });
-                } else if (status != null) task.showHandoff(status);
-                io.execute(() -> { try { rpcClient.send("listTasks", new JSONObject()); } catch (Exception e) { reportRpcError(taskById(taskId), e); } });
-            } catch (Exception e) { reportRpcError(taskById(taskId), e); }
+                JSONObject reply=client.request("takeResultOnMain",new JSONObject().put("taskId",taskId)).getJSONObject("result");
+                String outcome=reply.optString("outcome");
+                if(reply.optBoolean("moved")||"busy".equals(outcome)||"cancelled".equals(outcome)||"already_moved".equals(outcome))return;
+                JSONObject fresh=liveHandoff(client,taskId);
+                if(fresh==null||!"WAITING_USER".equals(fresh.optString("status")))return;
+                if(reply.optBoolean("previewAvailable")) {
+                    fresh.put("message",reply.optString("message"));main.post(() -> showCurrentHandoff(fresh));
+                } else main.post(() -> showTransferUnavailable(taskId,reply.optString("message")));
+            } catch(Exception error) {
+                // A transport error cannot establish that the old virtual page is still alive.
+                main.post(() -> showTransferUnavailable(taskId,"交接状态无法确认，请刷新后重试"));
+            } finally {
+                openingHandoffs.remove(taskId);
+                main.post(() -> {AutomationTaskView task=taskById(taskId);if(task!=null)task.setOpening(false);});
+            }
         });
+    }
+
+    private void showCurrentHandoff(JSONObject status) {
+        if(isFinishing()||isDestroyed())return;
+        AutomationTaskView task=ensureTask(status);
+        if(task==null)return;
+        task.updateStatus(status);
+        if(pager!=null)synchronized(tasks){pager.setCurrentItem(tasks.indexOf(task),false);}
+        task.showHandoff(status);
+    }
+
+    private void showTransferUnavailable(String taskId,String message) {
+        if(isFinishing()||isDestroyed())return;
+        new android.app.AlertDialog.Builder(this).setTitle("页面交接未完成").setMessage(message)
+                .setPositiveButton("重试",(dialog,which) -> onOpenHandoff(taskId))
+                .setNeutralButton("结束任务",(dialog,which) -> onTaskStop(taskId))
+                .setNegativeButton("返回任务",null).show();
     }
 
     public static final class HandoffCancelReceiver extends BroadcastReceiver {

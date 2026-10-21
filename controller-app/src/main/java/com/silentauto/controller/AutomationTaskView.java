@@ -23,6 +23,7 @@ final class AutomationTaskView {
         void onTaskStart(AutomationTaskView task);
 
         void onTaskStop(String taskId);
+        void onOpenHandoff(String taskId);
         void onTaskTouch(String taskId, String action, float x, float y);
         void onHandoffAction(String taskId, String method, String outcome);
     }
@@ -39,6 +40,8 @@ final class AutomationTaskView {
     private final ScrollView logScroll;
     private final Button run;
     private final Button stop;
+    private final Button resultAction;
+    private boolean opening, taskEnded;
 
     private H264VideoDecoder screenDecoder;
     private AlertDialog screenDialog;
@@ -66,7 +69,10 @@ final class AutomationTaskView {
         stop = view.findViewById(R.id.stopButton);
         screenDecoder = new H264VideoDecoder(screen, main);
         UiUtils.clearButtonTint(run, stop);
-        screenBox.setOnClickListener(v -> { if (handoffStatus != null) showHandoff(handoffStatus); else showScreenDialog(); });
+        resultAction=new Button(activity);resultAction.setText("去查看");resultAction.setVisibility(View.GONE);
+        ((android.widget.LinearLayout)view).addView(resultAction,2);
+        resultAction.setOnClickListener(v -> listener.onOpenHandoff(taskId));
+        screenBox.setOnClickListener(v -> { if(handoffStatus!=null)listener.onOpenHandoff(taskId);else showScreenDialog(); });
         run.setOnClickListener(v -> start());
         stop.setOnClickListener(v -> {
             setRunning(false);
@@ -92,6 +98,7 @@ final class AutomationTaskView {
         if (goalText().trim().isEmpty()) {
             return;
         }
+        taskEnded=false;
         showLiveUi(true);
         setRunning(true);
         resetVideo();
@@ -165,8 +172,20 @@ final class AutomationTaskView {
         stop.setVisibility(running ? View.VISIBLE : View.GONE);
     }
 
+    void setOpening(boolean value) {
+        activity.runOnUiThread(() -> {opening=value;updateResultAction();});
+    }
+    private void updateResultAction() {
+        boolean waiting=handoffStatus!=null;
+        boolean moving=opening||(waiting&&java.util.Arrays.asList("moving","cancelling").contains(handoffStatus.optString("transferState")));
+        resultAction.setVisibility(waiting||opening?View.VISIBLE:View.GONE);
+        resultAction.setText(moving?"正在交接…":waiting&&handoffStatus.optBoolean("resultReady")?"去查看":"去处理");
+        resultAction.setEnabled(!moving);screenBox.setEnabled(!moving&&!taskEnded);
+    }
+
     void updateStatus(JSONObject status) {
         activity.runOnUiThread(() -> {
+            taskEnded=java.util.Arrays.asList("VERIFIED","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(status.optString("status"));
             if ("WAITING_USER".equals(status.optString("status"))) {
                 handoffStatus = status;
                 if (handoffHint != null) handoffHint.setText(handoffMessage(status));
@@ -175,6 +194,7 @@ final class AutomationTaskView {
                 handoffStatus = null;
                 if (handoffHint != null && screenDialog != null) screenDialog.dismiss();
             }
+            updateResultAction();
         });
     }
 
@@ -184,7 +204,7 @@ final class AutomationTaskView {
     }
     private String handoffMessage(JSONObject status) {
         String prefix = otherWaiting > 0 ? "还有 " + otherWaiting + " 个任务等你处理\n" : "";
-        return prefix + (status.optBoolean("resultReady") ? "任务已完成，后台页面已保留。你可以在此查看和操作，看完后点击结束查看。\n" + status.optString("evidence") : status.optBoolean("protectedScreen")
+        return prefix + (status.optBoolean("resultReady") ? "任务已完成。" + status.optString("message") + "\n可在预览中操作，点“重试切到主屏”重试，或结束查看。\n" + status.optString("evidence") : status.optBoolean("protectedScreen")
                 ? "该页面受系统保护，请在 " + status.optString("appName", status.optString("app")) + " 中完成"
                 : "处理完成后会自动继续\n" + status.optString("message"));
     }
@@ -230,6 +250,10 @@ final class AutomationTaskView {
             openOnMain = new Button(activity); openOnMain.setText("在主屏打开");
             openOnMain.setVisibility(status.optBoolean("protectedScreen") ? View.VISIBLE : View.GONE);
             openOnMain.setOnClickListener(v -> listener.onHandoffAction(taskId, "openTaskOnMain", "")); content.addView(openOnMain);
+            if(status.optBoolean("resultReady")) {
+                Button retry=new Button(activity);retry.setText("重试切到主屏");content.addView(retry);
+                retry.setOnClickListener(v -> {if(screenDialog!=null)screenDialog.dismiss();listener.onOpenHandoff(taskId);});
+            }
             Button done = new Button(activity); done.setText(status.optBoolean("resultReady") ? "结束查看" : "我处理好了"); content.addView(done);
             done.setOnClickListener(v -> listener.onHandoffAction(taskId, "resumeTask", "done"));
             Button cancel = new Button(activity); cancel.setText("取消任务"); cancel.setVisibility(status.optBoolean("resultReady") ? View.GONE : View.VISIBLE); content.addView(cancel);

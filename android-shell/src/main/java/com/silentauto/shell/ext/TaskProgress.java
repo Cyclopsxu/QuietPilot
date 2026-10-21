@@ -21,6 +21,7 @@ public final class TaskProgress {
     private TaskStatus status = TaskStatus.QUEUED;
     private String appName = "";
     private String app = "", stepText = "", source = "model", message = "", evidence = "", boundary = "";
+    private String transferState = "idle";
     private String transcript = "";
     private long intakeElapsedMs, confirmDeadlineMs;
     private boolean pendingConfirmation, requiresConfirmation;
@@ -42,6 +43,11 @@ public final class TaskProgress {
         if (protectedScreen != value) { protectedScreen = value; publish(); }
     }
     public synchronized boolean protectedScreen() { return protectedScreen; }
+    public synchronized void transfer(String state,String detail) {
+        transferState=state;
+        if(!status.terminal())message=detail;
+        publish();
+    }
     public synchronized void resultReady(boolean value) { resultReady = value; }
     public synchronized TaskStatus status() { return status; }
     public synchronized void app(String value, String name) { app = value; appName = name; }
@@ -91,6 +97,7 @@ public final class TaskProgress {
         o.addProperty("confirmDeadlineMs", confirmDeadlineMs);
         o.addProperty("protectedScreen", protectedScreen);
         o.addProperty("resultReady", resultReady && !status.terminal());
+        o.addProperty("transferState",transferState);
         o.addProperty("elapsedMs", (ended == 0 ? SystemClock.elapsedRealtime() : ended) - started);
         return o;
     }

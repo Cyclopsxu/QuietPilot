@@ -13,6 +13,7 @@ public final class TaskDisplayTransfer {
         String command(String... args) throws Exception;
         ScreenFingerprint page(int displayId) throws Exception;
         String foreground() throws Exception;
+        default boolean cancelled() { return false; }
         default void pause() throws InterruptedException { Thread.sleep(150); }
     }
     public static final class Root {
@@ -21,43 +22,64 @@ public final class TaskDisplayTransfer {
         public boolean visible;
     }
     public static final class Result {
-        public final boolean moved;
+        public final boolean moved, previewAvailable, restored;
         public final int rootId, taskId;
-        public final String message;
-        Result(boolean moved,Root root,String message){this.moved=moved;rootId=root==null?-1:root.id;taskId=root==null?-1:root.task;this.message=message;}
+        public final String outcome, message;
+        Result(String outcome, Root root, String message, boolean preview, boolean restored) {
+            this.outcome=outcome; moved="moved".equals(outcome); previewAvailable=preview; this.restored=restored;
+            rootId=root==null?-1:root.id; taskId=root==null?-1:root.task; this.message=message;
+        }
     }
     private final Host host;
     public TaskDisplayTransfer(Host host){this.host=host;}
-    public Result move(int source,String pkg) {
-        Root original=null;
+    public Result move(int source,String pkg,List<String> anchors) {
+        Root original=null; ScreenFingerprint expected=null;
         try {
             if(source<=0)throw new IllegalStateException("Invalid source display");
             for(Root r:parse(host.command("am","stack","list")))if(r.display==source&&r.visible&&r.component.startsWith(pkg+"/")){
                 if(original!=null)throw new IllegalStateException("Ambiguous source tasks");original=r;
             }
-            if(original==null)throw new IllegalStateException("Current app task not found on virtual display");
-            ScreenFingerprint expected=host.page(source);
-            if(!pkg.equals(expected.packageName)||expected.stableTexts.isEmpty())throw new IllegalStateException("Current page has no comparable text");
+            if(original==null)throw new IllegalStateException("Source task missing");
+            expected=host.page(source);
+            if(!pkg.equals(expected.packageName)||!PageIdentity.contains(expected,anchors))
+                return new Result("preview",original,"关键页面证据不足，已保留预览",true,false);
+            checkCancelled();
             host.command("am","display","move-stack",String.valueOf(original.id),"0");
-            for(int i=0;i<16;i++){
+            long deadline=System.nanoTime()+12_000_000_000L;
+            for(int i=0;i<16&&System.nanoTime()<deadline;i++){
+                checkCancelled();
                 Root current=find(parse(host.command("am","stack","list")),original.id);
-                if(current!=null&&current.display==0&&current.task==original.task&&current.component.equals(original.component)
-                        && current.visible&&pkg.equals(host.foreground())&&expected.similarity(host.page(0))>=.6)
-                    return new Result(true,original,"当前页面已切到主屏");
+                if(sameTask(current,original)&&current.display==0&&current.visible&&pkg.equals(host.foreground())) {
+                    ScreenFingerprint page=host.page(0);
+                    if(pkg.equals(page.packageName)&&PageIdentity.contains(page,anchors)) {
+                        checkCancelled();
+                        return new Result("moved",original,"当前页面已切到主屏",false,false);
+                    }
+                }
                 host.pause();
             }
-            throw new IllegalStateException("Task or page verification failed after move");
+            throw new IllegalStateException("Task or result identity not confirmed");
         } catch(Exception failure) {
             if(original!=null)try {
                 Root current=find(parse(host.command("am","stack","list")),original.id);
-                if(current!=null&&current.display!=source){
-                    host.command("am","display","move-stack",String.valueOf(original.id),String.valueOf(source));
+                if(!sameTask(current,original))throw new IllegalStateException("Original task disappeared");
+                if(current.display!=source)host.command("am","display","move-stack",String.valueOf(original.id),String.valueOf(source));
+                for(int i=0;i<8;i++) {
                     current=find(parse(host.command("am","stack","list")),original.id);
-                    if(current==null||current.display!=source)throw new IllegalStateException("Rollback not confirmed");
+                    if(sameTask(current,original)&&current.display==source&&current.visible) {
+                        ScreenFingerprint page=host.page(source);
+                        boolean restored=pkg.equals(page.packageName)&&PageIdentity.contains(page,anchors);
+                        return new Result("preview",original,restored?"切换未完成，已恢复原页面预览":"原页面内容未能确认，请核对保留的预览",true,restored);
+                    }
+                    host.pause();
                 }
-            }catch(Exception rollback){return new Result(false,original,"切换未确认，后台资源已保留，请在预览中核对");}
-            return new Result(false,original,"无法切到主屏，已保留原预览："+failure.getClass().getSimpleName());
+            }catch(Exception rollback){ /* Preserve resources without claiming the page survived. */ }
+            return new Result("unavailable",original,"原页面无法恢复，后台资源暂时保留；请重试或结束任务",false,false);
         }
+    }
+    private void checkCancelled() throws InterruptedException { if(host.cancelled())throw new InterruptedException("Transfer cancelled"); }
+    private static boolean sameTask(Root now,Root original) {
+        return now!=null&&now.task==original.task&&now.component.equals(original.component);
     }
     private static Root find(List<Root> roots,int id){for(Root r:roots)if(r.id==id)return r;return null;}
     public static List<Root> parse(String text){
