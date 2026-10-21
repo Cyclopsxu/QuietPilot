@@ -17,7 +17,7 @@ public final class TaskProgress {
     private String skillId = "", comparison = "", evidenceScreenshot = "";
     private JsonObject sourceSteps = new JsonObject();
     private JsonObject disturbance = new JsonObject();
-    private boolean protectedScreen;
+    private boolean protectedScreen, finalized;
     private TaskStatus status = TaskStatus.QUEUED;
     private String appName = "";
     private String app = "", stepText = "", source = "model", message = "", evidence = "", boundary = "";
@@ -80,6 +80,7 @@ public final class TaskProgress {
         JsonObject counts = new JsonObject();
         for (Map.Entry<String,Integer> entry : calls.entrySet()) counts.addProperty(entry.getKey(), entry.getValue());
         o.add("llmCalls", counts);
+        o.addProperty("finalized",finalized);
         o.add("disturbance",disturbance.deepCopy());
         o.addProperty("skillId", skillId); o.add("sourceSteps",sourceSteps.deepCopy()); o.addProperty("comparison",comparison);
         o.addProperty("evidenceScreenshot",evidenceScreenshot); o.addProperty("createdAtMs",createdAtMs); o.addProperty("finishedAtMs",finishedAtMs);
@@ -95,7 +96,7 @@ public final class TaskProgress {
     public synchronized void disturbance(JsonObject report) { disturbance=report.deepCopy(); }
     public synchronized void evidenceScreenshot(String path) { evidenceScreenshot = path; }
     public synchronized void metrics(String id,JsonObject sources,String baseline) {
-        skillId = id; sourceSteps = sources.deepCopy(); comparison = baseline; publish();
+        skillId = id; sourceSteps = sources.deepCopy(); comparison = baseline; finalized=true; publish();
     }
     public synchronized void learned(String name) {
         if (status != TaskStatus.VERIFIED) return;

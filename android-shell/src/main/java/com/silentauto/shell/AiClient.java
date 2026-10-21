@@ -35,6 +35,7 @@ final class AiClient {
     private final LogHub logs;
     private final String taskId;
     private volatile Call call;
+    private volatile boolean aborted;
     private final Runnable onCall;
     private final OkHttpClient http = new OkHttpClient.Builder()
             .connectTimeout(30, TimeUnit.SECONDS)
@@ -105,7 +106,7 @@ final class AiClient {
     }
 
     private ToolResult stream(JsonObject body) throws Exception {
-        if (Thread.currentThread().isInterrupted()) throw new InterruptedException("AI call cancelled");
+        if (aborted || Thread.currentThread().isInterrupted()) throw new InterruptedException("AI call cancelled");
         config.executor.validate();
         onCall.run();
         Request request = new Request.Builder()
@@ -118,6 +119,7 @@ final class AiClient {
         StringBuilder full = new StringBuilder();
         Map<Integer, ToolCallBuilder> tools = new LinkedHashMap<>();
         call = http.newCall(request);
+        if(aborted)call.cancel();
         try (Response response = call.execute()) {
             if (!response.isSuccessful() || response.body() == null) {
                 throw new IllegalStateException("AI HTTP " + response.code() + " " + (response.body() == null ? "" : response.body().string()));
@@ -154,6 +156,8 @@ final class AiClient {
         }
         return result;
     }
+
+    void abort() { aborted=true;cancel(); }
 
     void cancel() {
         Call active = call;

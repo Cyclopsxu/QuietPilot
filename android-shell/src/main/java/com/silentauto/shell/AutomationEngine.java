@@ -73,12 +73,16 @@ public final class AutomationEngine {
         String taskId = Config.empty(request.taskId) ? "task-" + nextTaskId.getAndIncrement() : request.taskId;
         if (!taskId.matches("[A-Za-z0-9_.-]{1,100}") || ".".equals(taskId) || "..".equals(taskId))
             throw new IllegalArgumentException("taskId must contain safe filename characters");
-        stopTask(taskId);
+        TaskState previous=tasks.get(taskId);
+        if(previous!=null&&previous.settled.getCount()!=0){
+            if(!previous.progress.status().terminal())stopTask(taskId);
+            if(previous.settled.getCount()!=0)throw new IllegalStateException("上一轮任务正在学习或收尾，请稍后重试");
+        }
         TaskState task = new TaskState(taskId, request.goal, logs);
         tasks.put(taskId, task);
         recorder.prepare(taskId, request.goal);
         task.progress.publish();
-        task.future = executor.submit(() -> runTask(task, request));
+        submitTask(task,request);
         return taskId;
     }
 
@@ -94,18 +98,23 @@ public final class AutomationEngine {
         if (task == null || task.progress.status().terminal()) {
             return;
         }
-        task.stop.set(true);
+        synchronized(task){task.stop.set(true);}
         voicePending.remove(taskId);
         transition(task, TaskStatus.CANCELLED, "automation cancelled", "", "");
-        if (task.ai != null) task.ai.cancel();
-        if (task.verifierAi != null) task.verifierAi.cancel();
+        if (task.ai != null) task.ai.abort();
+        if (task.verifierAi != null) task.verifierAi.abort();
         if (task.future != null) {
             task.future.cancel(true);
         }
         releaseTask(task);
         scheduler.release(task);
-        recorder.snapshotOutcome(taskId, task.progress.outcome());
+        boolean unstarted;
+        synchronized(task){unstarted=!task.workerStarted;}
+        if(unstarted){
+            recorder.finish(taskId,task.progress.outcome());task.progress.disturbance(disturbance.finish(taskId));finishMetrics(task,null);
+        }else recorder.snapshotOutcome(taskId, task.progress.outcome());
         archive(task);
+        if(unstarted)task.settled.countDown();
         logs.task(taskId, "task metrics " + task.progress.json());
         logs.task(taskId, "automation stopped");
     }
@@ -242,14 +251,21 @@ public final class AutomationEngine {
         TaskRequest request = voicePending.remove(id); TaskState task = tasks.get(id);
         if (request == null || task == null || task.stop.get() || task.progress.status().terminal()) return;
         if (!ok) { stopTask(id); return; }
-        task.progress.confirmed(); task.future = executor.submit(()->runTask(task,request));
+        task.progress.confirmed(); submitTask(task,request);
     }
 
+    private void submitTask(TaskState task,TaskRequest request){
+        task.future=executor.submit(()->{
+            synchronized(task){if(task.stop.get()){task.settled.countDown();return;}task.workerStarted=true;}
+            try{runTask(task,request);}finally{task.settled.countDown();}
+        });
+    }
     private void runTask(TaskState task, TaskRequest request) {
         Config config = baseConfig.withOverrides(request.apiKey, request.apiBase, request.model).withProfiles(request.models);
         String doneMessage = null;
         ExecutionContext ctx = null;
         try {
+            if(task.stop.get()||Thread.currentThread().isInterrupted())throw new InterruptedException("Task stopped before planning");
             config.executor.validate();
             config.verifier.validate();
             AiClient ai = new AiClient(config, logs, task.taskId, () -> task.progress.call("executor"));
@@ -296,7 +312,11 @@ public final class AutomationEngine {
             if (task.stop.get()) throw new InterruptedException("task cancelled before launch");
             transition(task, TaskStatus.RUNNING, "开始执行", "", "");
             task.conflict = new com.silentauto.shell.ext.guard.MainAppConflictGuard(task.packageName,task.appName,
-                    foreground::foregroundPackage,task.progress::status,()->task.progress.json().get("stepText").getAsString(),
+                    ()->{
+                        String current=foreground.foregroundPackage();
+                        if(task.forceStart.get()){if(task.packageName.equals(current))return "";task.forceStart.set(false);}
+                        return current;
+                    },task.progress::status,()->task.progress.json().get("stepText").getAsString(),
                     (state,detail)->{synchronized(task.progress){
                         if(state==TaskStatus.PAUSED&&task.progress.status()!=TaskStatus.RUNNING)return;
                         if(state==TaskStatus.RUNNING&&task.progress.status()!=TaskStatus.PAUSED)return;
@@ -1081,6 +1101,8 @@ public final class AutomationEngine {
         public final String taskId;
         public final AtomicBoolean forceStart = new AtomicBoolean(false);
         public final AtomicBoolean stop = new AtomicBoolean(false);
+        final java.util.concurrent.CountDownLatch settled=new java.util.concurrent.CountDownLatch(1);
+        boolean workerStarted;
         public volatile String state = "queued";
         public final TaskProgress progress;
         public com.silentauto.shell.ext.guard.MainAppConflictGuard conflict;

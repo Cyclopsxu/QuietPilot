@@ -47,6 +47,7 @@ final class AutomationTaskView {
     private JSONObject handoffStatus;
     private TextView handoffHint;
     private int otherWaiting;
+    private boolean finalizing;
     private Button openOnMain;
 
     AutomationTaskView(Activity activity, Handler main, String taskId, Listener listener) {
@@ -149,6 +150,7 @@ final class AutomationTaskView {
         logScroll.setVisibility(visibility);
     }
 
+    void setFinalizing(boolean value) { finalizing=value; }
     void setRunning(boolean running) {
         if (Looper.myLooper() != Looper.getMainLooper()) {
             main.post(() -> setRunning(running));
@@ -158,8 +160,8 @@ final class AutomationTaskView {
             hideKeyboard();
         }
         goal.setVisibility(running ? View.GONE : View.VISIBLE);
-        run.setEnabled(!running);
-        run.setText(running ? activity.getString(R.string.running) : activity.getString(R.string.run));
+        run.setEnabled(!running&&!finalizing);
+        run.setText(finalizing ? "正在学习/收尾…" : running ? activity.getString(R.string.running) : activity.getString(R.string.run));
         stop.setVisibility(running ? View.VISIBLE : View.GONE);
     }
 

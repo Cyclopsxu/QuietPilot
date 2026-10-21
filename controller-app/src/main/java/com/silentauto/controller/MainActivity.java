@@ -347,6 +347,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
             if ("status".equals(type)) {
                 String status = params.optString("status");
                 if (params.has("goal")) task.restoreGoal(params.optString("goal"));
+                task.setFinalizing(java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status)&&!params.optBoolean("finalized",true));
                 task.setRunning(!java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status));
                 task.updateStatus(params);
                 task.append(status + " " + params.optString("stepText") + " " + params.optString("message"));
