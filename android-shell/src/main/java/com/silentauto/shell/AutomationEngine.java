@@ -200,7 +200,15 @@ public final class AutomationEngine {
 
             logs.task(task.taskId, "listing installed apps");
             List<AppCatalog.AppInfo> apps = appCatalog.installedApps();
-            ActionDecision app = chooseApp(ai, request.goal, apps);
+            com.silentauto.shell.ext.skill.SkillMatcher.Match match = null;
+            try { match = new com.silentauto.shell.ext.skill.SkillMatcher().match(request.goal, skills.list(true), ai::complete); }
+            catch (Exception matchError) { logs.task(task.taskId, "skill match skipped: " + matchError.getMessage()); }
+            ActionDecision app;
+            if (match != null) {
+                task.skillRunner = new com.silentauto.shell.ext.skill.SkillRunner(match.skill, match.args);
+                app = new ActionDecision(); app.packageName = match.skill.get("packageName").getAsString();
+                logs.task(task.taskId, "skill matched: " + task.skillRunner.skillId());
+            } else app = chooseApp(ai, request.goal, apps);
             if (Config.empty(app.packageName)) {
                 app.packageName = appCatalog.localPackageGuess(request.goal, apps);
             }
@@ -240,10 +248,11 @@ public final class AutomationEngine {
                 String dump = bridge.dump(task.display.displayId, task.display.width, task.display.height, UiBridge.MODE_SIMPLE);
                 rememberUiObservation(task, dump);
                 for (StepListener listener : listeners) listener.beforeStep(ctx, step, dump);
-                ActionDecision action = firstNonNull(ctx, task, step, dump);
+                ActionDecision action = task.skillRunner == null ? null : task.skillRunner.next(ctx, task, step, dump);
+                if (action == null) action = firstNonNull(ctx, task, step, dump);
                 if (action == null) action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
                 if (task.stop.get() || Thread.currentThread().isInterrupted()) throw new InterruptedException("task cancelled");
-                action = applyAutoCorrections(task, action);
+                if (!"skill".equals(action.source)) action = applyAutoCorrections(task, action);
                 task.progress.action(action.reason, action.source);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason) + " source=" + action.source);
                 if ("request_user".equals(action.action) || "done".equals(action.action)) {
@@ -352,7 +361,7 @@ public final class AutomationEngine {
                 }
             }
             if (ctx == null) recorder.finish(task.taskId, task.progress.outcome());
-            if (recorded != null && task.ai != null && !task.stop.get()) {
+            if (recorded != null && task.ai != null && !task.stop.get() && task.skillRunner == null) {
                 try {
                     JsonObject metrics = task.progress.json();
                     int calls = 0;
@@ -891,6 +900,7 @@ public final class AutomationEngine {
         public final AtomicBoolean stop = new AtomicBoolean(false);
         public volatile String state = "queued";
         public final TaskProgress progress;
+        public com.silentauto.shell.ext.skill.SkillRunner skillRunner;
         public String packageName = "";
         public String appName = "";
         public volatile AiClient verifierAi;

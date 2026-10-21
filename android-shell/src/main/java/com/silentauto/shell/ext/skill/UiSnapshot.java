@@ -31,7 +31,8 @@ public final class UiSnapshot {
     public JsonObject target(com.silentauto.shell.ActionDecision action) {
         JsonObject best = null; long area = Long.MAX_VALUE;
         for (JsonObject node : nodes) {
-            if (("text".equals(action.action) || "input_text".equals(action.action)) && bool(node,"editable") && bool(node,"focused")) return features(node);
+            if (("text".equals(action.action) || "input_text".equals(action.action)) && (action.inputIndex > 0
+                    ? integer(node,"inputIndex") == action.inputIndex : bool(node,"editable") && bool(node,"focused"))) return features(node);
             if ("tap_target".equals(action.action) && integer(node,"targetIndex") == action.targetIndex && action.targetIndex > 0) return features(node);
             if ("focus_input".equals(action.action) && integer(node,"inputIndex") == action.inputIndex && action.inputIndex > 0) return features(node);
             if ("tap".equals(action.action) || "long_press".equals(action.action)) {

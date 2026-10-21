@@ -36,6 +36,10 @@ public final class ActionExecutor {
         } else if ("scroll".equals(action.action)) {
             scrollUi(ctx.taskId, ctx.input, ctx.displayId, ctx.width, ctx.height, action.direction, action.distance);
         } else if ("text".equals(action.action)) {
+            if (action.inputIndex > 0) {
+                focusResult = focusInput(ctx.taskId, ctx.ui, ctx.input, ctx.displayId, ctx.width, ctx.height, action.inputIndex, "");
+                if (focusResult == null) throw new IllegalStateException("Skill input target disappeared");
+            }
             inputText(ctx.taskId, ctx.ui, ctx.input, ctx.clipboard, ctx.displayId, action.text);
         } else if ("set_clipboard".equals(action.action)) {
             task.agentClipboard = action.text;
