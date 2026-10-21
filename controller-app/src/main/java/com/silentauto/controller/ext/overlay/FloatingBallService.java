@@ -18,7 +18,7 @@ import java.util.concurrent.*;
 
 public final class FloatingBallService extends Service {
     private static final int BALL_DP=64, EDGE_MARGIN_DP=28;
-    private static final long HOLD_TO_RECORD_MS=2000;
+    private static final long HOLD_TO_RECORD_MS=1000;
     private final Handler main=new Handler(Looper.getMainLooper());
     private final ExecutorService io=Executors.newCachedThreadPool();
     private final LinkedHashMap<String,JSONObject> tasks=new LinkedHashMap<>();
@@ -34,7 +34,7 @@ public final class FloatingBallService extends Service {
     @Override public void onCreate(){super.onCreate();
         NotificationManager manager=getSystemService(NotificationManager.class);NotificationChannel channel=new NotificationChannel("voice_ball","语音悬浮球",NotificationManager.IMPORTANCE_LOW);channel.setSound(null,null);manager.createNotificationChannel(channel);
         PendingIntent guide=PendingIntent.getActivity(this,0,new Intent(this,OverlayPermissionActivity.class),PendingIntent.FLAG_IMMUTABLE);
-        Notification notice=new Notification.Builder(this,"voice_ball").setSmallIcon(android.R.drawable.ic_btn_speak_now).setContentTitle("语音悬浮球已开启").setContentText("按住约2秒，震动后说话；点击设置关闭").setContentIntent(guide).setOngoing(true).build();
+        Notification notice=new Notification.Builder(this,"voice_ball").setSmallIcon(android.R.drawable.ic_btn_speak_now).setContentTitle("语音悬浮球已开启").setContentText("按住约1秒，震动后说话；点击设置关闭").setContentIntent(guide).setOngoing(true).build();
         if(Build.VERSION.SDK_INT>=30)startForeground(1040,notice,OverlayPermissionActivity.ready(this)?ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE:ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC);else startForeground(1040,notice);
         if(!Settings.canDrawOverlays(this)){stopSelf();return;}
         windows=getSystemService(WindowManager.class);audio=getSystemService(AudioManager.class);ball=new Ball();
@@ -117,7 +117,7 @@ public final class FloatingBallService extends Service {
     @Override public IBinder onBind(Intent intent){return null;}
     private final class Ball extends View {
         private final Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);
-        Ball(){super(FloatingBallService.this);setContentDescription("语音悬浮球：按住约2秒，震动后说话，松开发送，上滑取消");}
+        Ball(){super(FloatingBallService.this);setContentDescription("语音悬浮球：按住约1秒，震动后说话，松开发送，上滑取消");}
         @Override protected void onSizeChanged(int w,int h,int oldw,int oldh){super.onSizeChanged(w,h,oldw,oldh);setSystemGestureExclusionRects(Collections.singletonList(new Rect(0,0,w,h)));}
         @Override protected void onDraw(Canvas canvas){super.onDraw(canvas);float x=getWidth()/2f,y=getHeight()/2f,r=dp(recording?30:28);boolean needs=waiting()!=null;int count=running();long now=SystemClock.elapsedRealtime();
             int color=!OverlayPermissionActivity.ready(FloatingBallService.this)?0xff888888:needs?0xffef8b25:recording?0xffb94463:0xff247c76;
