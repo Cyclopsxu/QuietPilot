@@ -914,8 +914,8 @@ public final class AutomationEngine {
             prompt += task.skillRunner.rescuePrompt();
         JsonArray messages = new JsonArray();
         messages.add(AiClient.message("system", TOOL_SYSTEM_PROMPT));
+        if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY)prompt+="\nQUERY 只读任务：仅搜索、浏览、读取。不得发送、提交、确认、购买、收藏等改变数据。读取所有可见节点的 text/desc，包括不可点击的文字；已有原文就直接报告，不必点击文字条目或重复滚动。找到答案调用 report_answer(answer<=60字,quote界面原文)，确实查不到调用 report_not_found(searched)。不得 finish，不得编造。";
         messages.add(AiClient.message("user", prompt));
-        if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY)prompt+="\nQUERY 只读任务：仅搜索、浏览、读取。不得发送、提交、确认、购买、收藏等改变数据。找到答案调用 report_answer(answer<=60字,quote界面原文)，确实查不到调用 report_not_found(searched)。不得 finish，不得编造。";
         JsonArray tools = task.type==com.silentauto.shell.ext.query.TaskType.QUERY?com.silentauto.shell.ext.query.QueryTools.tools(ActionTools.tools()):ActionTools.tools();
         for (int observationCalls = 0; observationCalls <= MAX_OBSERVATION_TOOL_CALLS; observationCalls++) {
             AiClient.ToolResult result = ai.callTools(messages, tools);
