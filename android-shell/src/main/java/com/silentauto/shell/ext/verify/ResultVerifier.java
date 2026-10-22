@@ -60,13 +60,21 @@ public final class ResultVerifier {
         public final EvidenceFrame frame;public final String visible;
         Extracted(com.silentauto.shell.ext.query.AnswerVerifier.Answer a,EvidenceFrame f,String text){answer=a;frame=f;visible=text;}
     }
-    public Extracted extractAnswer(ExecutionContext ctx,String question)throws Exception {
+    public Extracted extractAnswer(ExecutionContext ctx,String question)throws Exception { return extractAnswer(ctx,question,false); }
+    public Extracted extractAnswer(ExecutionContext ctx,String question,boolean forceOcr)throws Exception {
         EvidenceFrame frame=observe();
         if(frame.protectedScreen)throw new IllegalStateException("Protected query page requires manual handoff");
         String dump=ctx.ui.dump(ctx.displayId,ctx.width,ctx.height,UiBridge.MODE_FULL),ocrText="";
-        if(new com.silentauto.shell.ext.skill.UiSnapshot(dump).foreground().nodes.size()<5)ocrText=ocr.call();
-        return new Extracted(com.silentauto.shell.ext.query.AnswerVerifier.extract(question,dump,ocrText,frame.dataUrl(),completion),frame,
-                com.silentauto.shell.ext.query.AnswerVerifier.visible(dump,ocrText));
+        if(forceOcr||new com.silentauto.shell.ext.skill.UiSnapshot(dump).foreground().nodes.size()<5)ocrText=ocr.call();
+        com.silentauto.shell.ext.query.AnswerVerifier.Answer answer;
+        try { answer=com.silentauto.shell.ext.query.AnswerVerifier.extract(question,dump,ocrText,frame.dataUrl(),completion); }
+        catch(IllegalArgumentException unavailable) {
+            if(forceOcr||!ocrText.isEmpty()||!"Answer quote is not visible".equals(unavailable.getMessage()))throw unavailable;
+            // Rich control trees can still omit text rendered in images or custom views.
+            ocrText=ocr.call();
+            answer=com.silentauto.shell.ext.query.AnswerVerifier.extract(question,dump,ocrText,frame.dataUrl(),completion);
+        }
+        return new Extracted(answer,frame,com.silentauto.shell.ext.query.AnswerVerifier.visible(dump,ocrText));
     }
     public boolean answersAgree(String a,String b)throws Exception{return com.silentauto.shell.ext.query.AnswerVerifier.agrees(a,b,completion);}
 
@@ -114,7 +122,7 @@ public final class ResultVerifier {
                     scope=complete 时验收整个用户目标；scope=boundary 时只确认仍在交接边界。
                     scope=handoff_ready 时必须看到用户已成功处理或可安全继续；验证码/密码/确认的下一中间页不能通过。
                     scope=complete 时同时判断交付方式 delivery：选餐厅、挑商品、浏览/比较/查询结果等需要用户查看当前页面的任务为 view；发送成功、设置已更改等已经完成且无需继续操作的任务为 complete。不要因用户没说“停留”就选 complete。
-                    page_anchors 为当前结果实体的 1-3 个稳定、具体、可见文字，例如餐厅/商品全名、详细地址、订单号。必须包含实体名称或唯一编号；不要用导航、榜单标签、评分、价格、时间等通用或变化信息。无法确认则给空数组。
+                    page_anchors 为当前结果的 1-3 个稳定、具体、可见原文，必须逐字复制 ui_dump 的 text/desc。餐厅/商品等实体任务必须包含实体名称或唯一编号，可加详细地址。计算等非实体任务用完整表达式与计算结果的原文组合；设置任务用具体设置项及当前状态的原文组合。不要只用通用数字、按钮、导航、榜单标签、评分、价格、时间。无法确认则给空数组。
                     只输出 JSON: {"verified":true/false,"evidence":"界面上看到的具体证据","missing":"如果没通过，缺什么","delivery":"view或complete","page_anchors":["结果实体全名","详细地址"]}
                     """, observation.toString(), frame.dataUrl());
             JsonObject answer = parseAnswer(raw);

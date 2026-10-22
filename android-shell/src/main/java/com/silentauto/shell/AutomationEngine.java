@@ -391,6 +391,7 @@ public final class AutomationEngine {
     private void applyAmendments(TaskState task) {
         JsonArray applied=task.amendments.drain();if(applied.isEmpty())return;
         if(task.skillRunner!=null)task.skillRunner.abandonForAmendment();
+        task.queryProgress.reset();
         task.searchText="";task.pendingSearchSubmit=false;task.searchInputActive=false;task.pendingInputText="";task.verificationFailures=0;task.answerFailures=0;
         task.progress.protectedScreen(false);
         task.lastAction="amended";task.lastReason="已应用用户追加要求；重新观察当前页面，依据有效目标继续，已完成操作不得重复";
@@ -523,7 +524,25 @@ public final class AutomationEngine {
                 String dump = bridge.dump(task.display.displayId, task.display.width, task.display.height, UiBridge.MODE_SIMPLE);
                 rememberUiObservation(task, dump);
                 for (StepListener listener : listeners) listener.beforeStep(ctx, step, dump);
-                ActionDecision action = task.skillRunner == null ? null : task.skillRunner.next(ctx, task, step, dump);
+                ResultVerifier.Extracted recoveredQuery=null;
+                if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY&&task.queryProgress.observe(dump,task.lastAction)) {
+                    logs.task(task.taskId,"QUERY_LOOP_RECOVERY: repeated scroll viewport; inspect screenshot and OCR");
+                    try {
+                        recoveredQuery=verifier.extractAnswer(ctx,task.amendments.goal(),true);
+                        task.lastReason=recoveredQuery.answer.found?"独立截图/OCR发现有依据的答案":"当前滚动路径重复，截图/OCR也未找到足够原文。不要继续上下翻同一页面；返回换入口或使用应用内搜索。若只显示主版本，不得当作完整版本。";
+                    } catch(Exception unavailable) {
+                        if(task.stop.get()||Thread.currentThread().isInterrupted())throw unavailable;
+                        task.lastReason="当前滚动路径重复，补充识别不可用。不要重复滚动；返回换入口或搜索。";
+                        logs.task(task.taskId,"query loop extraction unavailable: "+unavailable.getMessage());
+                    }
+                    if(task.amendments.version()!=goalVersion){step--;continue;}
+                    if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
+                }
+                ActionDecision action;
+                if(recoveredQuery!=null&&recoveredQuery.answer.found) {
+                    action=new ActionDecision();action.action="report_answer";action.source="query_recovery";
+                    action.answer=recoveredQuery.answer.answer;action.quote=recoveredQuery.answer.quote;action.reason="重复页面后独立读取截图与OCR";
+                } else action = task.skillRunner == null ? null : task.skillRunner.next(ctx, task, step, dump);
                 if (action == null) action = firstNonNull(ctx, task, step, dump);
                 if (action == null) {
                     try {
@@ -605,11 +624,11 @@ public final class AutomationEngine {
                 if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY&&("report_answer".equals(action.action)||"report_not_found".equals(action.action))) {
                     try {
                         String question="skill".equals(action.source)?task.skillRunner.question():task.amendments.goal();
-                        ResultVerifier.Extracted extracted=verifier.extractAnswer(ctx,question);
+                        ResultVerifier.Extracted extracted=recoveredQuery!=null&&"query_recovery".equals(action.source)?recoveredQuery:verifier.extractAnswer(ctx,question);
                         if(task.amendments.version()!=goalVersion){step--;continue;}
                     if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
                         boolean found=extracted.answer.found,uncertain=false;String answer=extracted.answer.answer,quote=extracted.answer.quote;
-                        if(found&&!"skill".equals(action.source)) {
+                        if(found&&!"skill".equals(action.source)&&!"query_recovery".equals(action.source)) {
                             boolean agrees="report_answer".equals(action.action)&&com.silentauto.shell.ext.query.AnswerVerifier.grounded(action.quote,extracted.visible)
                                     &&verifier.answersAgree(action.answer,answer);
                             if(agrees){answer=com.silentauto.shell.ext.query.AnswerVerifier.shortAnswer(action.answer);quote=action.quote;}
@@ -801,7 +820,7 @@ public final class AutomationEngine {
 
     private void finishMetrics(TaskState task, JsonObject recorded) {
         JsonObject sources = new JsonObject();
-        for (String source : new String[]{"model","skill","rescue"}) sources.addProperty(source,0);
+        for (String source : new String[]{"model","skill","rescue","query_recovery"}) sources.addProperty(source,0);
         if (recorded != null) for (JsonElement item : com.silentauto.shell.ext.skill.UiSnapshot.array(recorded,"steps")) {
             String source = com.silentauto.shell.ext.skill.UiSnapshot.text(item.getAsJsonObject(),"source");
             if (sources.has(source)) sources.addProperty(source,sources.get(source).getAsInt()+1);
@@ -1359,6 +1378,7 @@ public final class AutomationEngine {
         public volatile AiClient ai;
         public com.silentauto.shell.ext.query.TaskType type=com.silentauto.shell.ext.query.TaskType.ACTION;
         public int answerFailures;
+        public final com.silentauto.shell.ext.query.QueryProgress queryProgress=new com.silentauto.shell.ext.query.QueryProgress();
         public final com.silentauto.shell.ext.amend.AmendmentQueue amendments;
         public String cancellationMessage="";
         public boolean completed;

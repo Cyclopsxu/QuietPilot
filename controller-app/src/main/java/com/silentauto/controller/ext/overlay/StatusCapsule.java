@@ -83,7 +83,7 @@ public final class StatusCapsule implements StatusSurface {
             }
             if(expanded){
                 text.setColor(Color.WHITE);text.setTextSize(dp(14));boolean queryResult=queryAnswer(task);
-                String goal=queryResult?(task.optBoolean("uncertain")?"可能是：":"")+("NOT_FOUND".equals(task.optString("status"))?"没查到："+task.optString("searched"):task.optString("answer")):amendResult!=null&&SystemClock.elapsedRealtime()<amendUntil&&task.optString("taskId").equals(amendResult.optString("taskId"))?amendResult.optString("message"):task.optString("goal");
+                String goal=queryResult?(task.optBoolean("uncertain")?"可能是：":"")+("NOT_FOUND".equals(task.optString("status"))?"没查到："+task.optString("searched"):task.optString("answer")):amendResult!=null&&SystemClock.elapsedRealtime()<amendUntil&&task.optString("taskId").equals(amendResult.optString("taskId"))?amendResult.optString("message"):task.optBoolean("resultReady")?task.optString("evidence",task.optString("goal")):task.optString("goal");
                 StaticLayout lines=StaticLayout.Builder.obtain(goal,0,goal.length(),text,(int)(w-dp(28))).setMaxLines(2).setEllipsize(TextUtils.TruncateAt.END).build();canvas.save();canvas.translate(dp(14),dp(44));lines.draw(canvas);canvas.restore();
                 String detail=queryResult?"来源："+task.optString("appName",task.optString("sourceApp")):waiting||terminal(task.optString("status"))?task.optString("message"):task.optString("stepText");
                 line(canvas,detail,dp(14),dp(105),12,0xffccd8df,w-dp(28));

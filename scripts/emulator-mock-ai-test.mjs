@@ -202,7 +202,7 @@ async function main() {
     method: 'startTask',
     params: {
       taskId,
-      goal: '打开系统设置，搜索wifi，然后结束。',
+      goal: '打开系统设置，搜索wifi，然后结束，无需保留页面。',
       apiKey: 'mock',
       apiBase: `http://127.0.0.1:${mockPort}/v1`,
       model: 'mock'

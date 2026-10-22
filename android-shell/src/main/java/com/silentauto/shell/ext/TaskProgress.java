@@ -33,7 +33,7 @@ public final class TaskProgress {
     public TaskProgress(String taskId, String goal, LogHub logs) {
         this.taskId = taskId; this.goal = goal;this.originalGoal=goal; this.logs = logs;
         calls.put("executor", 0); calls.put("verifier", 0); calls.put("intake", 0);
-        for (String source : new String[]{"model","skill","rescue"}) sourceSteps.addProperty(source,0);
+        for (String source : new String[]{"model","skill","rescue","query_recovery"}) sourceSteps.addProperty(source,0);
     }
     public synchronized void amendIntake(long elapsed){calls.put("intake",calls.get("intake")+1);intakeElapsedMs+=elapsed;}
     public synchronized void amended(String effective,com.google.gson.JsonArray records,String detail) {
