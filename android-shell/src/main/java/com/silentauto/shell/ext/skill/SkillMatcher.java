@@ -8,11 +8,16 @@ public final class SkillMatcher {
         Match(JsonObject skill, JsonObject args) { this.skill = skill; this.args = args; }
     }
     public Match match(String goal, JsonArray active, SkillCompiler.Model model) throws Exception {
+        return match(goal,"action",active,model);
+    }
+    public Match match(String goal,String type,JsonArray all,SkillCompiler.Model model)throws Exception {
+        JsonArray active=new JsonArray();
+        for(JsonElement item:all){String kind=UiSnapshot.text(item.getAsJsonObject(),"type");if(type.equals(kind.isEmpty()?"action":kind))active.add(item);}
         if (active.isEmpty()) return null;
         JsonArray catalog = new JsonArray();
         for (JsonElement item : active) {
             JsonObject source = item.getAsJsonObject(), metadata = new JsonObject();
-            for (String field : new String[]{"skillId", "name", "description", "params"}) metadata.add(field, source.get(field));
+            for (String field : new String[]{"type", "skillId", "name", "description", "params"}) metadata.add(field, source.get(field));
             catalog.add(metadata);
         }
         String raw = model.complete("SKILL_MATCH 从 active 技能中匹配任务。仅明确覆盖任务时匹配，参数必须来自本次任务，禁止沿用示例。"

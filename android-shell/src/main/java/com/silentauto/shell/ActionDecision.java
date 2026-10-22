@@ -15,6 +15,7 @@ public final class ActionDecision {
     public String message = "";
     public String boundary = "";
     public String expectedEvidence = "";
+    public String answer="", quote="", searched="";
     public String text = "";
     public String query = "";
     public String direction = "";
@@ -76,6 +77,7 @@ public final class ActionDecision {
         decision.message = string(args, "message");
         decision.boundary = string(args, "boundary");
         decision.expectedEvidence = string(args, "expected_evidence");
+        decision.answer=string(args,"answer");decision.quote=string(args,"quote");decision.searched=string(args,"searched");
         if ("get_ui_layout".equals(name)) {
             decision.action = "wait";
             decision.ms = 300;
@@ -129,6 +131,8 @@ public final class ActionDecision {
             decision.key = string(args, "key");
         } else if ("request_user".equals(name)) {
             decision.action = "request_user";
+        } else if ("report_answer".equals(name)||"report_not_found".equals(name)) {
+            decision.action=name;
         } else if ("finish".equals(name)) {
             decision.action = "done";
         } else {
@@ -171,6 +175,7 @@ public final class ActionDecision {
             decision.message = string(object, "message");
             decision.boundary = string(object, "boundary");
             decision.expectedEvidence = string(object, "expected_evidence");
+            decision.answer=string(object,"answer");decision.quote=string(object,"quote");decision.searched=string(object,"searched");
             decision.text = string(object, "text");
             decision.direction = string(object, "direction", "down");
             decision.key = string(object, "key");

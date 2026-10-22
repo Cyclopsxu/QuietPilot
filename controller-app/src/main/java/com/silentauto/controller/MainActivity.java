@@ -314,8 +314,8 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 if (array != null) main.post(() -> {
                     for (int i = 0; i < array.length(); i++) {
                         JSONObject task = array.optJSONObject(i);
-                        if (task == null || java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(task.optString("status"))) continue;
-                        try { task.put("type", "status"); handleEvent(task); } catch (Exception ignored) {}
+                        if (task == null || java.util.Arrays.asList("VERIFIED", "ANSWERED", "NOT_FOUND", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(task.optString("status"))) continue;
+                        try { task.put("event", "status"); handleEvent(task); } catch (Exception ignored) {}
                     }
                 });
             }
@@ -341,15 +341,15 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     private void handleEvent(JSONObject params) {
         try {
             AutomationTaskView task = taskById(params.optString("taskId"));
-            if (task == null && ("status".equals(params.optString("type")) || "video.config".equals(params.optString("type")))) task = ensureTask(params);
+            if (task == null && ("status".equals(params.optString("event",params.optString("type"))) || "video.config".equals(params.optString("type")))) task = ensureTask(params);
             if (task == null) return;
             final AutomationTaskView currentTask = task;
-            String type = params.optString("type");
+            String type = params.optString("event",params.optString("type"));
             if ("status".equals(type)) {
                 String status = params.optString("status");
                 if (params.has("goal")) task.restoreGoal(params.optString("goal"));
-                task.setFinalizing(java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status)&&!params.optBoolean("finalized",true));
-                task.setRunning(!java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status));
+                task.setFinalizing(java.util.Arrays.asList("VERIFIED", "ANSWERED", "NOT_FOUND", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status)&&!params.optBoolean("finalized",true));
+                task.setRunning(!java.util.Arrays.asList("VERIFIED", "ANSWERED", "NOT_FOUND", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status));
                 task.updateStatus(params);
                 task.append(status + " " + params.optString("stepText") + " " + params.optString("message"));
                 if ("WAITING_USER".equals(status)) {
@@ -361,7 +361,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                     main.post(() -> getSystemService(NotificationManager.class).cancel(currentTask.taskId(), 23));
                 }
                 synchronized (tasks) { for (AutomationTaskView page : tasks) page.otherWaiting(Math.max(0,pendingHandoffs.size()-(pendingHandoffs.containsKey(page.taskId())?1:0))); }
-                if (java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status)) task.setRunning(false);
+                if (java.util.Arrays.asList("VERIFIED", "ANSWERED", "NOT_FOUND", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(status)) task.setRunning(false);
             } else if ("handoff".equals(type)) {
                 // Compatibility event; v2 notifications are driven by the richer status event.
                 task.append("等待用户: " + params.optString("message"));

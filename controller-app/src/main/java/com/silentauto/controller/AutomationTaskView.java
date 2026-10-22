@@ -185,7 +185,7 @@ final class AutomationTaskView {
 
     void updateStatus(JSONObject status) {
         activity.runOnUiThread(() -> {
-            taskEnded=java.util.Arrays.asList("VERIFIED","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(status.optString("status"));
+            taskEnded=java.util.Arrays.asList("VERIFIED","ANSWERED","NOT_FOUND","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(status.optString("status"));
             if ("WAITING_USER".equals(status.optString("status"))) {
                 handoffStatus = status;
                 if (handoffHint != null) handoffHint.setText(handoffMessage(status));

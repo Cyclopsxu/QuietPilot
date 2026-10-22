@@ -22,7 +22,7 @@ public final class OverlayRpc implements AutoCloseable {
         BufferedReader reader=new BufferedReader(new InputStreamReader(connected.getInputStream(),StandardCharsets.UTF_8));String line;
         while(!closed&&(line=reader.readLine())!=null){JSONObject value=new JSONObject(line);
             if(value.has("id")){int id=value.optInt("id",-1);CompletableFuture<JSONObject> future=waiting.remove(id);if(future!=null){if(value.has("error"))future.completeExceptionally(new IOException(value.getJSONObject("error").optString("message")));else future.complete(value);} }
-            JSONObject event=value.optJSONObject("params");if(event!=null&&"status".equals(event.optString("type")))status.accept(event);
+            JSONObject event=value.optJSONObject("params");if(event!=null&&"status".equals(event.optString("event",event.optString("type"))))status.accept(event);
             JSONObject result=value.optJSONObject("result");JSONArray tasks=result==null?value.optJSONArray("result"):result.optJSONArray("tasks");
             if(tasks!=null)for(int i=0;i<tasks.length();i++)status.accept(tasks.getJSONObject(i));
         }

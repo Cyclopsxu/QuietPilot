@@ -143,10 +143,10 @@ public final class LogHub {
 
     public void status(JsonObject task) {
         String state = task.get("status").getAsString();
-        if (java.util.Arrays.asList("VERIFIED", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(state))
+        if (java.util.Arrays.asList("VERIFIED", "ANSWERED", "NOT_FOUND", "FAILED", "CANCELLED", "HANDOFF_TIMEOUT").contains(state))
             videoConfigs.remove(task.get("taskId").getAsString());
         JsonObject params = task.deepCopy();
-        params.addProperty("type", "status");
+        params.addProperty("event", "status");
         emit(params);
     }
 

@@ -59,7 +59,7 @@ const server = http.createServer((req, res) => {
   req.on('data', chunk => body += chunk);
   req.on('end', () => {
     if (body.includes('严格的验收员')) {
-      sse(res, [content('{"verified":true,"evidence":"Settings search UI shows wifi","missing":""}')]);
+      sse(res, [content('{"verified":true,"evidence":"Settings search UI shows wifi","missing":"","delivery":"complete"}')]);
       return;
     }
     if (!body.includes('"tools"')) {

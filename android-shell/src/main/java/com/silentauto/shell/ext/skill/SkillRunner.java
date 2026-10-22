@@ -7,7 +7,7 @@ import com.silentauto.shell.ext.*;
 /** Resolves controls from the current tree; recorded coordinates are never reused. */
 public final class SkillRunner implements ActionSource {
     private final JsonObject skill, args;
-    private int cursor;
+    private int cursor, emptyWaits;
     public enum State { FOLLOWING, RESCUING, ABANDONED }
     private State state = State.FOLLOWING;
     private int rescueSteps;
@@ -16,8 +16,9 @@ public final class SkillRunner implements ActionSource {
     public SkillRunner(JsonObject skill, JsonObject args, Runnable onAbandon) {
         this.skill = skill.deepCopy(); this.args = args.deepCopy(); this.onAbandon = onAbandon;
     }
-    public void retryUnexecuted(ActionDecision action){if("skill".equals(action.source)&&!"done".equals(action.action)&&cursor>0)cursor--;}
+    public void retryUnexecuted(ActionDecision action){if("skill".equals(action.source)&&!java.util.Arrays.asList("done","report_answer","wait").contains(action.action)&&cursor>0)cursor--;}
     public void forceRescue(){if(state!=State.ABANDONED){state=State.RESCUING;rescueSteps=0;}}
+    public String question(){return SkillCompiler.substitute(UiSnapshot.text(skill,"question"),args);}
     public String skillId() { return UiSnapshot.text(skill, "skillId"); }
     public State state() { return state; }
     public String rescuePrompt() {
@@ -41,12 +42,15 @@ public final class SkillRunner implements ActionSource {
 
     public ActionDecision next(UiSnapshot current, int height) {
         if (state == State.ABANDONED) return null;
+        boolean visible=false;for(JsonObject node:current.foreground().nodes)if(UiSnapshot.text(skill,"packageName").equals(UiSnapshot.text(node,"package")))visible=true;
+        if(!visible&&emptyWaits++<4){ActionDecision waiting=new ActionDecision();waiting.source="skill";waiting.action="wait";waiting.ms=500;waiting.reason="等待技能页面出现";return waiting;}
+        if(visible)emptyWaits=0;
         JsonArray steps = UiSnapshot.array(skill, "steps");
         ActionDecision action = new ActionDecision(); action.source = "skill";
         action.reason = UiSnapshot.text(skill, "name") + " · " + (cursor + 1) + "/" + steps.size();
         if (cursor >= steps.size()) {
             action.reason = UiSnapshot.text(skill, "name") + " · 验收";
-            action.action = "done"; action.expectedEvidence = SkillCompiler.substitute(UiSnapshot.text(skill, "evidence"), args); return action;
+            action.action = "query".equals(UiSnapshot.text(skill,"type"))?"report_answer":"done"; action.expectedEvidence = SkillCompiler.substitute(UiSnapshot.text(skill, "evidence"), args); return action;
         }
         JsonObject recorded = expand(steps.get(cursor), args).getAsJsonObject();
         ScreenFingerprint expected = ScreenFingerprint.parse(recorded.getAsJsonObject("expect"));

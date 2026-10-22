@@ -36,7 +36,7 @@ public final class TaskArchive {
     }
     public JsonObject withEvidence(String id,JsonObject item)throws IOException{
         File screenshot=new File("/data/local/tmp/shadowauto/evidence",safe(id)+".png");
-        if("VERIFIED".equals(UiSnapshot.text(item,"status")) && screenshot.isFile()) {
+        if(java.util.Arrays.asList("VERIFIED","ANSWERED","NOT_FOUND").contains(UiSnapshot.text(item,"status")) && screenshot.isFile()) {
             android.graphics.Bitmap bitmap=android.graphics.BitmapFactory.decodeFile(screenshot.getAbsolutePath());
             if(bitmap!=null)try{
                 int edge=Math.max(bitmap.getWidth(),bitmap.getHeight());

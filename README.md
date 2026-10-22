@@ -24,6 +24,7 @@ The capabilities below include inherited upstream features and downstream extens
 | Voice floating ball | A 64dp touch area with curved-screen spacing and edge docking; hold for about one second, speak after the ready vibration, release to submit, or swipe up to cancel |
 | Screen-aware requests | Optionally use the current screen's image and text to resolve references such as “this restaurant”; includes a screen-reading toggle, password masking, and temporary context expiry |
 | Status capsule and manual handoffs | Show execution, queue, confirmation, and waiting states; notify the user at CAPTCHA, login, or payment boundaries and provide an interactive handoff preview |
+| Query answers on the main screen | Read-only QUERY tasks independently extract and ground answers in visible quotes; the capsule shows the answer/source for eight seconds, with explicit Copy and Open-source-app actions, not-found and uncertainty states |
 | Retained results and main-screen takeover | Retain results that need viewing; “Go view” moves the existing task, checks result-specific text such as its name/address, then releases the virtual display; failed transfers check rollback and offer a preview or an explicit recovery message |
 | History and efficiency statistics | Inspect outcomes, evidence screenshots, model calls, duration, skill matches, and model/skill/rescue step sources |
 | Disturbance metrics and input protection | Observe foreground, focus, IME, clipboard, and frame metrics, with same-app conflict handling and clipboard protection; unavailable measurements remain unknown |
@@ -216,6 +217,9 @@ Main methods:
 - `ping`: health check.
 
 The server is intentionally unauthenticated because it binds to local loopback and is designed for a local controller app. Do not expose this port externally.
+
+
+Query API: `startTask` accepts `type="query"` (default `action`), with `ANSWERED` / `NOT_FOUND` outcomes. Status notifications use `event="status"`, leaving `type` for task type; the controller still accepts legacy `type="status"` events. `openQuerySource` opens the source app only after an explicit user action.
 
 ## Notes And Limitations
 

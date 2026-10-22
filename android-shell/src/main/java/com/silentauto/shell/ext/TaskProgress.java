@@ -17,7 +17,8 @@ public final class TaskProgress {
     private String skillId = "", comparison = "", evidenceScreenshot = "";
     private JsonObject sourceSteps = new JsonObject();
     private JsonObject disturbance = new JsonObject();
-    private boolean protectedScreen, finalized, resultReady;
+    private boolean protectedScreen, finalized, resultReady, uncertain;
+    private String type="action",answer="",quote="",searched="";
     private TaskStatus status = TaskStatus.QUEUED;
     private String appName = "";
     private String app = "", stepText = "", source = "model", message = "", evidence = "", boundary = "";
@@ -32,6 +33,8 @@ public final class TaskProgress {
         calls.put("executor", 0); calls.put("verifier", 0); calls.put("intake", 0);
         for (String source : new String[]{"model","skill","rescue"}) sourceSteps.addProperty(source,0);
     }
+    public synchronized void type(String value){type=value;}
+    public synchronized void answer(String value,String basis,boolean unsure,String locations){answer=value;quote=basis;uncertain=unsure;searched=locations;}
     public synchronized void voice(String original, long elapsed, boolean confirm, long deadline) {
         transcript = original; intakeElapsedMs = elapsed; pendingConfirmation = true; requiresConfirmation = confirm; confirmDeadlineMs = deadline;
         message = confirm ? "请确认任务，10 秒未确认将取消" : "3 秒后开始，可取消";
@@ -74,12 +77,13 @@ public final class TaskProgress {
     private static boolean allowed(TaskStatus from, TaskStatus to) {
         if (from == to || to == TaskStatus.CANCELLED || to == TaskStatus.FAILED) return true;
         if (from == TaskStatus.QUEUED) return to == TaskStatus.RUNNING;
-        if (from == TaskStatus.RUNNING) return to == TaskStatus.WAITING_USER || to == TaskStatus.PAUSED || to == TaskStatus.VERIFIED;
+        if (from == TaskStatus.RUNNING) return to == TaskStatus.WAITING_USER || to == TaskStatus.PAUSED || to == TaskStatus.VERIFIED || to == TaskStatus.ANSWERED || to == TaskStatus.NOT_FOUND;
         if (from == TaskStatus.WAITING_USER) return to == TaskStatus.RUNNING || to == TaskStatus.HANDOFF_TIMEOUT;
         return from == TaskStatus.PAUSED && to == TaskStatus.RUNNING;
     }
     public synchronized JsonObject json() {
         JsonObject o = new JsonObject();
+        o.addProperty("type",type);o.addProperty("answer",answer);o.addProperty("quote",quote);o.addProperty("uncertain",uncertain);o.addProperty("sourceApp",app);o.addProperty("searched",searched);
         o.addProperty("taskId", taskId); o.addProperty("status", status.name());
         o.addProperty("goal", goal); o.addProperty("app", app); o.addProperty("appName", appName); o.addProperty("stepText", stepText);
         o.addProperty("step",step);
@@ -108,7 +112,7 @@ public final class TaskProgress {
         skillId = id; sourceSteps = sources.deepCopy(); comparison = baseline; finalized=true; publish();
     }
     public synchronized void learned(String name) {
-        if (status != TaskStatus.VERIFIED) return;
+        if (status != TaskStatus.VERIFIED && status != TaskStatus.ANSWERED) return;
         message = "已学会：" + name;
         publish();
     }

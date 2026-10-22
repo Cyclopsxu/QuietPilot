@@ -108,6 +108,7 @@ final class RpcServer {
                 engine.openTaskOnMain(JsonRpc.text(params, "taskId"));
                 return JsonRpc.result(id, "opening");
             }
+            if("openQuerySource".equals(method)){engine.openQuerySource(JsonRpc.text(params,"taskId"));return JsonRpc.result(id,"opened");}
             if ("takeResultOnMain".equals(method)) return JsonRpc.result(id,engine.takeResultOnMain(JsonRpc.text(params,"taskId")));
             if ("resumeTask".equals(method)) {
                 engine.resumeTask(JsonRpc.text(params, "taskId"), JsonRpc.text(params, "outcome"));
@@ -130,6 +131,7 @@ final class RpcServer {
                         JsonRpc.text(params, "apiBase"),
                         JsonRpc.text(params, "model")
                 );
+                taskRequest.type=com.silentauto.shell.ext.query.TaskType.parse(JsonRpc.text(params,"type"));
                 taskRequest.models = params.getAsJsonObject("models");
                 String taskId = engine.startTask(taskRequest);
                 JsonObject value = new JsonObject();
@@ -165,7 +167,7 @@ final class RpcServer {
         public synchronized void send(JsonObject object) {
             if (statusOnly && object.has("params")) {
                 JsonObject event = object.getAsJsonObject("params");
-                if (!"status".equals(JsonRpc.text(event,"type"))) return;
+                if (!"status".equals(JsonRpc.text(event,event.has("event")?"event":"type"))) return;
             }
             try {
                 writer.write(JsonRpc.GSON.toJson(object));

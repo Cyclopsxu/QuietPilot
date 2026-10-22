@@ -18,6 +18,7 @@ public final class TrajectoryRecorder implements StepListener {
         Session(String id,String goal){ root.addProperty("taskId",id);root.addProperty("goal",goal);root.addProperty("packageName","");root.addProperty("handedOff",false);root.add("steps",steps); }
     }
     public void prepare(String id,String goal){sessions.put(id,new Session(id,goal));}
+    public void type(String id,String type){Session s=sessions.get(id);if(s!=null)synchronized(s){s.root.addProperty("type",type);}}
     public void handedOff(String id){Session s=sessions.get(id);if(s!=null)synchronized(s){s.root.addProperty("handedOff",true);}}
     @Override public void onTaskStart(ExecutionContext ctx,String goal,String pkg){
         Session s=sessions.computeIfAbsent(ctx.taskId,id->new Session(id,goal));synchronized(s){s.root.addProperty("packageName",pkg);}

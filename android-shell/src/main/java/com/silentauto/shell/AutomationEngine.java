@@ -79,8 +79,9 @@ public final class AutomationEngine {
             if(previous.settled.getCount()!=0)throw new IllegalStateException("上一轮任务正在学习或收尾，请稍后重试");
         }
         TaskState task = new TaskState(taskId, request.goal, logs);
+        task.type=request.type;task.progress.type(task.type.wire());
         tasks.put(taskId, task);
-        recorder.prepare(taskId, request.goal);
+        recorder.prepare(taskId, request.goal);recorder.type(taskId,task.type.wire());
         task.progress.publish();
         submitTask(task,request);
         return taskId;
@@ -195,6 +196,15 @@ public final class AutomationEngine {
         result.addProperty("moved","moved".equals(outcome));result.addProperty("previewAvailable",preview);return result;
     }
 
+    void openQuerySource(String taskId)throws Exception {
+        TaskState task; synchronized(this){task=tasks.get(taskId);}
+        JsonObject detail=task==null?history.get(taskId):task.progress.json();
+        if(detail==null||!"query".equals(com.silentauto.shell.ext.skill.UiSnapshot.text(detail,"type"))
+                ||!java.util.Arrays.asList("ANSWERED","NOT_FOUND").contains(com.silentauto.shell.ext.skill.UiSnapshot.text(detail,"status")))throw new IllegalStateException("Query result is not available");
+        if(task!=null)releaseTask(task);
+        appCatalog.openOnMain(taskId,com.silentauto.shell.ext.skill.UiSnapshot.text(detail,"app"));
+    }
+
     synchronized void injectTouch(String taskId, String action, float x, float y) throws Exception {
         TaskState task = tasks.get(taskId);
         if (task == null || task.progress.status() != TaskStatus.WAITING_USER || task.display == null)
@@ -290,16 +300,19 @@ public final class AutomationEngine {
                     JsonRpc.text(params,"audioFormat"),context,appCatalog.appsText(appCatalog.installedApps()),skills.list(true),intake::completeParts);
         } finally { contexts().deleteConsumed(context); }
         if (!result.has("understood") || !result.get("understood").getAsBoolean()) return result;
+        result.addProperty("voiceId",id);
         String pkg = JsonRpc.text(result,"app"); boolean installed = false;
         for (AppCatalog.AppInfo app : appCatalog.installedApps()) if (app.packageName.equals(pkg)) installed = true;
         if (!installed) return com.silentauto.shell.ext.voice.VoiceIntake.rejected("不确定要做什么");
-        TaskRequest request = new TaskRequest(id,JsonRpc.text(result,"task"),JsonRpc.text(params,"apiKey"),JsonRpc.text(params,"apiBase"),JsonRpc.text(params,"model"));
+        TaskRequest request = new TaskRequest(id,"query".equals(JsonRpc.text(result,"type"))?JsonRpc.text(result,"question"):JsonRpc.text(result,"task"),JsonRpc.text(params,"apiKey"),JsonRpc.text(params,"apiBase"),JsonRpc.text(params,"model"));
+        request.type=com.silentauto.shell.ext.query.TaskType.parse(JsonRpc.text(result,"type"));
         request.models = params.getAsJsonObject("models");
-        boolean confirm = !"high".equals(JsonRpc.text(result,"confidence"));
+        boolean confirm = request.type!=com.silentauto.shell.ext.query.TaskType.QUERY&&!"high".equals(JsonRpc.text(result,"confidence"));
         synchronized (this) {
-            TaskState task = new TaskState(id,request.goal,logs); tasks.put(id,task); recorder.prepare(id,request.goal);
+            TaskState task = new TaskState(id,request.goal,logs);task.type=request.type;task.progress.type(task.type.wire()); tasks.put(id,task); recorder.prepare(id,request.goal);recorder.type(id,task.type.wire());
             task.progress.call("intake");
             task.progress.voice(JsonRpc.text(result,"transcript"),SystemClock.elapsedRealtime()-started,confirm,System.currentTimeMillis()+(confirm?10_000:3_000));
+            if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY){task.progress.confirmed();submitTask(task,request);result.addProperty("taskId",id);return result;}
             voicePending.put(id,request);
             task.future = voiceTimers.schedule(()->{
                 synchronized (AutomationEngine.this) {
@@ -346,7 +359,7 @@ public final class AutomationEngine {
             logs.task(task.taskId, "listing installed apps");
             List<AppCatalog.AppInfo> apps = appCatalog.installedApps();
             com.silentauto.shell.ext.skill.SkillMatcher.Match match = null;
-            try { match = new com.silentauto.shell.ext.skill.SkillMatcher().match(request.goal, skills.list(true), ai::complete); }
+            try { match = new com.silentauto.shell.ext.skill.SkillMatcher().match(request.goal,task.type.wire(), skills.list(true), ai::complete); }
             catch (Exception matchError) { logs.task(task.taskId, "skill match skipped: " + matchError.getMessage()); }
             ActionDecision app;
             if (match != null) {
@@ -437,7 +450,11 @@ public final class AutomationEngine {
                 task.progress.action(step, action.reason, action.source);
                 logs.task(task.taskId, "step " + step + ": " + action.action + " " + safe(action.reason) + " source=" + action.source);
                 for(StepListener listener:listeners)listener.beforeAction(ctx,step,action);
-                if ("request_user".equals(action.action) || "done".equals(action.action)) {
+                if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY) {
+                    String blocked=com.silentauto.shell.ext.guard.ReadOnlyGuard.blocked(action,bridge.dump(ctx.displayId,ctx.width,ctx.height,UiBridge.MODE_FULL));
+                    if(!blocked.isEmpty()){task.lastAction="READONLY_BLOCKED";task.lastReason="查询任务只读，已拦截："+blocked+"，请换一种方式查";logs.task(task.taskId,task.lastReason+" READONLY_BLOCKED");continue;}
+                }
+                if ("request_user".equals(action.action) || "done".equals(action.action) || "report_answer".equals(action.action) || "report_not_found".equals(action.action)) {
                     for (StepListener listener : listeners) listener.afterAction(ctx, step, action, new StepResult(null, null), dump);
                 }
                 if ("request_user".equals(action.action)) {
@@ -485,6 +502,35 @@ public final class AutomationEngine {
                     task.lastReason = "User handled the boundary; inspect the fresh UI before continuing";
                     continue;
                 }
+                if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY&&("report_answer".equals(action.action)||"report_not_found".equals(action.action))) {
+                    try {
+                        String question="skill".equals(action.source)?task.skillRunner.question():request.goal;
+                        ResultVerifier.Extracted extracted=verifier.extractAnswer(ctx,question);
+                        if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
+                        boolean found=extracted.answer.found,uncertain=false;String answer=extracted.answer.answer,quote=extracted.answer.quote;
+                        if(found&&!"skill".equals(action.source)) {
+                            boolean agrees="report_answer".equals(action.action)&&com.silentauto.shell.ext.query.AnswerVerifier.grounded(action.quote,extracted.visible)
+                                    &&verifier.answersAgree(action.answer,answer);
+                            if(agrees){answer=com.silentauto.shell.ext.query.AnswerVerifier.shortAnswer(action.answer);quote=action.quote;}
+                            else if(task.answerFailures++<2){task.lastAction="answer_mismatch";task.lastReason="独立提取不一致，请继续检查页面："+answer+"；原文："+quote;continue;}
+                            else uncertain=true;
+                        } else if(!found&&"report_answer".equals(action.action)&&!"skill".equals(action.source)) {
+                            if(task.answerFailures++<2){task.lastAction="answer_unproven";task.lastReason="当前界面不能证明答案，请继续查找或报告查过哪里";continue;}
+                            throw new IllegalStateException("Query answer has no visible evidence");
+                        }
+                        String searched=action.searched;
+                        if(!found&&searched.trim().isEmpty())searched="已检查"+task.appName+"当前查询页面";
+                        ResultVerifier.Result proof=new ResultVerifier.Result(found,quote,"");proof.frame=extracted.frame;
+                        task.progress.evidenceScreenshot(verifier.saveEvidence(ctx,proof));
+                        task.progress.answer(answer,quote,uncertain,searched);task.completed=true;task.resultStatus=found?"answered":"not_found";
+                        transition(task,found?TaskStatus.ANSWERED:TaskStatus.NOT_FOUND,found?(uncertain?"可能是：":"")+answer:"没查到："+searched,quote,"");
+                        logs.result(task.taskId,task.resultStatus,found?answer:searched);break;
+                    } catch(InterruptedException interrupted){throw interrupted;}
+                    catch(Exception unavailable){
+                        if(task.answerFailures++<2){task.lastAction="answer_unavailable";task.lastReason="答案提取不可用："+unavailable.getMessage();continue;}
+                        throw unavailable;
+                    }
+                }
                 if ("done".equals(action.action)) {
                     ResultVerifier.Result verification = verifier.verify(ctx, request.goal, action.expectedEvidence);
                     if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
@@ -527,6 +573,7 @@ public final class AutomationEngine {
                 }
                 StepResult result = null;boolean interruptedInput=false;
                 try { result = actionExecutor.execute(ctx, task, action); }
+                catch(com.silentauto.shell.ext.guard.ReadOnlyGuard.Blocked blocked){task.lastAction="READONLY_BLOCKED";task.lastReason=blocked.getMessage();logs.task(task.taskId,task.lastReason);continue;}
                 catch (com.silentauto.shell.ext.guard.MainAppConflictGuard.PausedInputException paused) { interruptedInput=true; }
                 finally { for (StepListener listener : listeners) listener.afterAction(ctx, step, action, result, dump); }
                 if(interruptedInput){
@@ -559,7 +606,7 @@ public final class AutomationEngine {
         } finally {
             if(task.conflict!=null)task.conflict.close();
             // A transferred result no longer needs a virtual display while learning is saved.
-            if(task.resultTransferred)releaseTask(task);
+            if(task.resultTransferred||task.type==com.silentauto.shell.ext.query.TaskType.QUERY)releaseTask(task);
             JsonObject recorded = recorder.trajectory(task.taskId);
             if (recorded != null) recorded.add("outcome", new com.google.gson.Gson().toJsonTree(task.progress.outcome()));
             if (ctx != null) {
@@ -658,7 +705,7 @@ public final class AutomationEngine {
                 JsonObject first = skill.getAsJsonObject("stats");
                 comparison = String.format(Locale.ROOT,"模型调用 %d → %d 次，耗时 %.1f → %.1f 秒",
                         first.get("firstLlmCalls").getAsInt(),calls,first.get("firstElapsedMs").getAsDouble()/1000,elapsed/1000.0);
-                skills.recordUse(task.packageName,id,elapsed,calls,task.completed && task.skillRunner.state()!=com.silentauto.shell.ext.skill.SkillRunner.State.ABANDONED);
+                skills.recordUse(task.packageName,id,elapsed,calls,(task.progress.status()==TaskStatus.VERIFIED||task.progress.status()==TaskStatus.ANSWERED) && task.skillRunner.state()!=com.silentauto.shell.ext.skill.SkillRunner.State.ABANDONED);
             }
         } catch (Exception e) { logs.task(task.taskId,"skill statistics unavailable: "+e.getMessage()); }
         task.progress.metrics(id,sources,comparison);
@@ -757,7 +804,8 @@ public final class AutomationEngine {
         JsonArray messages = new JsonArray();
         messages.add(AiClient.message("system", TOOL_SYSTEM_PROMPT));
         messages.add(AiClient.message("user", prompt));
-        JsonArray tools = ActionTools.tools();
+        if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY)prompt+="\nQUERY 只读任务：仅搜索、浏览、读取。不得发送、提交、确认、购买、收藏等改变数据。找到答案调用 report_answer(answer<=60字,quote界面原文)，确实查不到调用 report_not_found(searched)。不得 finish，不得编造。";
+        JsonArray tools = task.type==com.silentauto.shell.ext.query.TaskType.QUERY?com.silentauto.shell.ext.query.QueryTools.tools(ActionTools.tools()):ActionTools.tools();
         for (int observationCalls = 0; observationCalls <= MAX_OBSERVATION_TOOL_CALLS; observationCalls++) {
             AiClient.ToolResult result = ai.callTools(messages, tools);
             if (result.toolCalls.isEmpty()) {
@@ -1166,6 +1214,7 @@ public final class AutomationEngine {
         final String apiBase;
         final String model;
         JsonObject models;
+        com.silentauto.shell.ext.query.TaskType type=com.silentauto.shell.ext.query.TaskType.ACTION;
 
         TaskRequest(String goal, String apiKey, String apiBase, String model) {
             this("", goal, apiKey, apiBase, model);
@@ -1197,6 +1246,8 @@ public final class AutomationEngine {
         public volatile VirtualDisplaySession display;
         public volatile VideoStreamer videoStreamer;
         public volatile AiClient ai;
+        public com.silentauto.shell.ext.query.TaskType type=com.silentauto.shell.ext.query.TaskType.ACTION;
+        public int answerFailures;
         public boolean completed;
         public volatile boolean resultTransferred, transferInProgress;
         public volatile java.util.List<String> resultAnchors=java.util.List.of();

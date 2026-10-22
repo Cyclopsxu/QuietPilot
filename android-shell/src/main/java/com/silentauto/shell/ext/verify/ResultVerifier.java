@@ -55,6 +55,21 @@ public final class ResultVerifier {
                 "handoff_ready");
     }
 
+    public static final class Extracted {
+        public final com.silentauto.shell.ext.query.AnswerVerifier.Answer answer;
+        public final EvidenceFrame frame;public final String visible;
+        Extracted(com.silentauto.shell.ext.query.AnswerVerifier.Answer a,EvidenceFrame f,String text){answer=a;frame=f;visible=text;}
+    }
+    public Extracted extractAnswer(ExecutionContext ctx,String question)throws Exception {
+        EvidenceFrame frame=observe();
+        if(frame.protectedScreen)throw new IllegalStateException("Protected query page requires manual handoff");
+        String dump=ctx.ui.dump(ctx.displayId,ctx.width,ctx.height,UiBridge.MODE_FULL),ocrText="";
+        if(new com.silentauto.shell.ext.skill.UiSnapshot(dump).foreground().nodes.size()<5)ocrText=ocr.call();
+        return new Extracted(com.silentauto.shell.ext.query.AnswerVerifier.extract(question,dump,ocrText,frame.dataUrl(),completion),frame,
+                com.silentauto.shell.ext.query.AnswerVerifier.visible(dump,ocrText));
+    }
+    public boolean answersAgree(String a,String b)throws Exception{return com.silentauto.shell.ext.query.AnswerVerifier.agrees(a,b,completion);}
+
     public EvidenceFrame observe() throws Exception { return capture.call(); }
 
     public String saveEvidence(ExecutionContext ctx, Result result) throws Exception {

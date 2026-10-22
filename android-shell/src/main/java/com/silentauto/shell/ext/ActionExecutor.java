@@ -3,6 +3,7 @@
 package com.silentauto.shell.ext;
 
 import com.silentauto.shell.ext.guard.ClipboardGuard;
+import com.silentauto.shell.ext.guard.ReadOnlyGuard;
 import android.os.SystemClock;
 import android.view.KeyEvent;
 import java.util.Locale;
@@ -18,6 +19,7 @@ public final class ActionExecutor {
 
     public StepResult execute(ExecutionContext ctx, TaskState task, ActionDecision action) throws Exception {
         ctx.input.checkAllowed();
+        if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY)ReadOnlyGuard.check(action,ctx.ui.dump(ctx.displayId,ctx.width,ctx.height,UiBridge.MODE_FULL));
         UiBridge.ClickResult clickResult = null;
         UiBridge.FocusResult focusResult = null;
         if ("tap_target".equals(action.action)) {
