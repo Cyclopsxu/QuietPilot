@@ -4,7 +4,7 @@ English | [中文](README.zh-CN.md)
 
 > This project is an independently modified distribution of [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto). Upstream authorship and contributor attribution are retained, and this branch continues under [Apache-2.0](LICENSE). The upstream baseline is `611e5eb`; see [Derivative Changes](docs/DERIVATIVE_CHANGES.md) and [NOTICE](NOTICE) for downstream additions and fixes.
 
-ShadowAuto is an open-source phone-assistant prototype targeting Android 10 and later, with background automation, reusable skills, and voice task entry. It starts an AI-driven shell process through `adb shell` and `app_process`, launches real Android apps inside an isolated VirtualDisplay, and lets automation run quietly in the background while the physical screen remains usable.
+ShadowAuto is an open-source phone-assistant prototype targeting Android 10 and later, with background automation, reusable skills, and voice task entry. It starts an AI-driven shell process through `adb shell` and `app_process`, launches real Android apps inside an isolated VirtualDisplay, and supports concurrent use of different apps on the same phone. Same-app conflicts prioritize the user and queue or pause automation. Background execution requires isolation configuration checks; accepted configuration is not proof of disturbance-free behavior.
 
 ShadowAuto is not just a click script. It gives the AI a phone-assistant-style loop for understanding and operating the screen: the shell process can read the UiAutomation UI node tree for the virtual display, fall back to offline OCR when accessibility nodes are missing or incomplete, and inject touch, key, clipboard, and text input events into the target display.
 
@@ -33,7 +33,10 @@ The capabilities below include inherited upstream features and downstream extens
 
 ### Verification Status — October 23, 2026
 
-- **Latest audit:** Fixed unsafe preview/automatic recovery after failed manual rollback, timeouts during native human control, and controller reconnection/stale-socket cleanup. Both APK builds/Lint, real emulator transfer fault injection, connection/timeout probes, and query/skill/amendment/cancellation/queue regressions passed. No other blocking issue was found in this scope. These latest fixes have not been installed on the physical phone; real Meituan validation below applies to the October 22 version.
+- **Isolation audit:** Record selected flags, fallback attempts, and local-IME readback. Missing independent-focus/no-focus-steal configuration or unverified local IME blocks background execution by default. The Mate 40 Pro accepted `0x14b`, lacks both focus flags, and reads back fallback IME; the new version requires an explicit unverified compatibility experiment on that device. Raw foreground changes remain visible beside handoff/touch correlations, and jank identifies its measured app. Historical Meituan results were not rewritten.
+- **Concurrent acceptance remains incomplete:** Emulator synthetic composition/scrolling plus a background mock query, paired video capture, and regression tests passed. Emulator jank failed the threshold, so smoothness is not certified. The user postponed real Chinese-IME candidate preservation during concurrent Meituan browsing. There is no end-to-end zero-disturbance certification; these latest changes have not been installed on the physical phone.
+
+- **Previous exception-path audit:** Fixed unsafe preview/automatic recovery after failed manual rollback, timeouts during native human control, and controller reconnection/stale-socket cleanup. Both APK builds/Lint, real emulator transfer fault injection, connection/timeout probes, and query/skill/amendment/cancellation/queue regressions passed. Those exception-path regressions passed. These latest fixes have not been installed on the physical phone; real Meituan validation below applies to the October 22 version.
 
 - **Native human handoff:** Added temporary main-screen handling and an explicit return-to-background action. Build/Lint and roundtrip/failure probes passed. The real Meituan test passed native human control, return to background, completion notice, and final Go-view transfer of the same restaurant task, with the page surviving display release. The user confirmed normal native interaction. The rerun did not show a CAPTCHA; a restaurant-confirmation boundary exercised human handoff.
 
@@ -258,3 +261,7 @@ Phase tasks, guides, reports, and regression artifacts in the local workspace li
 ## License
 
 This derivative continues under the upstream [Apache License 2.0](LICENSE), retaining the original license and applicable attribution. Original project: [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto). See [NOTICE](NOTICE) and [Derivative Changes](docs/DERIVATIVE_CHANGES.md) for provenance and the scope of modifications.
+
+### Unverified isolation experiments
+
+The backend startup option `--allow-unverified-isolation=true` is off by default and intended only for explicitly chosen, controlled compatibility experiments. It does not supply missing isolation capabilities or certify disturbance-free operation, and the task history labels the configuration unverified. It is not a silent compatibility fallback.

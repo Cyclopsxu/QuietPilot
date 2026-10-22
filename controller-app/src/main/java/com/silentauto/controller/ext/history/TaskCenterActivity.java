@@ -42,14 +42,20 @@ public final class TaskCenterActivity extends Activity {
         if(!item.optString("comparison").isEmpty())text(body,item.optString("comparison"),16,0xff217c69);
         timeline(body,item);
         text(body,"验收证据："+item.optString("evidence","暂无"),16,0xff182639);String image=item.optString("evidenceBase64");if(!image.isEmpty()){byte[] bytes=android.util.Base64.decode(image,android.util.Base64.DEFAULT);Bitmap bitmap=BitmapFactory.decodeByteArray(bytes,0,bytes.length);if(bitmap!=null){ImageView proof=new ImageView(this);proof.setImageBitmap(bitmap);proof.setAdjustViewBounds(true);body.addView(proof,new LinearLayout.LayoutParams(-1,-2));}}
+        JSONObject isolation=item.optJSONObject("isolation");
+        if(isolation!=null)text(body,"隔离能力："+isolation.optString("message")+"\n配置 "+isolation.optString("selectedFlagsHex")+" · 候选 "+isolation.optInt("candidateIndex"),14,0xff576879);
+        text(body,"指标是采样观察，不构成全程无打扰认证。仅支持不同 App 并行；同 App 冲突时用户优先。",14,0xff576879);
         JSONObject disturbance=item.optJSONObject("disturbance");text(body,"干扰度指标",18,0xff182639);
         JSONArray metrics=disturbance==null?null:disturbance.optJSONArray("metrics");
         if(metrics==null)text(body,"暂无干扰度记录",14,0xff576879);else for(int i=0;i<metrics.length();i++){JSONObject metric=metrics.optJSONObject(i);boolean available=metric.optBoolean("available"),pass=metric.optBoolean("pass");
             String value=metric.optString("key").equals("jank")?String.format(Locale.ROOT,"%.1f%%",metric.optDouble("value")*100):metric.optString("value");
             text(body,metric.optString("label")+"："+(available?value:"未知")+" · "+(!available?"未能评估":pass?"达标":"不达标")+"\n"+metric.optString("reason"),14,!available?0xff576879:pass?0xff218461:0xffb34545);}
-        if(disturbance!=null){text(body,"采样："+disturbance.optInt("samples")+" 次，间隔 500ms，平均 "+String.format(Locale.ROOT,"%.1fms",disturbance.optDouble("avgSampleMs")),13,0xff576879);JSONArray events=disturbance.optJSONArray("events");if(events!=null)for(int i=0;i<events.length();i++){JSONObject event=events.optJSONObject(i);text(body,event.optLong("elapsedMs")+"ms · 第 "+event.optInt("step")+" 步 · "+event.optString("action")+"\n"+event.optString("detail"),13,0xffb34545);}}
+        if(disturbance!=null){text(body,disturbance.has("rawForegroundSwitches")?"前台变化原始总数 "+disturbance.optInt("rawForegroundSwitches")+"；显式交接关联 "+disturbance.optInt("authorizedHandoffSwitches")+"；未归因 "+disturbance.optInt("unattributedForegroundSwitches")+"；数据不足 "+disturbance.optInt("unknownForegroundSwitches"):"旧记录没有单独区分显式交接，不可据此认定抢屏或零干扰",14,0xff576879);text(body,"采样："+disturbance.optInt("samples")+" 次，间隔 500ms，平均 "+String.format(Locale.ROOT,"%.1fms",disturbance.optDouble("avgSampleMs")),13,0xff576879);JSONArray events=disturbance.optJSONArray("events");if(events!=null)for(int i=0;i<events.length();i++){JSONObject event=events.optJSONObject(i);text(body,event.optLong("elapsedMs")+"ms · 第 "+event.optInt("step")+" 步 · "+event.optString("action")+"\n"+event.optString("detail")+(event.has("attribution")?" ["+attributionLabel(event.optString("attribution"))+"]":""),13,0xffb34545);}}
         ScrollView scroll=new ScrollView(this);scroll.addView(body);new AlertDialog.Builder(this).setTitle("任务详情").setView(scroll).setPositiveButton("关闭",null).show();
     });}catch(Exception error){main.post(()->{if(alive())Toast.makeText(this,error.getMessage(),Toast.LENGTH_LONG).show();});}});}
+    private static String attributionLabel(String value) {
+        switch(value){case "explicit_handoff":return "显式交接关联";case "touch_correlated":return "最近触摸关联";case "unattributed":return "未归因";default:return "数据不足";}
+    }
     private void timeline(LinearLayout body,JSONObject item) {
         text(body,"步骤与追加时间线",18,0xff182639);
         java.util.List<JSONObject> rows=new ArrayList<>();JSONArray steps=item.optJSONArray("steps"),amendments=item.optJSONArray("amendments");

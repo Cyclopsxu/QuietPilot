@@ -111,6 +111,7 @@ final class RpcServer {
                 return JsonRpc.result(id, "opening");
             }
             if("openQuerySource".equals(method)){engine.openQuerySource(JsonRpc.text(params,"taskId"));return JsonRpc.result(id,"opened");}
+            if ("noteUserHandoff".equals(method)){engine.noteUserHandoff(JsonRpc.text(params,"taskId"));return JsonRpc.result(id,"recorded");}
             if ("takeManualOnMain".equals(method)) return JsonRpc.result(id,engine.takeManualOnMain(JsonRpc.text(params,"taskId")));
             if ("takeResultOnMain".equals(method)) return JsonRpc.result(id,engine.takeResultOnMain(JsonRpc.text(params,"taskId")));
             if ("resumeTask".equals(method)) {

@@ -453,6 +453,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                     return;
                 }
                 if(java.util.Arrays.asList("moving","returning","cancelling").contains(current.optString("transferState")))return;
+                client.request("noteUserHandoff",new JSONObject().put("taskId",taskId));
                 JSONObject live=current;main.post(() -> {AutomationTaskView task=ensureTask(live);if(task!=null)task.setOpening(true);});
                 if(!current.optBoolean("resultReady")) {
                     if("manual_main".equals(current.optString("transferState"))) {

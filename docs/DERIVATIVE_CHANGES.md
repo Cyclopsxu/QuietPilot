@@ -28,6 +28,7 @@
 | 执行扩展 | 从主循环提取执行上下文、动作执行器、步骤监听与来源扩展；复用上游动作逻辑并继续扩展 | `android-shell/.../ext/`、`AutomationEngine.java` |
 | 验收与人工交接 | 独立视觉验收、任务状态、证据截图、验证码等边界等待、触摸预览、原任务临时转主屏人工处理与交回后台继续，人工期间暂停自动恢复 | `ext/verify/`、`ext/handoff/`、控制端任务视图与 RPC |
 | 异常路径复查（2026-10-23） | 人工转移失败后重新确认位置并保留归属，位置未知不自动恢复；主屏人工期间暂停等待超时；控制端前台恢复刷新、旧 socket 隔离清理与连接超时，不自动重放操作。构建/Lint及模拟器回归通过，最新修复尚未安装实体手机 | `ManualTaskTransfer`、`HandoffManager`、`AutomationEngine`、`MainActivity`、`RpcClient` |
+| 隔离能力与指标归因（2026-10-23） | 记录实际 flags/候选回退/IME 回读，能力不足默认阻止后台，显式兼容实验标为未验证；保留原始切换，区分交接/触摸关联及未归因；掉帧注明采样 App，合成并行双画面测试不替代真机中文候选词验收 | `DisplayIsolation`、`VirtualDisplaySession`、`DisturbanceMonitor`、`DisturbanceCounters`、任务历史 |
 | 调度与输入保护 | 两任务并发上限、同 App 排队、前台冲突暂停/恢复、剪贴板保护及任务收尾隔离 | `ext/guard/`、`ClipboardBridge.java` |
 | 技能学习 | 轨迹录制、参数化技能编译与存储、语义控件匹配、重放、有限救援与 suspect 状态 | `ext/skill/` |
 | 执行中追加 | 线程安全追加队列、有效目标及旧规划失效、语音归属选择、暂停/排队/交接恢复、追加历史与技能编译排除 | `ext/amend/`、`ext/voice/VoiceRouting.java`、执行循环与胶囊 |

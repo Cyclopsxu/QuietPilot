@@ -19,6 +19,8 @@ public final class TaskProgress {
     private String skillId = "", comparison = "", evidenceScreenshot = "";
     private JsonObject sourceSteps = new JsonObject();
     private JsonObject disturbance = new JsonObject();
+    private JsonObject isolation=new JsonObject();
+    public synchronized void isolation(JsonObject value){isolation=value.deepCopy();publish();}
     private boolean protectedScreen, finalized, resultReady, uncertain;
     private String type="action",answer="",quote="",searched="";
     private TaskStatus status = TaskStatus.QUEUED;
@@ -98,7 +100,7 @@ public final class TaskProgress {
         for (Map.Entry<String,Integer> entry : calls.entrySet()) counts.addProperty(entry.getKey(), entry.getValue());
         o.add("llmCalls", counts);
         o.addProperty("finalized",finalized);
-        o.add("disturbance",disturbance.deepCopy());
+        o.add("disturbance",disturbance.deepCopy());o.add("isolation",isolation.deepCopy());
         o.addProperty("skillId", skillId); o.add("sourceSteps",sourceSteps.deepCopy()); o.addProperty("comparison",comparison);
         o.addProperty("evidenceScreenshot",evidenceScreenshot); o.addProperty("createdAtMs",createdAtMs); o.addProperty("finishedAtMs",finishedAtMs);
         o.addProperty("waitingSinceMs", waitingSinceMs);

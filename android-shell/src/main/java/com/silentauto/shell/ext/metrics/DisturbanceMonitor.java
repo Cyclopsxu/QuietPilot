@@ -18,7 +18,7 @@ public final class DisturbanceMonitor implements StepListener {
     private final class Session {
         final String id;final ClipboardBridge clipboard;final long started=System.nanoTime();
         final ScheduledExecutorService sampler=Executors.newSingleThreadScheduledExecutor(low("disturbance-sampler"));
-        DisturbanceCounters counts;String mainPackage="",clipBefore;long[] framesBefore;
+        volatile DisturbanceCounters counts;String mainPackage="",clipBefore;long[] framesBefore;
         volatile int display=-1,step;volatile String action="准备",source="model";
         ScheduledFuture<?> polling;long sampleNanos,maxNanos,nextEligible;int skipped;String error="";
         Session(String id,ClipboardBridge clipboard){this.id=id;this.clipboard=clipboard;}
@@ -40,20 +40,26 @@ public final class DisturbanceMonitor implements StepListener {
         JsonObject finish(){
             sample();boolean clipboardAvailable=true,changed=false;try{changed=clipBefore!=null&&!clipBefore.equals(clip(clipboard));if(clipBefore==null)clipboardAvailable=false;}catch(Exception failure){clipboardAvailable=false;}
             long[] after=null;try{if(!mainPackage.isEmpty())after=DisturbanceReadings.frames(read("dumpsys","gfxinfo",mainPackage));}catch(Exception ignored){}
-            boolean frameAvailable=framesBefore!=null&&after!=null&&after[0]>=framesBefore[0]&&after[1]>=framesBefore[1];
+            boolean frameAvailable=framesBefore!=null&&after!=null&&after[0]>=framesBefore[0]&&after[1]>=framesBefore[1]&&after[1]-framesBefore[1]<=after[0]-framesBefore[0];
             long frames=frameAvailable?after[0]-framesBefore[0]:0,janky=frameAvailable?after[1]-framesBefore[1]:0;double rate=frames==0?0:janky/(double)frames;
             if(changed)counts.event("clipboard",elapsed(),step,action,source,"主屏剪贴板开始/结束内容不同（可能包含用户编辑）");
             if(frameAvailable&&rate>.05)counts.event("jank",elapsed(),step,action,source,"主屏新增帧掉帧率超过 5%："+janky+"/"+frames);
             JsonArray metrics=new JsonArray();
-            metrics.add(DisturbanceCounters.metric("foreground","前台切换次数",counts.switches,counts.foregroundAvailable&&counts.unknownSwitches==0,counts.switches==0,"1 秒内有主屏触摸的变化不计；无法归因 "+counts.unknownSwitches+" 次"));
+            metrics.add(DisturbanceCounters.metric("foreground","未归因前台切换",counts.switches,counts.foregroundAvailable&&counts.unknownSwitches==0,counts.switches==0,"原始切换 "+counts.totalSwitches+"；显式交接关联 "+counts.authorizedSwitches+"；触摸关联 "+counts.userSwitches+"；数据不足 "+counts.unknownSwitches+"（关联不等于因果证明）"));
             metrics.add(DisturbanceCounters.metric("focus","焦点丢失次数",counts.focusLosses,counts.focusAvailable,counts.focusLosses==0,"主焦点指向本任务虚拟屏的次数"));
             metrics.add(DisturbanceCounters.metric("ime","键盘被抢次数",counts.imeSteals,counts.imeAvailable,counts.imeSteals==0,"活动输入法目标变为本任务虚拟屏"));
             metrics.add(DisturbanceCounters.metric("clipboard","剪贴板内容变化",changed?1:0,clipboardAvailable,!changed,clipboardAvailable?"仅比较摘要，不保存剪贴板内容":"剪贴板读取不可用"));
-            JsonObject frame=DisturbanceCounters.metric("jank","主屏掉帧率",rate,frameAvailable&&frames>0,rate<=.05,frameAvailable?(frames==0?"本次主屏无新增帧，无法评估掉帧率":"新增卡顿帧 "+janky+" / "+frames+"，阈值 5%") : "gfxinfo 不可用或计数重置");frame.addProperty("frames",frames);frame.addProperty("jankyFrames",janky);metrics.add(frame);
+            JsonObject frame=DisturbanceCounters.metric("jank","指定 App 掉帧率",rate,frameAvailable&&frames>0,rate<=.05,frameAvailable?(frames==0?"本次主屏无新增帧，无法评估掉帧率":"新增卡顿帧 "+janky+" / "+frames+"，阈值 5%") : "gfxinfo 不可用或计数重置");frame.addProperty("measuredPackage",mainPackage);frame.addProperty("scope","task_start_foreground_package_process");frame.addProperty("foregroundSamples",counts.foregroundSamples.getOrDefault(mainPackage,0));frame.addProperty("totalSamples",counts.samples);frame.addProperty("coversOtherApps",false);frame.addProperty("frames",frames);frame.addProperty("jankyFrames",janky);frame.addProperty("reason",frame.get("reason").getAsString()+"；仅任务开始时的 "+mainPackage+"，不代表其他 App 或持续信息流流畅度");metrics.add(frame);
             JsonObject report=new JsonObject();report.add("metrics",metrics);report.add("events",counts.events);report.addProperty("foregroundPackage",mainPackage);report.addProperty("samples",counts.samples);
             report.addProperty("sampleIntervalMs",500);report.addProperty("avgSampleMs",counts.samples==0?0:sampleNanos/1_000_000.0/counts.samples);report.addProperty("maxSampleMs",maxNanos/1_000_000.0);report.addProperty("skippedTicks",skipped);
-            report.addProperty("touchMethod","dumpsys input / RecentQueue / displayId=0 MotionEvent / age");report.addProperty("userForegroundSwitches",counts.userSwitches);report.addProperty("samplingError",error);return report;
+            report.addProperty("touchMethod","dumpsys input / RecentQueue / displayId=0 MotionEvent / age");report.addProperty("rawForegroundSwitches",counts.totalSwitches);report.addProperty("authorizedHandoffSwitches",counts.authorizedSwitches);report.addProperty("unattributedForegroundSwitches",counts.switches);report.addProperty("unknownForegroundSwitches",counts.unknownSwitches);report.addProperty("userForegroundSwitches",counts.userSwitches);report.addProperty("eventsTruncated",counts.eventsTruncated);report.addProperty("zeroDisturbanceVerified",false);report.addProperty("assessmentScope","采样观察与显式交接关联，非全程无打扰认证");report.addProperty("samplingError",error);return report;
         }
+    }
+    public void handoffEntry(String id){Session s=active.get(id);if(s!=null&&s.counts!=null)s.counts.authorizeEntry("com.silentauto.controller",System.nanoTime()/1_000_000);}
+    public void handoffTarget(String id,String target,boolean returning){
+        Session s=active.get(id);if(s==null||s.counts==null)return;long now=System.nanoTime()/1_000_000;
+        if(returning){s.counts.authorize(target,"com.silentauto.controller","user_return_to_background",now);s.counts.authorize(target,s.mainPackage,"user_return_to_background",now);}
+        else{s.counts.authorize("com.silentauto.controller",target,"user_take_on_main",now);s.counts.authorize(s.mainPackage,target,"user_take_on_main",now);}
     }
     public void prepare(String id,ClipboardBridge clipboard){Session session=new Session(id,clipboard);active.put(id,session);try{session.sampler.submit(session::baseline).get(3,TimeUnit.SECONDS);}catch(Exception error){session.error="baseline timeout/unavailable";if(error instanceof InterruptedException)Thread.currentThread().interrupt();}}
     @Override public void onTaskStart(ExecutionContext ctx,String goal,String pkg){Session session=active.get(ctx.taskId);if(session==null)return;session.display=ctx.displayId;session.polling=session.sampler.scheduleAtFixedRate(session::sample,0,500,TimeUnit.MILLISECONDS);}

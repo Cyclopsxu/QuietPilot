@@ -27,6 +27,9 @@ final class VirtualDisplaySession {
     private final int previousImePolicy;
     private final boolean localImeEnabled;
     private boolean released;
+    private int selectedFlags,candidateIndex,ownFocusFlag,noStealFlag;
+    private boolean localImeVerified;
+    private com.google.gson.JsonArray creationAttempts;
 
     private VirtualDisplaySession(int width, int height, int dpi, ImageReader captureReader, Surface outputSurface, VirtualDisplay display) {
         this.width = width;
@@ -40,6 +43,7 @@ final class VirtualDisplaySession {
         this.windowManager = new WindowManagerBridge();
         this.previousImePolicy = windowManager.getDisplayImePolicy(displayId);
         this.localImeEnabled = windowManager.setDisplayImePolicy(displayId, WindowManagerBridge.DISPLAY_IME_POLICY_LOCAL);
+        this.localImeVerified=localImeEnabled&&windowManager.getDisplayImePolicy(displayId)==WindowManagerBridge.DISPLAY_IME_POLICY_LOCAL;
     }
 
     boolean localImeEnabled() {
@@ -65,18 +69,36 @@ final class VirtualDisplaySession {
                 baseFlags
         };
         Throwable lastError = null;
-        for (int flags : candidates) {
+        com.google.gson.JsonArray attempts=new com.google.gson.JsonArray();
+        for (int index=0;index<candidates.length;index++) {
+            int flags=candidates[index];
+            VirtualDisplay display=null;
+            com.google.gson.JsonObject attempt=new com.google.gson.JsonObject();attempt.addProperty("candidateIndex",index);attempt.addProperty("flags",flags);attempts.add(attempt);
             try {
-                VirtualDisplay display = manager.createVirtualDisplay("ShadowAuto", width, height, dpi, outputSurface, flags);
+                display = manager.createVirtualDisplay("ShadowAuto", width, height, dpi, outputSurface, flags);
                 if (display != null && display.getDisplay() != null) {
-                    return new VirtualDisplaySession(width, height, dpi, captureReader, outputSurface, display);
+                    VirtualDisplaySession session=new VirtualDisplaySession(width,height,dpi,captureReader,outputSurface,display);
+                    session.selectedFlags=flags;session.candidateIndex=index;session.ownFocusFlag=focusFlag;session.noStealFlag=noStealFlag;
+                    attempt.addProperty("accepted",true);session.creationAttempts=attempts.deepCopy();
+                    return session;
                 }
+                attempt.addProperty("accepted",false);
+                if(display!=null)display.release();
             } catch (Throwable e) {
+                attempt.addProperty("accepted",false);attempt.addProperty("error",e.getClass().getSimpleName());
+                if(display!=null)try{display.release();}catch(Throwable ignored){}
                 lastError = e;
             }
         }
         captureReader.close();
         throw new IllegalStateException("createVirtualDisplay failed", lastError);
+    }
+
+    com.google.gson.JsonObject isolation(boolean experimental) {
+        com.google.gson.JsonObject report=com.silentauto.shell.ext.guard.DisplayIsolation.assess(selectedFlags,candidateIndex,ownFocusFlag,noStealFlag,localImeVerified,experimental);
+        report.add("creationAttempts",creationAttempts.deepCopy());report.addProperty("platformDisplayFlags",display.getDisplay().getFlags());
+        report.addProperty("localImeSetSucceeded",localImeEnabled);report.addProperty("imePolicyBefore",previousImePolicy);report.addProperty("imePolicyReadback",windowManager.getDisplayImePolicy(displayId));
+        report.addProperty("sdkInt",android.os.Build.VERSION.SDK_INT);report.addProperty("manufacturer",android.os.Build.MANUFACTURER);report.addProperty("model",android.os.Build.MODEL);return report;
     }
 
     synchronized Bitmap captureBitmap(int retries, long delayMs) {

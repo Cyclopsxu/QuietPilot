@@ -131,6 +131,12 @@ public final class AutomationEngine {
         logs.task(taskId, "WARNING: forceStart may conflict with the user on the main display");
     }
 
+    synchronized void noteUserHandoff(String id) {
+        TaskState task=tasks.get(id);
+        if(task==null||task.progress.status()!=TaskStatus.WAITING_USER)throw new IllegalStateException("任务当前不等待交接");
+        disturbance.handoffEntry(id);
+    }
+
     synchronized void openTaskOnMain(String taskId) {
         TaskState task = tasks.get(taskId);
         if (task == null || task.handoff == null || !task.progress.protectedScreen())
@@ -151,6 +157,7 @@ public final class AutomationEngine {
         }
         boolean replied=false;
         try {
+            disturbance.handoffTarget(taskId,task.packageName,false);
             task.progress.transfer("moving","正在交接到主屏…");
             com.silentauto.shell.ext.handoff.TaskDisplayTransfer transfer=new com.silentauto.shell.ext.handoff.TaskDisplayTransfer(
                     new com.silentauto.shell.ext.handoff.TaskDisplayTransfer.Host() {
@@ -235,6 +242,7 @@ public final class AutomationEngine {
             task.manualTransfer=transfer;
         }
         try {
+            disturbance.handoffTarget(taskId,task.packageName,false);
             task.progress.transfer("moving","正在把当前页面交给你在主屏处理…");
             transfer.toMain();
             synchronized(this) {
@@ -272,6 +280,7 @@ public final class AutomationEngine {
             task.transferInProgress=true;
         }
         try {
+            disturbance.handoffTarget(taskId,task.packageName,true);
             task.progress.transfer("returning","正在将当前页面交回后台…");
             task.manualTransfer.toBackground();
             synchronized(this) {
@@ -558,6 +567,9 @@ public final class AutomationEngine {
             DisplaySpec displaySpec = DisplaySpec.current(logs);
             task.videoStreamer = new VideoStreamer(logs, task.taskId, displaySpec.width, displaySpec.height);
             task.display = VirtualDisplaySession.create(task.videoStreamer.width(), task.videoStreamer.height(), displaySpec.dpi, task.videoStreamer.inputSurface());
+            JsonObject isolation=task.display.isolation(baseConfig.allowUnverifiedIsolation);
+            task.progress.isolation(isolation);logs.task(task.taskId,"display isolation: "+isolation);
+            if(!isolation.get("backgroundAllowed").getAsBoolean())throw new IllegalStateException(isolation.get("message").getAsString());
             task.videoStreamer.start();
             logs.task(task.taskId, "virtual display created: " + task.display.displayId + " " + task.display.width + "x" + task.display.height + " dpi=" + task.display.dpi);
             logs.task(task.taskId, "virtual display local IME " + (task.display.localImeEnabled() ? "enabled" : "unavailable"));

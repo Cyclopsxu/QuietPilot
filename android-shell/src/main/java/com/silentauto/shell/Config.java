@@ -8,6 +8,7 @@ import java.util.Map;
 
 final class Config {
     final int port;
+    boolean allowUnverifiedIsolation;
     final String apiKey, apiBase, model;
     final ModelConfig executor, verifier, intake;
 
@@ -68,7 +69,9 @@ final class Config {
             }
             roles.add(role, value);
         }
-        return config.withProfiles(roles);
+        Config result=config.withProfiles(roles);
+        result.allowUnverifiedIsolation="true".equals(values.get("allow-unverified-isolation"));
+        return result;
     }
 
     static boolean empty(String value) { return value == null || value.trim().isEmpty(); }
