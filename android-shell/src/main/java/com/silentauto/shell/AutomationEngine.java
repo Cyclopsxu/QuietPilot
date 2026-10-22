@@ -532,7 +532,7 @@ public final class AutomationEngine {
                         task.lastReason=recoveredQuery.answer.found?"独立截图/OCR发现有依据的答案":"当前滚动路径重复，截图/OCR也未找到足够原文。不要继续上下翻同一页面；返回换入口或使用应用内搜索。若只显示主版本，不得当作完整版本。";
                     } catch(Exception unavailable) {
                         if(task.stop.get()||Thread.currentThread().isInterrupted())throw unavailable;
-                        task.lastReason="当前滚动路径重复，补充识别不可用。不要重复滚动；返回换入口或搜索。";
+                        task.lastReason="当前滚动路径重复，补充识别未能证明答案："+unavailable.getMessage()+"。不要重复滚动；返回换入口或搜索。";
                         logs.task(task.taskId,"query loop extraction unavailable: "+unavailable.getMessage());
                     }
                     if(task.amendments.version()!=goalVersion){step--;continue;}
