@@ -93,6 +93,10 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
             return;
         }
         config = configStore.load();
+        if(pager!=null&&!configOpen)io.execute(() -> {
+            try {rpcClient.send("listTasks",new JSONObject());}
+            catch(Exception e){appendGlobal("[连接] "+rpcErrorMessage(e));}
+        });
         if (!config.isConfigured() && !configOpen && pendingHandoffs.isEmpty() && !getIntent().hasExtra("handoffStatus")) {
             openConfig(false);
         }
@@ -155,6 +159,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     protected void onDestroy() {
         io.shutdownNow();
         touchIo.shutdownNow();
+        rpcClient.close();
         super.onDestroy();
     }
 
@@ -455,8 +460,11 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                     } else {
                         try {client.request("takeManualOnMain",new JSONObject().put("taskId",taskId));}
                         catch(Exception unavailable) {
-                            current.put("message","切换未完成，可重试到主屏处理。"+current.optString("message"));
-                            JSONObject waiting=current;main.post(() -> showCurrentHandoff(waiting));
+                            JSONObject fresh=liveHandoff(client,taskId);
+                            if(fresh==null||!"WAITING_USER".equals(fresh.optString("status")))return;
+                            if("manual_main".equals(fresh.optString("transferState")))return;
+                            if("preview".equals(fresh.optString("transferState")))main.post(() -> showCurrentHandoff(fresh));
+                            else main.post(() -> showTransferUnavailable(taskId,fresh.optString("message")));
                         }
                     }
                     return;

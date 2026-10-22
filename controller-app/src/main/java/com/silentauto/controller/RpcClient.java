@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
+import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -39,22 +40,28 @@ final class RpcClient {
         request.put("id", ids.getAndIncrement());
         request.put("method", method);
         request.put("params", params);
-        writer.write(request.toString());
-        writer.write('\n');
-        writer.flush();
+        try {
+            writer.write(request.toString());writer.write('\n');writer.flush();
+        } catch(java.io.IOException failed) {
+            clearConnection(socket);throw failed; // Never replay a possibly delivered mutation.
+        }
     }
 
     private synchronized void connect() throws Exception {
         if (socket != null && socket.isConnected() && !socket.isClosed()) {
             return;
         }
-        socket = new Socket(host, port);
-        writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
-        BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-        new Thread(() -> readLoop(reader), "rpc-reader").start();
+        Socket connected=new Socket();
+        try {
+            connected.connect(new InetSocketAddress(host,port),3000);
+            BufferedReader reader=new BufferedReader(new InputStreamReader(connected.getInputStream(),StandardCharsets.UTF_8));
+            writer=new BufferedWriter(new OutputStreamWriter(connected.getOutputStream(),StandardCharsets.UTF_8));
+            socket=connected;
+            new Thread(() -> readLoop(connected,reader),"rpc-reader").start();
+        } catch(Exception failed){connected.close();throw failed;}
     }
 
-    private void readLoop(BufferedReader reader) {
+    private void readLoop(Socket connected,BufferedReader reader) {
         try {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -63,17 +70,15 @@ final class RpcClient {
         } catch (Exception e) {
             listener.onClosed(e);
         } finally {
-            clearConnection();
+            clearConnection(connected);
         }
     }
 
-    synchronized void close() throws Exception {
-        if (socket != null) socket.close();
-        clearConnection();
-    }
+    synchronized void close() { clearConnection(socket); }
 
-    private synchronized void clearConnection() {
-        socket = null;
-        writer = null;
+    private synchronized void clearConnection(Socket connected) {
+        if(connected==null)return;
+        try {connected.close();}catch(java.io.IOException ignored){}
+        if(socket==connected){socket=null;writer=null;}
     }
 }

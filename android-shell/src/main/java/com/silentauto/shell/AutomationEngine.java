@@ -218,23 +218,24 @@ public final class AutomationEngine {
 
     JsonObject takeManualOnMain(String taskId) throws Exception {
         final TaskState task; final HandoffManager handoff;
+        final com.silentauto.shell.ext.handoff.ManualTaskTransfer transfer;
         synchronized(this) {
             task=tasks.get(taskId);
             if(task==null||task.stop.get()||task.progress.status()!=TaskStatus.WAITING_USER||task.handoff==null||task.display==null||task.progress.json().get("resultReady").getAsBoolean())
                 throw new IllegalStateException("任务当前不需要人工处理，请刷新");
             if(task.transferInProgress)throw new IllegalStateException("正在交接，请稍候");
-            if(task.manualTransfer!=null)return transferReply("moved","请在主屏处理，完成后点交回后台继续",false);
             handoff=task.handoff;handoff.beginManual();task.transferInProgress=true;
-        }
-        try {
-            task.progress.transfer("moving","正在把当前页面交给你在主屏处理…");
-            com.silentauto.shell.ext.handoff.ManualTaskTransfer transfer=new com.silentauto.shell.ext.handoff.ManualTaskTransfer(
+            transfer=task.manualTransfer!=null?task.manualTransfer:new com.silentauto.shell.ext.handoff.ManualTaskTransfer(
                 new com.silentauto.shell.ext.handoff.TaskDisplayTransfer.Host() {
                     public String command(String...args)throws Exception{return com.silentauto.shell.ext.handoff.TaskDisplayTransfer.command(args);}
                     public com.silentauto.shell.ext.skill.ScreenFingerprint page(int id){return null;}
                     public String foreground()throws Exception{return foreground.foregroundPackage();}
                     public boolean cancelled(){return task.stop.get();}
                 },task.packageName,task.display.displayId);
+            task.manualTransfer=transfer;
+        }
+        try {
+            task.progress.transfer("moving","正在把当前页面交给你在主屏处理…");
             transfer.toMain();
             synchronized(this) {
                 if(task.stop.get())throw new InterruptedException("Task stopped");
@@ -243,7 +244,18 @@ public final class AutomationEngine {
             }
             return transferReply("moved","当前页面已交给你在主屏处理",false);
         } catch(Exception failure) {
-            handoff.endManual();task.progress.transfer("preview","切换未完成，后台页面保留；可重试到主屏处理");throw failure;
+            int location=transfer.location();
+            synchronized(this) {
+                if(task.display!=null&&location==task.display.displayId) {
+                    task.manualTransfer=null;handoff.endManual();
+                    task.progress.transfer("preview","切换未完成，已确认原任务在后台；可重试到主屏处理");
+                } else {
+                    task.progress.transfer(location==0?"manual_main":"unavailable",location==0
+                        ?"切换未完成，原任务仍在主屏；处理后可交回后台"
+                        :"原页面位置未能确认，已暂停自动执行；请重试或取消任务");
+                }
+            }
+            throw failure;
         } finally {synchronized(this){task.transferInProgress=false;if(task.stop.get()&&!task.progress.status().terminal())stopTask(taskId);}}
     }
 
@@ -269,7 +281,7 @@ public final class AutomationEngine {
                 if(task.verifierAi!=null)task.verifierAi.cancel();
             }
         } catch(Exception failure) {
-            task.progress.transfer("manual_main","交回后台未完成，请保留主屏页面并重试");throw failure;
+            task.progress.transfer("manual_main","交回后台未确认，自动执行保持暂停；请点继续重试或取消任务");throw failure;
         } finally {synchronized(this){task.transferInProgress=false;if(task.stop.get()&&!task.progress.status().terminal())stopTask(taskId);}}
     }
 
