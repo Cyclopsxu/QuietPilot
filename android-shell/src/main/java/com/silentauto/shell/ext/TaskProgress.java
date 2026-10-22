@@ -7,7 +7,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class TaskProgress {
-    public final String taskId, goal;
+    public final String taskId;public String goal;
+    private final String originalGoal;
+    private com.google.gson.JsonArray amendments=new com.google.gson.JsonArray();
     private final LogHub logs;
     private final long started = SystemClock.elapsedRealtime();
     private long ended, waitingSinceMs;
@@ -29,9 +31,13 @@ public final class TaskProgress {
     private final Map<String, Integer> calls = new LinkedHashMap<>();
 
     public TaskProgress(String taskId, String goal, LogHub logs) {
-        this.taskId = taskId; this.goal = goal; this.logs = logs;
+        this.taskId = taskId; this.goal = goal;this.originalGoal=goal; this.logs = logs;
         calls.put("executor", 0); calls.put("verifier", 0); calls.put("intake", 0);
         for (String source : new String[]{"model","skill","rescue"}) sourceSteps.addProperty(source,0);
+    }
+    public synchronized void amendIntake(long elapsed){calls.put("intake",calls.get("intake")+1);intakeElapsedMs+=elapsed;}
+    public synchronized void amended(String effective,com.google.gson.JsonArray records,String detail) {
+        if(status.terminal())return;goal=effective;amendments=records.deepCopy();message=detail;publish();
     }
     public synchronized void type(String value){type=value;}
     public synchronized void answer(String value,String basis,boolean unsure,String locations){answer=value;quote=basis;uncertain=unsure;searched=locations;}
@@ -85,7 +91,7 @@ public final class TaskProgress {
         JsonObject o = new JsonObject();
         o.addProperty("type",type);o.addProperty("answer",answer);o.addProperty("quote",quote);o.addProperty("uncertain",uncertain);o.addProperty("sourceApp",app);o.addProperty("searched",searched);
         o.addProperty("taskId", taskId); o.addProperty("status", status.name());
-        o.addProperty("goal", goal); o.addProperty("app", app); o.addProperty("appName", appName); o.addProperty("stepText", stepText);
+        o.addProperty("originalGoal",originalGoal);o.add("amendments",amendments.deepCopy());o.addProperty("goal", goal); o.addProperty("app", app); o.addProperty("appName", appName); o.addProperty("stepText", stepText);
         o.addProperty("step",step);
         o.addProperty("source", source); o.addProperty("message", message); o.addProperty("evidence", evidence); o.addProperty("boundary", boundary);
         JsonObject counts = new JsonObject();

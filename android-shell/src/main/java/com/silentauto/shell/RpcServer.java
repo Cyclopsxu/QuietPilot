@@ -1,4 +1,4 @@
-// Modified by Codex for ShadowAuto: accept user handoff outcomes. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: accept handoff outcomes, typed queries and voice amendment routing. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.google.gson.JsonElement;
@@ -71,6 +71,8 @@ final class RpcServer {
             if ("status".equals(method)) {
                 return JsonRpc.result(id, engine.statusJson());
             }
+            if("amendTask".equals(method))return JsonRpc.result(id,engine.amendTask(JsonRpc.text(params,"taskId"),JsonRpc.text(params,"kind"),JsonRpc.text(params,"text")));
+            if("resolveVoice".equals(method))return JsonRpc.result(id,engine.resolveVoice(JsonRpc.text(params,"voiceId"),JsonRpc.text(params,"taskId")));
             if ("submitVoiceTask".equals(method)) return JsonRpc.result(id,engine.submitVoiceTask(params));
             if ("confirmTask".equals(method)) { engine.confirmTask(JsonRpc.text(params,"taskId"),params.get("ok").getAsBoolean()); return JsonRpc.result(id,"confirmed"); }
             if ("captureContext".equals(method)) return JsonRpc.result(id, engine.captureContext());

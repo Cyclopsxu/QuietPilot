@@ -29,6 +29,7 @@
 | 验收与人工交接 | 独立视觉验收、任务状态、证据截图、验证码等边界等待、触摸预览、受保护页面主屏处理 | `ext/verify/`、`ext/handoff/`、控制端任务视图与 RPC |
 | 调度与输入保护 | 两任务并发上限、同 App 排队、前台冲突暂停/恢复、剪贴板保护及任务收尾隔离 | `ext/guard/`、`ClipboardBridge.java` |
 | 技能学习 | 轨迹录制、参数化技能编译与存储、语义控件匹配、重放、有限救援与 suspect 状态 | `ext/skill/` |
+| 执行中追加 | 线程安全追加队列、有效目标及旧规划失效、语音归属选择、暂停/排队/交接恢复、追加历史与技能编译排除 | `ext/amend/`、`ext/voice/VoiceRouting.java`、执行循环与胶囊 |
 | 查询带回（5.8） | 只读动作保护、独立答案提取与原文核对、查询技能、胶囊答案与本机历史；用户主动复制或打开来源 App | `ext/query/`、`ReadOnlyGuard.java`、验收与胶囊模块 |
 | 语音与上下文 | executor/verifier/intake 分角色配置、音频理解与确认、临时屏幕上下文、隐私开关与密码区域遮盖 | `ext/config/`、`ext/context/`、`ext/voice/`、模型配置页 |
 | 悬浮入口 | 语音悬浮球、状态胶囊、录音就绪震动、上滑取消、曲面屏边距与交接入口 | `controller-app/.../ext/overlay/`、`AndroidManifest.xml` |

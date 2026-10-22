@@ -25,6 +25,7 @@ The capabilities below include inherited upstream features and downstream extens
 | Screen-aware requests | Optionally use the current screen's image and text to resolve references such as “this restaurant”; includes a screen-reading toggle, password masking, and temporary context expiry |
 | Status capsule and manual handoffs | Show execution, queue, confirmation, and waiting states; notify the user at CAPTCHA, login, or payment boundaries and provide an interactive handoff preview |
 | Query answers on the main screen | Read-only QUERY tasks independently extract and ground answers in visible quotes; the capsule shows the answer/source for eight seconds, with explicit Copy and Open-source-app actions, not-found and uncertainty states |
+| Amend running tasks | A single voice intake can modify, add to, or cancel an active task; ambiguous requests ask for a target, queued/paused/manual-wait tasks resume with the effective goal, and amended trajectories are excluded from skill learning |
 | Retained results and main-screen takeover | Retain results that need viewing; “Go view” moves the existing task, checks result-specific text such as its name/address, then releases the virtual display; failed transfers check rollback and offer a preview or an explicit recovery message |
 | History and efficiency statistics | Inspect outcomes, evidence screenshots, model calls, duration, skill matches, and model/skill/rescue step sources |
 | Disturbance metrics and input protection | Observe foreground, focus, IME, clipboard, and frame metrics, with same-app conflict handling and clipboard protection; unavailable measurements remain unknown |
@@ -33,6 +34,7 @@ The capabilities below include inherited upstream features and downstream extens
 ### Verification Status — October 22, 2026
 
 - **Local and emulator coverage:** Steps 2–5 are implemented, with build, Lint, logic-probe, mock integration, and native UI regression records. This does not establish compatibility with every real app.
+- **New query/amendment features (5.8/5.9):** Dedicated emulator fixtures and local model mocks cover answer grounding, read-only blocking, skill replay, active-task amendments, chooser timeout, history, and native capsule interactions. Real-app semantics, speech recognition, and this version on the phone remain unverified. The older Settings baseline retains one failing typed-text UI assertion.
 - **Mate 40 Pro / HarmonyOS 4.2.0.192:** ADB deployment, real model endpoints, calculator tasks, and Meituan restaurant selection have been tested. The preceding version passed retained-preview and same-task main-screen transfer checks, including page survival after virtual-display release. Backend rollback also has a separate native fault-injection record.
 - **Latest handoff fixes (`d1df15e`):** Entity-text verification, explicit rollback states, semantic result retention, unified viewing entry points, and transfer progress are implemented and pass build/Lint/local boundary regressions. Full Meituan success and fallback validation for this version remains pending phone installation confirmation and a manually completed CAPTCHA. Real speech accuracy, long-running background survival, and other vendors still need further validation.
 
@@ -207,7 +209,9 @@ The shell listens on loopback only:
 Main methods:
 
 - `startTask` / `stopTask` / `listTasks`: start, stop, and inspect tasks. Start supports per-role `models` and retains compatibility with `apiKey`, `apiBase`, and `model`.
-- `submitVoiceTask` / `confirmTask`: submit voice interpretation and confirm or cancel a task.
+- `submitVoiceTask` / `confirmTask`: submit one voice interpretation and confirm or cancel a new action task.
+- `amendTask {taskId, kind, text}`: queue `modify`, `add`, or `cancel` on an active task.
+- `resolveVoice {voiceId, taskId}`: choose an offered amendment target or `"new"`; an unanswered choice becomes a new task after ten seconds.
 - `captureContext` / `discardContext` / `setContextReading`: capture, discard, or disable screen context.
 - `resumeTask` / `injectTouch` / `takeResultOnMain`: manual handoff, preview touch input, and result transfer.
 - `listHistory` / `getTask`: task history and detail.

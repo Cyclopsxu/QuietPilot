@@ -12,7 +12,7 @@ public final class SkillCompiler {
     public JsonObject compile(JsonObject trajectory, Model model, long elapsed, int callsBefore) throws Exception {
         if (trajectory == null || !trajectory.has("outcome")
                 || !java.util.Arrays.asList("VERIFIED","ANSWERED").contains(UiSnapshot.text(trajectory.getAsJsonObject("outcome"), "status"))
-                || UiSnapshot.bool(trajectory, "handedOff")) return null;
+                || UiSnapshot.bool(trajectory, "handedOff") || !UiSnapshot.array(trajectory,"amendments").isEmpty()) return null;
         JsonArray steps = preprocess(UiSnapshot.array(trajectory, "steps"));
         if (steps.isEmpty()) return null;
         JsonObject input = new JsonObject(); input.addProperty("goal", UiSnapshot.text(trajectory, "goal"));

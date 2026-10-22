@@ -26,12 +26,13 @@ public final class HandoffManager {
                 && message != null && !message.trim().isEmpty() && boundary != null && !boundary.trim().isEmpty();
     }
     public synchronized void resume(String value) {
-        if (!"done".equals(value) && !"cancel".equals(value) && !"open_main".equals(value))
+        if (!"done".equals(value) && !"cancel".equals(value) && !"open_main".equals(value) && !"amend".equals(value))
             throw new IllegalArgumentException("outcome must be done or cancel");
         if (outcome != null) throw new IllegalStateException("handoff already answered");
         outcome = value;
         response.countDown();
     }
+    public synchronized boolean tryResume(String value){if(outcome!=null)return false;resume(value);return true;}
     public String awaitResponse(ExecutionContext ctx, ResultVerifier verifier, String boundary, TaskProgress progress) throws Exception {
         return awaitResponse(ctx, verifier, boundary, progress, () -> {});
     }

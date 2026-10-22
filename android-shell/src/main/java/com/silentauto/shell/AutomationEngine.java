@@ -1,4 +1,4 @@
-// Modified by Codex for ShadowAuto: delegate actions, verify results and coordinate user handoff. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: delegate actions, verify query/action results, coordinate handoff and amend active goals. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.silentauto.shell.ext.*;
@@ -81,7 +81,7 @@ public final class AutomationEngine {
         TaskState task = new TaskState(taskId, request.goal, logs);
         task.type=request.type;task.progress.type(task.type.wire());
         tasks.put(taskId, task);
-        recorder.prepare(taskId, request.goal);recorder.type(taskId,task.type.wire());
+        recorder.prepare(taskId, task.amendments.goal());recorder.type(taskId,task.type.wire());
         task.progress.publish();
         submitTask(task,request);
         return taskId;
@@ -105,7 +105,7 @@ public final class AutomationEngine {
             return;
         }
         voicePending.remove(taskId);
-        transition(task, TaskStatus.CANCELLED, "automation cancelled", "", "");
+        transition(task, TaskStatus.CANCELLED, task.cancellationMessage.isEmpty()?"automation cancelled":task.cancellationMessage, "", "");
         if (task.ai != null) task.ai.abort();
         if (task.verifierAi != null) task.verifierAi.abort();
         if (task.future != null) {
@@ -264,6 +264,7 @@ public final class AutomationEngine {
             item.addProperty("displayId", task.display == null ? -1 : task.display.displayId);
             array.add(item);
         }
+        for(PendingVoice choice:voiceChoices.values())array.add(choice.choice.deepCopy());
         object.add("tasks", array);
         return object;
     }
@@ -287,6 +288,20 @@ public final class AutomationEngine {
     void setContextReading(boolean enabled) throws Exception { contexts().reading(enabled); }
     void discardContext(String id) { contexts().discard(id); }
 
+    private final java.util.concurrent.ConcurrentHashMap<String,PendingVoice> voiceChoices=new java.util.concurrent.ConcurrentHashMap<>();
+    private static final class PendingVoice {
+        final JsonObject intake,params,choice; final long started,elapsed;
+        PendingVoice(JsonObject i,JsonObject p,JsonObject c,long s){intake=i;params=p;choice=c;started=s;elapsed=SystemClock.elapsedRealtime()-s;}
+    }
+    private synchronized JsonArray voiceCandidates() {
+        JsonArray result=new JsonArray();for(TaskState task:tasks.values()) {
+            if(task.stop.get()||task.progress.status().terminal()||task.transferInProgress)continue;
+            JsonObject state=task.progress.json(),value=new JsonObject();
+            for(String k:new String[]{"taskId","goal","app","appName","status","stepText"})value.add(k,state.get(k));result.add(value);
+        }return result;
+    }
+    private static JsonObject voiceConfig(JsonObject params){JsonObject result=new JsonObject();for(String key:new String[]{"models","apiKey","apiBase","model"})if(params.has(key))result.add(key,params.get(key).deepCopy());return result;}
+
     JsonObject submitVoiceTask(JsonObject params) throws Exception {
         String id = "voice-" + java.util.UUID.randomUUID();
         Config config = baseConfig.withOverrides(JsonRpc.text(params,"apiKey"),JsonRpc.text(params,"apiBase"),JsonRpc.text(params,"model")).withProfiles(params.getAsJsonObject("models"));
@@ -297,38 +312,114 @@ public final class AutomationEngine {
         try {
             AiClient intake = new AiClient(config.forRole(config.intake),logs,id);
             result = new com.silentauto.shell.ext.voice.VoiceIntake().understand(JsonRpc.text(params,"audioBase64"),
-                    JsonRpc.text(params,"audioFormat"),context,appCatalog.appsText(appCatalog.installedApps()),skills.list(true),intake::completeParts);
+                    JsonRpc.text(params,"audioFormat"),context,appCatalog.appsText(appCatalog.installedApps()),skills.list(true),voiceCandidates(),intake::completeParts);
         } finally { contexts().deleteConsumed(context); }
         if (!result.has("understood") || !result.get("understood").getAsBoolean()) return result;
         result.addProperty("voiceId",id);
-        String pkg = JsonRpc.text(result,"app"); boolean installed = false;
-        for (AppCatalog.AppInfo app : appCatalog.installedApps()) if (app.packageName.equals(pkg)) installed = true;
-        if (!installed) return com.silentauto.shell.ext.voice.VoiceIntake.rejected("不确定要做什么");
-        TaskRequest request = new TaskRequest(id,"query".equals(JsonRpc.text(result,"type"))?JsonRpc.text(result,"question"):JsonRpc.text(result,"task"),JsonRpc.text(params,"apiKey"),JsonRpc.text(params,"apiBase"),JsonRpc.text(params,"model"));
-        request.type=com.silentauto.shell.ext.query.TaskType.parse(JsonRpc.text(result,"type"));
-        request.models = params.getAsJsonObject("models");
-        boolean confirm = request.type!=com.silentauto.shell.ext.query.TaskType.QUERY&&!"high".equals(JsonRpc.text(result,"confidence"));
-        synchronized (this) {
-            TaskState task = new TaskState(id,request.goal,logs);task.type=request.type;task.progress.type(task.type.wire()); tasks.put(id,task); recorder.prepare(id,request.goal);recorder.type(id,task.type.wire());
-            task.progress.call("intake");
-            task.progress.voice(JsonRpc.text(result,"transcript"),SystemClock.elapsedRealtime()-started,confirm,System.currentTimeMillis()+(confirm?10_000:3_000));
-            if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY){task.progress.confirmed();submitTask(task,request);result.addProperty("taskId",id);return result;}
-            voicePending.put(id,request);
-            task.future = voiceTimers.schedule(()->{
-                synchronized (AutomationEngine.this) {
-                    if (!voicePending.containsKey(id) || task.stop.get() || task.progress.status().terminal()) return;
-                    if (confirm) { voicePending.remove(id); stopTask(id); }
-                    else confirmTask(id,true);
-                }
-            },confirm?10:3,java.util.concurrent.TimeUnit.SECONDS);
+        if("amend".equals(JsonRpc.text(result,"type"))) {
+            JsonArray candidates=voiceCandidates();
+            String route=com.silentauto.shell.ext.voice.VoiceRouting.route(result,candidates);
+            if("ask".equals(route)) {
+                JsonObject choice=com.silentauto.shell.ext.voice.VoiceRouting.choice(id,result,candidates,System.currentTimeMillis()+10_000);
+                voiceChoices.put(id,new PendingVoice(result.deepCopy(),voiceConfig(params),choice,started));logs.status(choice);
+                voiceTimers.schedule(()->{try{resolveVoice(id,"new");}catch(Exception e){logs.task(id,"voice route expired: "+e.getMessage());}},10,java.util.concurrent.TimeUnit.SECONDS);
+                result.addProperty("route","ask");result.add("taskId",com.google.gson.JsonNull.INSTANCE);result.add("candidates",candidates);return result;
+            }
+            if(!"new".equals(route))try {
+                JsonObject amend=result.getAsJsonObject("amend");
+                amendTask(route,JsonRpc.text(amend,"kind"),JsonRpc.text(amend,"text"),SystemClock.elapsedRealtime()-started);
+                result.addProperty("route","amended");result.addProperty("taskId",route);return result;
+            }catch(IllegalStateException ended){ /* Completion races are routed as new tasks. */ }
+            result=newVoiceIntent(result);
         }
-        result.addProperty("taskId",id); return result;
+        return registerVoice(id,result,params,started);
+    }
+
+    private JsonObject newVoiceIntent(JsonObject intake) {
+        JsonObject result=intake.deepCopy();result.addProperty("type","action");result.addProperty("route","new");
+        if(JsonRpc.text(result,"task").isEmpty())result.addProperty("task",JsonRpc.text(result,"transcript"));
+        // A completed target supplies context, never permission to repeat its previous action.
+        if(intake.has("amend")) {
+            JsonObject amendment=intake.getAsJsonObject("amend");TaskState old;
+            synchronized(this){old=tasks.get(JsonRpc.text(amendment,"target"));}
+            if(old!=null&&old.progress.status().terminal()) {
+                result.addProperty("app",old.packageName);
+                result.addProperty("task","前一任务已结束："+old.progress.json().get("originalGoal").getAsString()+"。不要重复前一任务。现在作为新任务只处理："+JsonRpc.text(amendment,"text"));
+            }
+        }
+        return result;
+    }
+
+    JsonObject resolveVoice(String id,String selected)throws Exception {
+        PendingVoice pending=voiceChoices.get(id);if(pending==null)throw new IllegalStateException("归属选择已结束");
+        if(!"new".equals(selected)) {
+            boolean offered=false;for(com.google.gson.JsonElement candidate:pending.choice.getAsJsonArray("candidates"))if(selected.equals(JsonRpc.text(candidate.getAsJsonObject(),"taskId")))offered=true;
+            if(!offered)throw new IllegalArgumentException("请选择列出的任务或新任务");
+        }
+        if(!voiceChoices.remove(id,pending))throw new IllegalStateException("归属选择已结束");
+        JsonObject closed=pending.choice.deepCopy();closed.addProperty("routingRequired",false);closed.addProperty("routingResolved",true);closed.addProperty("status","CANCELLED");logs.status(closed);
+        if(!"new".equals(selected))try {
+            JsonObject amend=pending.intake.getAsJsonObject("amend");amendTask(selected,JsonRpc.text(amend,"kind"),JsonRpc.text(amend,"text"),pending.elapsed);
+            JsonObject response=pending.intake.deepCopy();response.addProperty("route","amended");response.addProperty("taskId",selected);return response;
+        }catch(IllegalStateException ended){ /* Target finished after the chooser appeared. */ }
+        return registerVoice(id,newVoiceIntent(pending.intake),pending.params,SystemClock.elapsedRealtime()-pending.elapsed);
+    }
+
+    private JsonObject registerVoice(String id,JsonObject result,JsonObject params,long started)throws Exception {
+        String pkg=JsonRpc.text(result,"app");boolean installed=false;for(AppCatalog.AppInfo app:appCatalog.installedApps())if(app.packageName.equals(pkg))installed=true;
+        if(!installed)return com.silentauto.shell.ext.voice.VoiceIntake.rejected("不确定新任务使用哪个 App，请重新说明完整任务");
+        TaskRequest request=new TaskRequest(id,"query".equals(JsonRpc.text(result,"type"))?JsonRpc.text(result,"question"):JsonRpc.text(result,"task"),JsonRpc.text(params,"apiKey"),JsonRpc.text(params,"apiBase"),JsonRpc.text(params,"model"));
+        request.type=com.silentauto.shell.ext.query.TaskType.parse(JsonRpc.text(result,"type"));request.models=params.getAsJsonObject("models");
+        boolean confirm=request.type!=com.silentauto.shell.ext.query.TaskType.QUERY&&!"high".equals(JsonRpc.text(result,"confidence"));
+        synchronized(this) {
+            TaskState task=new TaskState(id,request.goal,logs);task.type=request.type;task.progress.type(task.type.wire());tasks.put(id,task);recorder.prepare(id,request.goal);recorder.type(id,task.type.wire());task.progress.call("intake");
+            task.progress.voice(JsonRpc.text(result,"transcript"),SystemClock.elapsedRealtime()-started,confirm,System.currentTimeMillis()+(confirm?10_000:3_000));
+            if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY){task.progress.confirmed();submitTask(task,request);}
+            else {
+                voicePending.put(id,request);task.future=voiceTimers.schedule(()->{synchronized(AutomationEngine.this){if(!voicePending.containsKey(id)||task.stop.get()||task.progress.status().terminal())return;if(confirm){voicePending.remove(id);stopTask(id);}else confirmTask(id,true);}},confirm?10:3,java.util.concurrent.TimeUnit.SECONDS);
+            }
+        }
+        result.addProperty("voiceId",id);result.addProperty("taskId",id);result.addProperty("route","new");return result;
     }
     synchronized void confirmTask(String id, boolean ok) {
         TaskRequest request = voicePending.remove(id); TaskState task = tasks.get(id);
         if (request == null || task == null || task.stop.get() || task.progress.status().terminal()) return;
         if (!ok) { stopTask(id); return; }
         task.progress.confirmed(); submitTask(task,request);
+    }
+
+    private void applyAmendments(TaskState task) {
+        JsonArray applied=task.amendments.drain();if(applied.isEmpty())return;
+        if(task.skillRunner!=null)task.skillRunner.abandonForAmendment();
+        task.searchText="";task.pendingSearchSubmit=false;task.searchInputActive=false;task.pendingInputText="";task.verificationFailures=0;task.answerFailures=0;
+        task.progress.protectedScreen(false);
+        task.lastAction="amended";task.lastReason="已应用用户追加要求；重新观察当前页面，依据有效目标继续，已完成操作不得重复";
+        recorder.amended(task.taskId,task.amendments.records(),task.amendments.goal());
+        task.progress.amended(task.amendments.goal(),task.amendments.records(),"已追加："+JsonRpc.text(applied.get(applied.size()-1).getAsJsonObject(),"text"));
+        logs.task(task.taskId,"AMEND_APPLIED "+applied);
+    }
+
+    synchronized JsonObject amendTask(String id,String kind,String text){return amendTask(id,kind,text,-1);}
+    private synchronized JsonObject amendTask(String id,String kind,String text,long intakeElapsed) {
+        TaskState task=tasks.get(id);
+        if(task==null)throw new IllegalStateException("目标任务不存在");
+        synchronized(task.amendments) {
+            if(task.progress.status().terminal()||task.stop.get())throw new IllegalStateException("目标任务已结束，请作为新任务提交");
+            if(task.transferInProgress)throw new IllegalStateException("正在交接主屏，请稍候再追加");
+            JsonObject record=task.amendments.add(kind,text);
+            if(intakeElapsed>=0)task.progress.amendIntake(intakeElapsed);
+            recorder.amended(id,task.amendments.records(),task.amendments.goal());
+            task.progress.amended(task.amendments.goal(),task.amendments.records(),"已追加："+text);
+            logs.task(id,"AMEND_QUEUED "+record);
+            if("cancel".equals(kind)){task.cancellationMessage="已按你的要求取消";stopTask(id);}
+            else {
+                if(task.handoff!=null)task.handoff.tryResume("amend");
+                if(task.verifierAi!=null)task.verifierAi.cancel();
+                // Do not interrupt input injection. Discard any old planning response at the next boundary.
+                if(task.ai!=null&&task.progress.status()==TaskStatus.RUNNING)task.ai.cancel();
+            }
+            return record;
+        }
     }
 
     private void submitTask(TaskState task,TaskRequest request){
@@ -350,8 +441,9 @@ public final class AutomationEngine {
             UiBridge bridge = getUi();
             InputBridge input = new InputBridge();
             ClipboardBridge clipboard = new ClipboardBridge();
+            applyAmendments(task);
             task.progress.action("正在选择应用", "model");
-            task.searchText = searchTextFromGoal(request.goal);
+            task.searchText = task.amendments.version()==0?searchTextFromGoal(task.amendments.goal()):"";
             if (!Config.empty(task.searchText)) {
                 logs.task(task.taskId, "search text hint: " + task.searchText);
             }
@@ -359,7 +451,7 @@ public final class AutomationEngine {
             logs.task(task.taskId, "listing installed apps");
             List<AppCatalog.AppInfo> apps = appCatalog.installedApps();
             com.silentauto.shell.ext.skill.SkillMatcher.Match match = null;
-            try { match = new com.silentauto.shell.ext.skill.SkillMatcher().match(request.goal,task.type.wire(), skills.list(true), ai::complete); }
+            try { match = new com.silentauto.shell.ext.skill.SkillMatcher().match(task.amendments.goal(),task.type.wire(), skills.list(true), ai::complete); }
             catch (Exception matchError) { logs.task(task.taskId, "skill match skipped: " + matchError.getMessage()); }
             ActionDecision app;
             if (match != null) {
@@ -371,9 +463,9 @@ public final class AutomationEngine {
                 });
                 app = new ActionDecision(); app.packageName = match.skill.get("packageName").getAsString();
                 logs.task(task.taskId, "skill matched: " + task.skillRunner.skillId());
-            } else app = chooseApp(ai, request.goal, apps);
+            } else app = chooseApp(ai, task.amendments.goal(), apps);
             if (Config.empty(app.packageName)) {
-                app.packageName = appCatalog.localPackageGuess(request.goal, apps);
+                app.packageName = appCatalog.localPackageGuess(task.amendments.goal(), apps);
             }
             if (Config.empty(app.packageName)) {
                 throw new IllegalStateException("AI did not choose an app package");
@@ -385,7 +477,7 @@ public final class AutomationEngine {
                 if (app.packageName.equals(installed.packageName)) { task.appName = installed.name; break; }
             }
             task.progress.app(app.packageName, task.appName);
-            awaitAdmission(task);
+            awaitAdmission(task);applyAmendments(task);
             if (task.stop.get()) throw new InterruptedException("task cancelled before launch");
             transition(task, TaskStatus.RUNNING, "开始执行", "", "");
             task.conflict = new com.silentauto.shell.ext.guard.MainAppConflictGuard(task.packageName,task.appName,
@@ -411,7 +503,7 @@ public final class AutomationEngine {
             logs.task(task.taskId, "virtual display local IME " + (task.display.localImeEnabled() ? "enabled" : "unavailable"));
             ctx = new ExecutionContext(task.taskId, task.display.displayId, task.display.width, task.display.height,
                     bridge, input, clipboard, logs);
-            for (StepListener listener : listeners) listener.onTaskStart(ctx, request.goal, app.packageName);
+            for (StepListener listener : listeners) listener.onTaskStart(ctx, task.amendments.goal(), app.packageName);
             task.conflict.awaitClear();
             appCatalog.launchPackage(task.taskId, app.packageName, task.display.displayId);
             logs.task(task.taskId, "launched " + app.packageName);
@@ -425,6 +517,8 @@ public final class AutomationEngine {
                     () -> EvidenceFrame.from(task.display.captureBitmap(8, 120)));
             for (int step = 1; step <= MAX_STEPS && !task.stop.get(); step++) {
                 if (task.conflict.awaitClear()) recoverAfterConflict(task);
+                applyAmendments(task);
+                long goalVersion=task.amendments.version();
                 long planningEpoch=task.conflict.epoch();
                 String dump = bridge.dump(task.display.displayId, task.display.width, task.display.height, UiBridge.MODE_SIMPLE);
                 rememberUiObservation(task, dump);
@@ -432,13 +526,16 @@ public final class AutomationEngine {
                 ActionDecision action = task.skillRunner == null ? null : task.skillRunner.next(ctx, task, step, dump);
                 if (action == null) action = firstNonNull(ctx, task, step, dump);
                 if (action == null) {
+                    try {
                     boolean rescuing = task.skillRunner != null && task.skillRunner.state() == com.silentauto.shell.ext.skill.SkillRunner.State.RESCUING;
-                    action = nextAction(task, ai, bridge, request.goal, app.packageName, step, task.display.displayId, dump);
+                    action = nextAction(task, ai, bridge, task.amendments.goal(), app.packageName, step, task.display.displayId, dump);
                     if (rescuing) {
                         if ("done".equals(action.action)) action = ActionDecision.wait(300, "救援只恢复界面，重新观察");
                         action.source = "rescue";
                     }
+                } catch(Exception changed){if(task.amendments.version()!=goalVersion){step--;continue;}throw changed;}
                 }
+                if(task.amendments.version()!=goalVersion){step--;continue;}
                 if (task.stop.get() || Thread.currentThread().isInterrupted()) throw new InterruptedException("task cancelled");
                 boolean recovered=task.conflict.awaitClear();
                 if (recovered || planningEpoch!=task.conflict.epoch()) {
@@ -464,6 +561,7 @@ public final class AutomationEngine {
                         continue;
                     }
                     ResultVerifier.Result boundary = verifier.verifyBoundary(ctx, action.boundary);
+                    if(task.amendments.version()!=goalVersion){step--;continue;}
                     if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
                     logs.task(task.taskId, "handoff boundary verified=" + boundary.verified + ": "
                             + (boundary.verified ? boundary.evidence : boundary.missing));
@@ -482,8 +580,10 @@ public final class AutomationEngine {
                             : action.message, boundary.evidence, action.boundary);
                     logs.task(task.taskId, "HANDOFF " + action.kind + ": " + action.message);
                     logs.handoff(task.taskId, action.kind, action.message, action.boundary);
+                    if(task.amendments.pending())handoff.tryResume("amend");
                     String outcome = handoff.awaitResponse(ctx, verifier, action.boundary, task.progress, verifierAi::cancel);
                     task.handoff = null;
+                    if("amend".equals(outcome)){transition(task,TaskStatus.RUNNING,"追加要求已收到，继续执行","","");continue;}
                     if (!"done".equals(outcome)) {
                         task.resultStatus = "handoff";
                         if ("open_main".equals(outcome)) {
@@ -504,9 +604,10 @@ public final class AutomationEngine {
                 }
                 if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY&&("report_answer".equals(action.action)||"report_not_found".equals(action.action))) {
                     try {
-                        String question="skill".equals(action.source)?task.skillRunner.question():request.goal;
+                        String question="skill".equals(action.source)?task.skillRunner.question():task.amendments.goal();
                         ResultVerifier.Extracted extracted=verifier.extractAnswer(ctx,question);
-                        if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
+                        if(task.amendments.version()!=goalVersion){step--;continue;}
+                    if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
                         boolean found=extracted.answer.found,uncertain=false;String answer=extracted.answer.answer,quote=extracted.answer.quote;
                         if(found&&!"skill".equals(action.source)) {
                             boolean agrees="report_answer".equals(action.action)&&com.silentauto.shell.ext.query.AnswerVerifier.grounded(action.quote,extracted.visible)
@@ -522,17 +623,22 @@ public final class AutomationEngine {
                         if(!found&&searched.trim().isEmpty())searched="已检查"+task.appName+"当前查询页面";
                         ResultVerifier.Result proof=new ResultVerifier.Result(found,quote,"");proof.frame=extracted.frame;
                         task.progress.evidenceScreenshot(verifier.saveEvidence(ctx,proof));
+                        synchronized(task.amendments) {
+                        if(task.amendments.version()!=goalVersion){step--;continue;}
                         task.progress.answer(answer,quote,uncertain,searched);task.completed=true;task.resultStatus=found?"answered":"not_found";
                         transition(task,found?TaskStatus.ANSWERED:TaskStatus.NOT_FOUND,found?(uncertain?"可能是：":"")+answer:"没查到："+searched,quote,"");
                         logs.result(task.taskId,task.resultStatus,found?answer:searched);break;
+                        }
                     } catch(InterruptedException interrupted){throw interrupted;}
                     catch(Exception unavailable){
+                        if(task.amendments.version()!=goalVersion){step--;continue;}
                         if(task.answerFailures++<2){task.lastAction="answer_unavailable";task.lastReason="答案提取不可用："+unavailable.getMessage();continue;}
                         throw unavailable;
                     }
                 }
                 if ("done".equals(action.action)) {
-                    ResultVerifier.Result verification = verifier.verify(ctx, request.goal, action.expectedEvidence);
+                    ResultVerifier.Result verification = verifier.verify(ctx, task.amendments.goal(), action.expectedEvidence);
+                    if(task.amendments.version()!=goalVersion){step--;continue;}
                     if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
                     if (verification.verified) {
                         String evidencePath = verifier.saveEvidence(ctx, verification);
@@ -540,25 +646,30 @@ public final class AutomationEngine {
                         logs.task(task.taskId, "evidence saved: " + evidencePath);
                         task.completed = true;
                         task.resultStatus = "verified";
-                        if (com.silentauto.shell.ext.handoff.ResultRetention.requested(request.goal,verification.delivery)) {
+                        if (com.silentauto.shell.ext.handoff.ResultRetention.requested(task.amendments.goal(),verification.delivery)) {
                             task.resultAnchors=java.util.List.copyOf(verification.pageAnchors);
                             task.handoff = new HandoffManager();
                             task.progress.resultReady(true);
                             transition(task, TaskStatus.WAITING_USER, "已完成，后台页面已保留，点击去查看", verification.evidence, "结果已验收，等待查看");
                             logs.task(task.taskId, "result retained until user acknowledgement");
+                            if(task.amendments.pending())task.handoff.tryResume("amend");
                             String reviewed = task.handoff.awaitAcknowledgement();
                             task.handoff = null;
                             task.progress.resultReady(false);
+                            if("amend".equals(reviewed)){task.completed=false;task.resultStatus="";transition(task,TaskStatus.RUNNING,"追加要求已收到，继续执行","","");continue;}
                             if (task.stop.get() || !"done".equals(reviewed)) {
                                 transition(task, TaskStatus.CANCELLED, "已关闭结果页面", verification.evidence, "");
                                 break;
                             }
                             transition(task, TaskStatus.RUNNING, "查看结束，正在保存结果", verification.evidence, "");
                         }
+                        synchronized(task.amendments) {
+                        if(task.amendments.version()!=goalVersion){task.completed=false;task.resultStatus="";step--;continue;}
                         transition(task, TaskStatus.VERIFIED, task.resultTransferred ? "当前页面已交给你在主屏继续" : "任务已验收", verification.evidence, "");
                         logs.task(task.taskId, "VERIFIED: " + verification.evidence);
                         logs.result(task.taskId, "verified", verification.evidence);
                         break;
+                        }
                     }
                     task.lastAction = "verification_failed";
                     task.lastReason = verification.missing;
@@ -597,7 +708,7 @@ public final class AutomationEngine {
             }
         } catch (Throwable e) {
             if (task.stop.get()) {
-                transition(task, TaskStatus.CANCELLED, "automation cancelled", "", "");
+                transition(task, TaskStatus.CANCELLED, task.cancellationMessage.isEmpty()?"automation cancelled":task.cancellationMessage, "", "");
                 doneMessage = "automation cancelled";
             } else {
                 transition(task, TaskStatus.FAILED, e.getMessage(), "", "");
@@ -1248,6 +1359,8 @@ public final class AutomationEngine {
         public volatile AiClient ai;
         public com.silentauto.shell.ext.query.TaskType type=com.silentauto.shell.ext.query.TaskType.ACTION;
         public int answerFailures;
+        public final com.silentauto.shell.ext.amend.AmendmentQueue amendments;
+        public String cancellationMessage="";
         public boolean completed;
         public volatile boolean resultTransferred, transferInProgress;
         public volatile java.util.List<String> resultAnchors=java.util.List.of();
@@ -1273,7 +1386,7 @@ public final class AutomationEngine {
         public String lastUiWindowError = "";
 
         TaskState(String taskId, String goal, LogHub logs) {
-            this.taskId = taskId;
+            this.taskId = taskId;this.amendments=new com.silentauto.shell.ext.amend.AmendmentQueue(goal);
             this.progress = new TaskProgress(taskId, goal, logs);
         }
     }

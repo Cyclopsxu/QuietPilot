@@ -1,4 +1,4 @@
-// Modified by Codex for ShadowAuto: log results and notify users about verified handoff boundaries. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: log typed results, handle handoff boundaries and exclude voice-routing prompts from task cards. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.controller;
 
 import android.Manifest;
@@ -339,6 +339,7 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
     }
 
     private void handleEvent(JSONObject params) {
+        if(params.optBoolean("routingRequired")||params.optBoolean("routingResolved"))return;
         try {
             AutomationTaskView task = taskById(params.optString("taskId"));
             if (task == null && ("status".equals(params.optString("event",params.optString("type"))) || "video.config".equals(params.optString("type")))) task = ensureTask(params);

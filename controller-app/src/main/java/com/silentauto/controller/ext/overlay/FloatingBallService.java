@@ -45,6 +45,7 @@ public final class FloatingBallService extends Service {
         rpc=new OverlayRpc(status->main.post(()->status(status)));
         capsule=new StatusCapsule(this,new StatusCapsule.Actions(){
             public void open(JSONObject task){openTask(task);}
+            public void resolve(String voice,String task){io.execute(()->{try{JSONObject result=rpc.request("resolveVoice",new JSONObject().put("voiceId",voice).put("taskId",task)).getJSONObject("result");if(result.has("understood")&&!result.optBoolean("understood"))main.post(()->message(result.optString("reason")));}catch(Exception e){main.post(()->message(e.getMessage()));}});}
             public void query(JSONObject task,boolean copy){
                 if(copy){getSystemService(android.content.ClipboardManager.class).setPrimaryClip(android.content.ClipData.newPlainText("查询答案",task.optString("answer")));message("已复制答案");}
                 else io.execute(()->{try{rpc.request("openQuerySource",new JSONObject().put("taskId",task.optString("taskId")));}catch(Exception e){main.post(()->message(e.getMessage()));}});
@@ -107,12 +108,12 @@ public final class FloatingBallService extends Service {
     }
     private void discard(String id){if(id==null||id.isEmpty()||rpc==null)return;io.execute(()->{try{rpc.request("discardContext",new JSONObject().put("contextId",id));}catch(Exception ignored){}});}
     private void message(String text){if(destroyed)return;Toast.makeText(this,text==null?"操作失败":text,Toast.LENGTH_LONG).show();}
-    private void status(JSONObject value){if(destroyed)return;String id=value.optString("taskId");if(id.isEmpty())return;JSONObject old=tasks.put(id,value);
+    private void status(JSONObject value){if(destroyed)return;String id=value.optString("taskId");if(id.isEmpty())return;if(value.optBoolean("routingResolved")){tasks.remove(id);if(capsule!=null)capsule.update(tasks.values());return;}JSONObject old=tasks.put(id,value);
         String state=value.optString("status");if((old==null||!state.equals(old.optString("status")))&&(state.equals("VERIFIED")||state.equals("ANSWERED")||state.equals("NOT_FOUND")||state.equals("FAILED"))){flash=(state.equals("VERIFIED")||state.equals("ANSWERED")||state.equals("NOT_FOUND"))?"done":"failed";flashUntil=SystemClock.elapsedRealtime()+5000;}
         if(ball!=null)ball.invalidate();if(capsule!=null)capsule.update(tasks.values());
     }
     private JSONObject waiting(){JSONObject first=null;for(JSONObject task:tasks.values())if("WAITING_USER".equals(task.optString("status"))&&(first==null||task.optLong("waitingSinceMs",Long.MAX_VALUE)<first.optLong("waitingSinceMs",Long.MAX_VALUE)))first=task;return first;}
-    private int running(){int count=0;for(JSONObject task:tasks.values())if(!Arrays.asList("VERIFIED","ANSWERED","NOT_FOUND","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(task.optString("status")))count++;return count;}
+    private int running(){int count=0;for(JSONObject task:tasks.values())if(!task.optBoolean("routingRequired")&&!Arrays.asList("VERIFIED","ANSWERED","NOT_FOUND","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(task.optString("status")))count++;return count;}
     private void openTask(){openTask(waiting());}
     private void openTask(JSONObject target){
         if(target!=null&&Arrays.asList("moving","cancelling").contains(target.optString("transferState"))){Toast.makeText(this,"正在交接，请稍候",Toast.LENGTH_SHORT).show();return;}

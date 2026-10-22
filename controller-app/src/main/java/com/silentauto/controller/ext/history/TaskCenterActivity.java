@@ -40,7 +40,7 @@ public final class TaskCenterActivity extends Activity {
         if("query".equals(item.optString("type"))){text(body,(item.optBoolean("uncertain")?"可能是：":"答案：")+item.optString("answer")+"\n原文依据："+item.optString("quote")+"\n查找范围："+item.optString("searched"),16,0xff182639);}
         text(body,"结果："+item.optString("message"),16,0xff182639);JSONObject counts=item.optJSONObject("llmCalls");if(counts!=null)text(body,"模型调用："+counts+"\n技能："+item.optString("skillId")+"\n来源步数："+item.optJSONObject("sourceSteps"),14,0xff576879);
         if(!item.optString("comparison").isEmpty())text(body,item.optString("comparison"),16,0xff217c69);
-        text(body,"步骤时间线",18,0xff182639);JSONArray steps=item.optJSONArray("steps");if(steps!=null)for(int i=0;i<steps.length();i++){JSONObject step=steps.optJSONObject(i);String source=step.optString("source","model"),label=step.optString("stepText",step.optString("reason"));TextView row=new TextView(this);row.setText(step.optInt("step")+" · "+source+" · "+label);row.setTextSize(15);row.setTextColor(source.equals("skill")?0xff218461:source.equals("rescue")?0xffb46a18:0xff365e9d);row.setPadding(0,dp(6),0,dp(6));body.addView(row);row.setOnClickListener(v->new AlertDialog.Builder(this).setTitle("步骤详情").setMessage(step.toString()).setPositiveButton("关闭",null).show());}
+        timeline(body,item);
         text(body,"验收证据："+item.optString("evidence","暂无"),16,0xff182639);String image=item.optString("evidenceBase64");if(!image.isEmpty()){byte[] bytes=android.util.Base64.decode(image,android.util.Base64.DEFAULT);Bitmap bitmap=BitmapFactory.decodeByteArray(bytes,0,bytes.length);if(bitmap!=null){ImageView proof=new ImageView(this);proof.setImageBitmap(bitmap);proof.setAdjustViewBounds(true);body.addView(proof,new LinearLayout.LayoutParams(-1,-2));}}
         JSONObject disturbance=item.optJSONObject("disturbance");text(body,"干扰度指标",18,0xff182639);
         JSONArray metrics=disturbance==null?null:disturbance.optJSONArray("metrics");
@@ -50,6 +50,18 @@ public final class TaskCenterActivity extends Activity {
         if(disturbance!=null){text(body,"采样："+disturbance.optInt("samples")+" 次，间隔 500ms，平均 "+String.format(Locale.ROOT,"%.1fms",disturbance.optDouble("avgSampleMs")),13,0xff576879);JSONArray events=disturbance.optJSONArray("events");if(events!=null)for(int i=0;i<events.length();i++){JSONObject event=events.optJSONObject(i);text(body,event.optLong("elapsedMs")+"ms · 第 "+event.optInt("step")+" 步 · "+event.optString("action")+"\n"+event.optString("detail"),13,0xffb34545);}}
         ScrollView scroll=new ScrollView(this);scroll.addView(body);new AlertDialog.Builder(this).setTitle("任务详情").setView(scroll).setPositiveButton("关闭",null).show();
     });}catch(Exception error){main.post(()->{if(alive())Toast.makeText(this,error.getMessage(),Toast.LENGTH_LONG).show();});}});}
+    private void timeline(LinearLayout body,JSONObject item) {
+        text(body,"步骤与追加时间线",18,0xff182639);
+        java.util.List<JSONObject> rows=new ArrayList<>();JSONArray steps=item.optJSONArray("steps"),amendments=item.optJSONArray("amendments");
+        if(steps!=null)for(int i=0;i<steps.length();i++)rows.add(steps.optJSONObject(i));
+        if(amendments!=null)for(int i=0;i<amendments.length();i++)try {JSONObject row=new JSONObject(amendments.optJSONObject(i).toString());row.put("amendment",true);row.put("elapsedMs",Math.max(0,row.optLong("time")-item.optLong("createdAtMs")));rows.add(row);}catch(Exception ignored){}
+        rows.sort(java.util.Comparator.comparingLong(row -> row.optLong("elapsedMs")));
+        for(JSONObject row:rows){boolean amend=row.optBoolean("amendment");String source=row.optString("source","model");
+            String label=amend?"追加 #"+row.optInt("seq")+" · "+row.optString("kind")+" · "+row.optString("text"):row.optInt("step")+" · "+source+" · "+row.optString("stepText",row.optString("reason"));
+            TextView view=new TextView(this);view.setText(row.optLong("elapsedMs")+"ms · "+label);view.setTextSize(15);view.setPadding(0,dp(6),0,dp(6));view.setTextColor(amend?0xff8b4f9e:source.equals("skill")?0xff218461:source.equals("rescue")?0xffb46a18:0xff365e9d);body.addView(view);
+            view.setOnClickListener(v->new AlertDialog.Builder(this).setTitle(amend?"追加详情":"步骤详情").setMessage(row.toString()).setPositiveButton("关闭",null).show());
+        }
+    }
     private String statistics(JSONObject skill) {
         JSONObject stats=skill.optJSONObject("stats");if(stats==null)return "暂无统计";
         return String.format(Locale.ROOT,"使用 %d 次 · 成功 %d 次\n平均 %.1f 秒 / %.1f 次模型调用\n首次 %.1f 秒 / %d 次模型调用 · 连续放弃 %d 次",

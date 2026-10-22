@@ -17,6 +17,7 @@ public final class SkillRunner implements ActionSource {
         this.skill = skill.deepCopy(); this.args = args.deepCopy(); this.onAbandon = onAbandon;
     }
     public void retryUnexecuted(ActionDecision action){if("skill".equals(action.source)&&!java.util.Arrays.asList("done","report_answer","wait").contains(action.action)&&cursor>0)cursor--;}
+    public void abandonForAmendment(){state=State.ABANDONED;}
     public void forceRescue(){if(state!=State.ABANDONED){state=State.RESCUING;rescueSteps=0;}}
     public String question(){return SkillCompiler.substitute(UiSnapshot.text(skill,"question"),args);}
     public String skillId() { return UiSnapshot.text(skill, "skillId"); }
