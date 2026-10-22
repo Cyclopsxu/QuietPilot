@@ -116,7 +116,10 @@ public final class FloatingBallService extends Service {
     private int running(){int count=0;for(JSONObject task:tasks.values())if(!task.optBoolean("routingRequired")&&!Arrays.asList("VERIFIED","ANSWERED","NOT_FOUND","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(task.optString("status")))count++;return count;}
     private void openTask(){openTask(waiting());}
     private void openTask(JSONObject target){
-        if(target!=null&&Arrays.asList("moving","cancelling").contains(target.optString("transferState"))){Toast.makeText(this,"正在交接，请稍候",Toast.LENGTH_SHORT).show();return;}
+        if(target!=null&&"manual_main".equals(target.optString("transferState"))){
+            io.execute(()->{try{rpc.request("resumeTask",new JSONObject().put("taskId",target.optString("taskId")).put("outcome","done"));}catch(Exception e){main.post(()->message(e.getMessage()));}});return;
+        }
+        if(target!=null&&Arrays.asList("moving","returning","cancelling").contains(target.optString("transferState"))){Toast.makeText(this,"正在交接，请稍候",Toast.LENGTH_SHORT).show();return;}
         if(target!=null&&Arrays.asList("VERIFIED","ANSWERED","NOT_FOUND","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(target.optString("status"))){startActivity(new Intent(this,com.silentauto.controller.ext.history.TaskCenterActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP).putExtra("taskId",target.optString("taskId")));return;}
         if(capsule!=null)capsule.compact();if(!OverlayPermissionActivity.ready(this)){startActivity(new Intent(this,OverlayPermissionActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));return;}Intent open=new Intent(this,MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);if(target!=null){open.putExtra("handoffTaskId",target.optString("taskId"));if("WAITING_USER".equals(target.optString("status")))open.putExtra("handoffStatus",target.toString());}startActivity(open);}
     @Override public void onDestroy(){destroyed=true;if(down)finishGesture(true);main.removeCallbacksAndMessages(null);if(rpc!=null)rpc.close();if(capsule!=null)capsule.close();if(windows!=null&&ball!=null)windows.removeView(ball);io.shutdown();super.onDestroy();}

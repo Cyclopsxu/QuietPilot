@@ -177,9 +177,9 @@ final class AutomationTaskView {
     }
     private void updateResultAction() {
         boolean waiting=handoffStatus!=null;
-        boolean moving=opening||(waiting&&java.util.Arrays.asList("moving","cancelling").contains(handoffStatus.optString("transferState")));
+        boolean moving=opening||(waiting&&java.util.Arrays.asList("moving","returning","cancelling").contains(handoffStatus.optString("transferState")));
         resultAction.setVisibility(waiting||opening?View.VISIBLE:View.GONE);
-        resultAction.setText(moving?"正在交接…":waiting&&handoffStatus.optBoolean("resultReady")?"去查看":"去处理");
+        resultAction.setText(moving?"正在交接…":waiting&&"manual_main".equals(handoffStatus.optString("transferState"))?"交回后台继续":waiting&&handoffStatus.optBoolean("resultReady")?"去查看":"到主屏处理");
         resultAction.setEnabled(!moving);screenBox.setEnabled(!moving&&!taskEnded);
     }
 
@@ -189,7 +189,8 @@ final class AutomationTaskView {
             if ("WAITING_USER".equals(status.optString("status"))) {
                 handoffStatus = status;
                 if (handoffHint != null) handoffHint.setText(handoffMessage(status));
-                if (openOnMain != null) openOnMain.setVisibility(status.optBoolean("protectedScreen") ? View.VISIBLE : View.GONE);
+                if (openOnMain != null) openOnMain.setVisibility(!status.optBoolean("resultReady") ? View.VISIBLE : View.GONE);
+                if("manual_main".equals(status.optString("transferState"))&&screenDialog!=null)screenDialog.dismiss();
             } else {
                 handoffStatus = null;
                 if (handoffHint != null && screenDialog != null) screenDialog.dismiss();
@@ -206,7 +207,7 @@ final class AutomationTaskView {
         String prefix = otherWaiting > 0 ? "还有 " + otherWaiting + " 个任务等你处理\n" : "";
         return prefix + (status.optBoolean("resultReady") ? "任务已完成。" + status.optString("message") + "\n可在预览中操作，点“重试切到主屏”重试，或结束查看。\n" + status.optString("evidence") : status.optBoolean("protectedScreen")
                 ? "该页面受系统保护，请在 " + status.optString("appName", status.optString("app")) + " 中完成"
-                : "处理完成后会自动继续\n" + status.optString("message"));
+                : "建议点“到主屏处理”，在原生页面操作，完成后点“交回后台继续”。\n" + status.optString("message"));
     }
 
     void showHandoff(JSONObject status) {
@@ -247,9 +248,9 @@ final class AutomationTaskView {
             });
             dialogDecoder = new H264VideoDecoder(preview, main);
             if (videoConfig != null) videoConfig.apply(dialogDecoder);
-            openOnMain = new Button(activity); openOnMain.setText("在主屏打开");
-            openOnMain.setVisibility(status.optBoolean("protectedScreen") ? View.VISIBLE : View.GONE);
-            openOnMain.setOnClickListener(v -> listener.onHandoffAction(taskId, "openTaskOnMain", "")); content.addView(openOnMain);
+            openOnMain = new Button(activity); openOnMain.setText("到主屏处理");
+            openOnMain.setVisibility(!status.optBoolean("resultReady") ? View.VISIBLE : View.GONE);
+            openOnMain.setOnClickListener(v -> listener.onOpenHandoff(taskId)); content.addView(openOnMain);
             if(status.optBoolean("resultReady")) {
                 Button retry=new Button(activity);retry.setText("重试切到主屏");content.addView(retry);
                 retry.setOnClickListener(v -> {if(screenDialog!=null)screenDialog.dismiss();listener.onOpenHandoff(taskId);});

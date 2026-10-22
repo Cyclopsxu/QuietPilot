@@ -16,6 +16,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class HandoffManager {
     private final CountDownLatch response = new CountDownLatch(1);
     private volatile String outcome;
+    private volatile boolean manual;
+    public synchronized void beginManual() {
+        if(outcome!=null)throw new IllegalStateException("人工处理已结束，请刷新任务");
+        manual=true;
+    }
+    public synchronized void endManual(){manual=false;}
     private final long timeoutMs;
 
     public HandoffManager() { this(10 * 60 * 1000L); }
@@ -58,6 +64,7 @@ public final class HandoffManager {
         }, timeoutMs, TimeUnit.MILLISECONDS);
         if (verifier != null) observer.scheduleAtFixedRate(() -> {
             try {
+                if(manual)return;
                 EvidenceFrame frame = verifier.observe();
                 EvidenceFrame previous = latest.getAndSet(frame);
                 if (previous == null || previous.fingerprint != frame.fingerprint || frame.protectedScreen)
@@ -72,6 +79,7 @@ public final class HandoffManager {
         try {
             while (true) {
                 if (response.await(1500, TimeUnit.MILLISECONDS)) return outcome;
+                if(manual)continue;
                 EvidenceFrame frame = latest.get();
                 if (frame == null || frame.protectedScreen || SystemClock.elapsedRealtime() - lastChange.get() < 2000) continue;
                 long epoch = lastChange.get();
@@ -84,6 +92,7 @@ public final class HandoffManager {
                     if (epoch == lastChange.get() && ready.verified) {
                         synchronized (this) {
                             if (outcome != null) return outcome;
+                            if(manual)continue;
                             outcome = "done";
                         }
                         ctx.logs.task(ctx.taskId, "handoff automatically resumed: " + ready.evidence);

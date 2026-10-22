@@ -58,7 +58,7 @@ public final class StatusCapsule implements StatusSurface {
         surface.setContentDescription("任务状态："+word()+"，"+task.optString("goal")+"，"+task.optString("stepText"));
         if(attached)windows.updateViewLayout(surface,layout);else{windows.addView(surface,layout);attached=true;}surface.invalidate();
     }
-    private String word(){if(task.optBoolean("routingRequired"))return "请选择追加任务";if(java.util.Arrays.asList("moving","cancelling").contains(task.optString("transferState")))return "正在交接…";String state=task.optString("status");if(task.optBoolean("pendingConfirmation"))return task.optBoolean("requiresConfirmation")?"待确认":"即将开始";
+    private String word(){if(task.optBoolean("routingRequired"))return "请选择追加任务";if(java.util.Arrays.asList("moving","returning","cancelling").contains(task.optString("transferState")))return "正在交接…";String state=task.optString("status");if("manual_main".equals(task.optString("transferState")))return "主屏处理 · 点此继续";if(task.optBoolean("pendingConfirmation"))return task.optBoolean("requiresConfirmation")?"待确认":"即将开始";
         switch(state){case "RUNNING":return "执行中";case "WAITING_USER":return task.optBoolean("resultReady")?"已完成 · 去查看":"待处理";case "QUEUED":return "排队中";case "PAUSED":return "已暂停";case "ANSWERED":return "查到了";case "NOT_FOUND":return "没查到";case "VERIFIED":return "已完成";case "FAILED":return "失败";case "CANCELLED":return "已取消";default:return "处理超时";}}
     @Override public void close(){closed=true;main.removeCallbacksAndMessages(null);if(attached){windows.removeView(surface);attached=false;}}
     private final class Surface extends View {
@@ -83,7 +83,7 @@ public final class StatusCapsule implements StatusSurface {
             }
             if(expanded){
                 text.setColor(Color.WHITE);text.setTextSize(dp(14));boolean queryResult=queryAnswer(task);
-                String goal=queryResult?(task.optBoolean("uncertain")?"可能是：":"")+("NOT_FOUND".equals(task.optString("status"))?"没查到："+task.optString("searched"):task.optString("answer")):amendResult!=null&&SystemClock.elapsedRealtime()<amendUntil&&task.optString("taskId").equals(amendResult.optString("taskId"))?amendResult.optString("message"):task.optBoolean("resultReady")?task.optString("evidence",task.optString("goal")):task.optString("goal");
+                String goal=queryResult?(task.optBoolean("uncertain")?"可能是：":"")+("NOT_FOUND".equals(task.optString("status"))?"没查到："+task.optString("searched"):task.optString("answer")):amendResult!=null&&SystemClock.elapsedRealtime()<amendUntil&&task.optString("taskId").equals(amendResult.optString("taskId"))?amendResult.optString("message"):"manual_main".equals(task.optString("transferState"))?task.optString("message"):task.optBoolean("resultReady")?task.optString("evidence",task.optString("goal")):task.optString("goal");
                 StaticLayout lines=StaticLayout.Builder.obtain(goal,0,goal.length(),text,(int)(w-dp(28))).setMaxLines(2).setEllipsize(TextUtils.TruncateAt.END).build();canvas.save();canvas.translate(dp(14),dp(44));lines.draw(canvas);canvas.restore();
                 String detail=queryResult?"来源："+task.optString("appName",task.optString("sourceApp")):waiting||terminal(task.optString("status"))?task.optString("message"):task.optString("stepText");
                 line(canvas,detail,dp(14),dp(105),12,0xffccd8df,w-dp(28));
@@ -91,7 +91,7 @@ public final class StatusCapsule implements StatusSurface {
                     if(!task.optString("answer").isEmpty()){copy.set(dp(14),dp(116),w/2-dp(6),h-dp(8));button(canvas,copy,"复制",0xff266b60);}
                     open.set(copy.isEmpty()?dp(14):w/2+dp(6),dp(116),w-dp(14),h-dp(8));button(canvas,open,"去看看",0xff35485e);
                 } else if(pending){if(task.optBoolean("requiresConfirmation")){yes.set(dp(14),dp(116),w/2-dp(6),h-dp(8));button(canvas,yes,"确认",0xff266b60);}no.set(yes.isEmpty()?dp(14):w/2+dp(6),dp(116),w-dp(14),h-dp(8));button(canvas,no,"取消",0xff703f4b);}
-                else{open.set(dp(14),dp(116),w-dp(14),h-dp(8));button(canvas,open,java.util.Arrays.asList("moving","cancelling").contains(task.optString("transferState"))?"正在交接…":task.optBoolean("resultReady")?"去查看":waiting?"去处理":"查看任务",0xff35485e);}
+                else{open.set(dp(14),dp(116),w-dp(14),h-dp(8));button(canvas,open,java.util.Arrays.asList("moving","returning","cancelling").contains(task.optString("transferState"))?"正在交接…":"manual_main".equals(task.optString("transferState"))?"交回后台继续":task.optBoolean("resultReady")?"去查看":waiting?"到主屏处理":"查看任务",0xff35485e);}
             }
             if(pending)postInvalidateDelayed(500);
         }
@@ -105,7 +105,7 @@ public final class StatusCapsule implements StatusSurface {
                 if(event.getActionMasked()==MotionEvent.ACTION_UP){if(routeScrolled)return true;performClick();String voice=task.optString("voiceId");if(open.contains(event.getX(),event.getY()))actions.resolve(voice,"new");else for(int i=0;i<routeButtons.size();i++)if(routeButtons.get(i).contains(event.getX(),event.getY())){JSONObject target=task.optJSONArray("candidates").optJSONObject(routeOffset+i);actions.resolve(voice,target.optString("taskId"));break;}return true;}
                 return true;
             }
-            if(event.getActionMasked()==MotionEvent.ACTION_UP&&task!=null){performClick();String id=task.optString("taskId");if(copy.contains(event.getX(),event.getY()))actions.query(task,true);else if(open.contains(event.getX(),event.getY())&&queryAnswer(task))actions.query(task,false);else if(yes.contains(event.getX(),event.getY()))actions.confirm(id,true);else if(no.contains(event.getX(),event.getY()))actions.confirm(id,false);else if(!java.util.Arrays.asList("moving","cancelling").contains(task.optString("transferState")))actions.open(task);return true;}return true;}
+            if(event.getActionMasked()==MotionEvent.ACTION_UP&&task!=null){performClick();String id=task.optString("taskId");if(copy.contains(event.getX(),event.getY()))actions.query(task,true);else if(open.contains(event.getX(),event.getY())&&queryAnswer(task))actions.query(task,false);else if(yes.contains(event.getX(),event.getY()))actions.confirm(id,true);else if(no.contains(event.getX(),event.getY()))actions.confirm(id,false);else if(!java.util.Arrays.asList("moving","returning","cancelling").contains(task.optString("transferState")))actions.open(task);return true;}return true;}
         @Override public boolean performClick(){super.performClick();return true;}
     }
 }

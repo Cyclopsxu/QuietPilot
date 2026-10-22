@@ -404,17 +404,17 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                 .setAction("cancel:" + taskId).putExtra("taskId", taskId);
         PendingIntent dismiss = PendingIntent.getBroadcast(this, taskId.hashCode(), cancel,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        boolean transferring=java.util.Arrays.asList("moving","cancelling").contains(params.optString("transferState"));
+        boolean transferring=java.util.Arrays.asList("moving","returning","cancelling").contains(params.optString("transferState"));
         Notification.Builder builder = new Notification.Builder(this, HANDOFF_CHANNEL)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(java.util.Arrays.asList("moving","cancelling").contains(params.optString("transferState")) ? "正在交接…" : params.optBoolean("resultReady") ? "任务已完成，去查看" : "任务等待处理")
+                .setContentTitle(java.util.Arrays.asList("moving","returning","cancelling").contains(params.optString("transferState")) ? "正在交接…" : "manual_main".equals(params.optString("transferState")) ? "主屏处理中，交回后台继续" : params.optBoolean("resultReady") ? "任务已完成，去查看" : "任务等待处理")
                 .setContentText(params.optString("message"))
                 .setStyle(new Notification.BigTextStyle().bigText(params.optString("message")))
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 .setContentIntent(transferring?null:show)
                 .addAction(new Notification.Action.Builder(null, "取消任务", dismiss).build())
                 .setAutoCancel(!transferring);
-        if(!transferring)builder.addAction(new Notification.Action.Builder(null,params.optBoolean("resultReady")?"去查看":"去处理",show).build());
+        if(!transferring)builder.addAction(new Notification.Action.Builder(null,"manual_main".equals(params.optString("transferState"))?"交回后台继续":params.optBoolean("resultReady")?"去查看":"到主屏处理",show).build());
         try {
             manager.notify(taskId, 23, builder.build());
         } catch (SecurityException e) {
@@ -447,10 +447,19 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
                     main.post(() -> android.widget.Toast.makeText(this,"该任务已结束或已交接，请查看任务记录",android.widget.Toast.LENGTH_LONG).show());
                     return;
                 }
-                if(java.util.Arrays.asList("moving","cancelling").contains(current.optString("transferState")))return;
+                if(java.util.Arrays.asList("moving","returning","cancelling").contains(current.optString("transferState")))return;
                 JSONObject live=current;main.post(() -> {AutomationTaskView task=ensureTask(live);if(task!=null)task.setOpening(true);});
                 if(!current.optBoolean("resultReady")) {
-                    JSONObject waiting=current;main.post(() -> showCurrentHandoff(waiting));return;
+                    if("manual_main".equals(current.optString("transferState"))) {
+                        client.request("resumeTask",new JSONObject().put("taskId",taskId).put("outcome","done"));
+                    } else {
+                        try {client.request("takeManualOnMain",new JSONObject().put("taskId",taskId));}
+                        catch(Exception unavailable) {
+                            current.put("message","切换未完成，可重试到主屏处理。"+current.optString("message"));
+                            JSONObject waiting=current;main.post(() -> showCurrentHandoff(waiting));
+                        }
+                    }
+                    return;
                 }
                 JSONObject reply=client.request("takeResultOnMain",new JSONObject().put("taskId",taskId)).getJSONObject("result");
                 String outcome=reply.optString("outcome");
