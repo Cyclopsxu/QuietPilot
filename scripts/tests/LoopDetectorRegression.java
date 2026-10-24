@@ -25,6 +25,17 @@ public final class LoopDetectorRegression {
         check(!com.silentauto.shell.ext.guard.NodeWritePolicy.permits(12,0,"app","app"),"main display rejected");
         check(!com.silentauto.shell.ext.guard.NodeWritePolicy.permits(12,12,"memo","amap"),"wrong package rejected");
         check(!com.silentauto.shell.ext.guard.NodeWritePolicy.permits(12,-1,"app","app"),"unknown display rejected");
+        var early=new com.silentauto.shell.ext.skill.ScreenFingerprint("memo","备忘录",java.util.List.of("今天 17:05","4 分钟前同步","标题","未分类"));
+        var later=new com.silentauto.shell.ext.skill.ScreenFingerprint("memo","备忘录",java.util.List.of("今天 17:10","9 分钟前同步","标题","未分类"));
+        check(early.similarity(later)==1,"clock and relative-time metadata must not trigger rescue");
+        var content=new com.silentauto.shell.ext.skill.ScreenFingerprint("memo","备忘录",java.util.List.of("正文不同","未分类"));
+        check(early.similarity(content)<.6,"semantic content changes remain detectable");
+        check(new com.silentauto.shell.ext.skill.ScreenFingerprint("memo","备忘录",java.util.List.of("20字")).stableTexts.contains("20字"),"content counts remain semantic");
+        String listUi="{\"windows\":[{\"type\":1,\"root\":{\"package\":\"memo\",\"children\":[{\"id\":\"add\",\"text\":\"新建\"},{\"class\":\"android.widget.ListView\",\"children\":[{\"id\":\"card\",\"text\":\"Old private list item\"}]}]}}]}";
+        var beforeList=com.silentauto.shell.ext.skill.ScreenFingerprint.from(new com.silentauto.shell.ext.skill.UiSnapshot(listUi),"memo",2000);
+        var afterList=com.silentauto.shell.ext.skill.ScreenFingerprint.from(new com.silentauto.shell.ext.skill.UiSnapshot(listUi.replace("Old private list item","New note and time")),"memo",2000);
+        check(beforeList.similarity(afterList)==1,"changing list cards must not invalidate page identity");
+        check(beforeList.stableTexts.contains("id:add")&&!beforeList.stableTexts.contains("id:card"),"keep chrome identity, exclude list content");
         System.out.println("LoopDetectorRegression passed");
     }
 }

@@ -33,7 +33,8 @@ Operate real Android apps on a background virtual display while the owner uses t
 | Calculate 12×13 / public place address in Amap | ANSWERED in 6 / 4 steps, grounded evidence; Amap search results only |
 | Clear-then-calculate task | Original 25-step failure; a 7-step ANSWERED 156 retest and a separate 16-step repetition failure are both retained |
 | Memo page delivery | VERIFIED; same root task, unchanged body hash, virtual display released |
-| Full parallel Chinese input, WeChat skill sequence, payment-boundary amendment | Not validated to the Step 6 acceptance criteria |
+| Memo skill exploration / reuse / injected deviation | All VERIFIED, 8 / 10 / 13 steps; reuse calls 10→8 but time 27.7→49.4s, with model fallback; [report](docs/evidence/skills/report.md) |
+| WeChat sending and voice amendment at payment boundary | Not validated to the Step 6 acceptance criteria |
 
 [Repository evidence](docs/evidence/README.md) includes failures. No-focus-change touches, key gating, accessibility text and clipboard restoration mitigate interference. This phone lacks confirmed native independent focus/local IME; compatibility mode is not certified isolation. Three new rounds sampled zero events and the owner reported normal input, but the first recording has a gap and the owner confirmed that matching text on the main screen was typed manually. This is not proof against cross-display text effects. Historical tests also included brief unfocused/inactive-IME samples; see [capability boundaries](docs/ISOLATION.md) and [acceptance status](docs/evidence/isolation/report.md).
 
@@ -41,7 +42,7 @@ Operate real Android apps on a background virtual display while the owner uses t
 
 **Coding Agent collaboration:** product/design documents → task specification → implementation → phone measurement → correction. Actual iterations: unstable UI after surface swaps → independent capture mirror; successful accessibility clicks without activation in Amap/Meituan → re-resolve targets and touch their bounds; whole-goal text entered into city fields → remove broad correction; repeated clearing after reaching 156 → repetition detection with independent verification. [Reports](docs/evidence/capture-stability/report.md) retain the limits of these observations.
 
-**Limits:** full isolation needs three human/video rounds; some apps and login/payment boundaries require the owner; designated skill/voice paths lack complete phone evidence; loopback RPC is unauthenticated and can be called by other local apps (planned 32-byte token); other Android versions and long-running stability remain untested.
+**Limits:** full isolation needs three human/video rounds; some apps and login/payment boundaries require the owner; memo skills still fall back to model planning; WeChat/voice paths lack complete phone evidence; loopback RPC is unauthenticated and can be called by other local apps (planned 32-byte token); other Android versions and long-running stability remain untested.
 
 ## Contents
 

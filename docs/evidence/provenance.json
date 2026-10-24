@@ -172,5 +172,67 @@
     "artifact": "demo-path/recorder-teardown-check.json",
     "sourceSha256": "58023be87c5da1b4be38eed54a62b5375900b08a66256bd4d8e2ddb90bad2b13",
     "redactedSha256": "2a4e6a690355f740bb15b254e477e2750cc56e2ac60a5410b8fc2568648e1b9c"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-skill-first-1792832423-final.json",
+    "artifact": "skills/skill-first.json",
+    "sourceSha256": "0f2dd3af445aff1382b7ade0957a08e4cfc8d5d49569d5ef179a3359609944c0",
+    "redactedSha256": "fa3e0b6500774c7f937841c69153014dc8dd4975f1f53b5c888182f365619190"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-skill-first-fixed-1792832711-final.json",
+    "artifact": "skills/skill-first-fixed.json",
+    "sourceSha256": "c232d7ec443e5230559948b5d8adece54742a9b2fdf45c00262ffb03455b4159",
+    "redactedSha256": "66506030ff3e7cd6f9692c45b57db90775f83d4b0be68a0a06610afa5850e98a"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-skill-reuse-1792833004-final.json",
+    "artifact": "skills/skill-reuse.json",
+    "sourceSha256": "35965d729aec60a4cdcbef137861f1f4a6cef3c7fddc51877db3ca41de85b5a3",
+    "redactedSha256": "a8ba58a630e68d1eb73dee9462cb14aaa3b32b7b0233cc88ea35d48c3ddcc095"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-skill-reuse-fixed-1792833513-final.json",
+    "artifact": "skills/skill-reuse-fixed.json",
+    "sourceSha256": "6cba00cb15f01a21a31691214063d51ea63b1668ddd9f3d2a105550a1a789295",
+    "redactedSha256": "50a548eb9e6801acdbfcbff3bcb3001d7473fa5e6d457a8e8ff43c4c62360d55"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-skill-rescue-1792833608-final.json",
+    "artifact": "skills/skill-rescue.json",
+    "sourceSha256": "10c222c45e54c969cccf9e96596074c2ca3e578df91a93296f7480f6101747dc",
+    "redactedSha256": "cc4d1964611ae7dbaae166c4f6f4d92443d7f97e6aee756fa6e96fceb31721a5"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-skill-explore-v2-1792833789-final.json",
+    "artifact": "skills/skill-explore-v2.json",
+    "sourceSha256": "3956544d07ccd86cd72a6721937153a61f1c46b5e211f08564971c5473caccae",
+    "redactedSha256": "68fa9e3d11a24c91c597c06e0f184878a29afd3c8a6db419bed84a6ebf9ace4e"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-skill-reuse-v2-1792833893-final.json",
+    "artifact": "skills/skill-reuse-v2.json",
+    "sourceSha256": "2f936fa6273c7e03664cda0fbe92e4c426e885cb711bca816b5c2e0dc2611d9c",
+    "redactedSha256": "3776b3e3233599ac6217943136f81757ad6f9278423eee819aaa0b283b0b12f2"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-skill-rescue-v2-1792833985-final.json",
+    "artifact": "skills/skill-rescue-v2.json",
+    "sourceSha256": "826ff702b9f6ac530860ad447617a95ab4e7e9e5d0b8ab6d4a772cc5f54df683",
+    "redactedSha256": "b91aba6169d6ac7c06460b7eccc38e0b49998d0b9a4dde189e47ef072a8a3fdd"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/skill-rescue-v2-fault.json",
+    "artifact": "skills/rescue-fault.json",
+    "sourceSha256": "9b2b4eb88361df46dbf0edfce907c1a2f32b8a14393574e0a299d3f2bcf9046f",
+    "redactedSha256": "178630b8804d603124ad4c2d57d09a5ec35d9a954cd498d98ff14b04b500266d",
+    "note": "真实注入记录"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/skills-after-explore-v2.json",
+    "artifact": "skills/learned-skill-redacted.json",
+    "sourceSha256": "9ac7980fe2350c0e4a24b2a10f09e8348eb4b0fefbbd9a8557ee07348a7962d8",
+    "redactedSha256": "8f4aec8e00d4887927dde62588d85fd45dc0fd9c72aa19a6a56f4ba98a900134",
+    "note": "技能副本仅为脱敏摘录，不可导入"
   }
 ]

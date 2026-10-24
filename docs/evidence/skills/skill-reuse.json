@@ -1,0 +1,3463 @@
+{
+  "type": "action",
+  "answer": "",
+  "quote": "",
+  "uncertain": false,
+  "sourceApp": "com.huawei.notepad",
+  "searched": "",
+  "taskId": "step6-skill-reuse-1792833004",
+  "status": "VERIFIED",
+  "originalGoal": "在华为备忘录新建一条笔记，严格按照下面标题和完整正文写入。保存后返回笔记列表，再重新打开同名笔记逐字核对。完成后不需要保留页面。\n标题：Step6技能测试2\n完整正文开始：\n这是技能复用测试，测试消息：测试2。\n完整正文结束。",
+  "amendments": [],
+  "goal": "在华为备忘录新建一条笔记，严格按照下面标题和完整正文写入。保存后返回笔记列表，再重新打开同名笔记逐字核对。完成后不需要保留页面。\n标题：Step6技能测试2\n完整正文开始：\n这是技能复用测试，测试消息：测试2。\n完整正文结束。",
+  "app": "com.huawei.notepad",
+  "appName": "备忘录",
+  "stepText": "重新打开同名笔记后，标题输入框文本为「S",
+  "step": 15,
+  "displayId": -1,
+  "source": "model",
+  "message": "任务已验收",
+  "evidence": "已逐字核对标题与完整正文，并在返回列表后重新打开确认保存",
+  "boundary": "",
+  "llmCalls": {
+    "executor": 15,
+    "verifier": 0,
+    "intake": 0
+  },
+  "finalized": true,
+  "disturbance": {
+    "focusSamples": [
+      {
+        "atMs": 1792833008010,
+        "elapsedMs": 632,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833008532,
+        "elapsedMs": 1155,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833008996,
+        "elapsedMs": 1618,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833009553,
+        "elapsedMs": 2176,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833010005,
+        "elapsedMs": 2627,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833010487,
+        "elapsedMs": 3109,
+        "step": 1,
+        "action": "tap_target",
+        "source": "skill",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833010987,
+        "elapsedMs": 3610,
+        "step": 1,
+        "action": "tap_target 后观察",
+        "source": "skill",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833011490,
+        "elapsedMs": 4112,
+        "step": 1,
+        "action": "tap_target 后观察",
+        "source": "skill",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833012060,
+        "elapsedMs": 4682,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833012543,
+        "elapsedMs": 5165,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833013054,
+        "elapsedMs": 5677,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833013532,
+        "elapsedMs": 6154,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833014058,
+        "elapsedMs": 6680,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833014515,
+        "elapsedMs": 7137,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833015037,
+        "elapsedMs": 7659,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833015559,
+        "elapsedMs": 8181,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833016048,
+        "elapsedMs": 8670,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833016540,
+        "elapsedMs": 9162,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833017038,
+        "elapsedMs": 9660,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833017532,
+        "elapsedMs": 10154,
+        "step": 3,
+        "action": "tap_target",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833017989,
+        "elapsedMs": 10611,
+        "step": 3,
+        "action": "tap_target 后观察",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833018536,
+        "elapsedMs": 11158,
+        "step": 3,
+        "action": "tap_target 后观察",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833019044,
+        "elapsedMs": 11666,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833019568,
+        "elapsedMs": 12190,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833020054,
+        "elapsedMs": 12676,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833020535,
+        "elapsedMs": 13158,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833021055,
+        "elapsedMs": 13677,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833021532,
+        "elapsedMs": 14154,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833022055,
+        "elapsedMs": 14677,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833022532,
+        "elapsedMs": 15154,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833023047,
+        "elapsedMs": 15669,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833023532,
+        "elapsedMs": 16155,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833023977,
+        "elapsedMs": 16599,
+        "step": 4,
+        "action": "tap_target 后观察",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833024498,
+        "elapsedMs": 17120,
+        "step": 4,
+        "action": "tap_target 后观察",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833025044,
+        "elapsedMs": 17666,
+        "step": 5,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833025529,
+        "elapsedMs": 18151,
+        "step": 5,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833026038,
+        "elapsedMs": 18660,
+        "step": 5,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833026554,
+        "elapsedMs": 19176,
+        "step": 5,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833027049,
+        "elapsedMs": 19671,
+        "step": 5,
+        "action": "focus_input 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833027562,
+        "elapsedMs": 20184,
+        "step": 5,
+        "action": "focus_input 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833028007,
+        "elapsedMs": 20629,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833028533,
+        "elapsedMs": 21156,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833029057,
+        "elapsedMs": 21679,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833029559,
+        "elapsedMs": 22181,
+        "step": 6,
+        "action": "text 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833030054,
+        "elapsedMs": 22677,
+        "step": 6,
+        "action": "text 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833030474,
+        "elapsedMs": 23096,
+        "step": 6,
+        "action": "text 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833031069,
+        "elapsedMs": 23691,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833031530,
+        "elapsedMs": 24152,
+        "step": 7,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833032043,
+        "elapsedMs": 24665,
+        "step": 7,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833032594,
+        "elapsedMs": 25216,
+        "step": 7,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833033058,
+        "elapsedMs": 25680,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833033579,
+        "elapsedMs": 26202,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833034034,
+        "elapsedMs": 26656,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833034534,
+        "elapsedMs": 27156,
+        "step": 8,
+        "action": "text 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833035052,
+        "elapsedMs": 27674,
+        "step": 8,
+        "action": "text 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833035533,
+        "elapsedMs": 28156,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833036060,
+        "elapsedMs": 28682,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833036556,
+        "elapsedMs": 29178,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833037054,
+        "elapsedMs": 29676,
+        "step": 9,
+        "action": "tap_target",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833037483,
+        "elapsedMs": 30105,
+        "step": 9,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833038043,
+        "elapsedMs": 30665,
+        "step": 9,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833038599,
+        "elapsedMs": 31221,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833039050,
+        "elapsedMs": 31672,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833039556,
+        "elapsedMs": 32178,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833040054,
+        "elapsedMs": 32676,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833040490,
+        "elapsedMs": 33112,
+        "step": 10,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833041047,
+        "elapsedMs": 33669,
+        "step": 10,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833041495,
+        "elapsedMs": 34117,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833042058,
+        "elapsedMs": 34680,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833042535,
+        "elapsedMs": 35157,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833043073,
+        "elapsedMs": 35695,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833043471,
+        "elapsedMs": 36093,
+        "step": 11,
+        "action": "tap_target",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833043991,
+        "elapsedMs": 36613,
+        "step": 11,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833044494,
+        "elapsedMs": 37116,
+        "step": 11,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833045035,
+        "elapsedMs": 37657,
+        "step": 12,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833045518,
+        "elapsedMs": 38140,
+        "step": 12,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833046033,
+        "elapsedMs": 38655,
+        "step": 12,
+        "action": "back 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833046536,
+        "elapsedMs": 39159,
+        "step": 13,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833047010,
+        "elapsedMs": 39632,
+        "step": 13,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833047517,
+        "elapsedMs": 40139,
+        "step": 13,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833048066,
+        "elapsedMs": 40689,
+        "step": 13,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833048561,
+        "elapsedMs": 41183,
+        "step": 13,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833049018,
+        "elapsedMs": 41641,
+        "step": 13,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833049500,
+        "elapsedMs": 42122,
+        "step": 13,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833050012,
+        "elapsedMs": 42634,
+        "step": 13,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833050540,
+        "elapsedMs": 43162,
+        "step": 14,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833051059,
+        "elapsedMs": 43682,
+        "step": 14,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833051553,
+        "elapsedMs": 44175,
+        "step": 14,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833051991,
+        "elapsedMs": 44613,
+        "step": 14,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833052504,
+        "elapsedMs": 45126,
+        "step": 14,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833053046,
+        "elapsedMs": 45668,
+        "step": 15,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833053537,
+        "elapsedMs": 46159,
+        "step": 15,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833054061,
+        "elapsedMs": 46683,
+        "step": 15,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833054560,
+        "elapsedMs": 47182,
+        "step": 15,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833055054,
+        "elapsedMs": 47677,
+        "step": 15,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833055503,
+        "elapsedMs": 48126,
+        "step": 15,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833056041,
+        "elapsedMs": 48664,
+        "step": 15,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833056530,
+        "elapsedMs": 49152,
+        "step": 15,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833057031,
+        "elapsedMs": 49653,
+        "step": 15,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792833057510,
+        "elapsedMs": 50132,
+        "step": 15,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "[前台App]",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f68b70d u0 [前台App]/com.tplink.superapp.ui.main.MainActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0} mCurSeq=1102",
+          "mCurFocusedWindow=android.os.BinderProxy@f35cda4 softInputMode=STATE_UNSPECIFIED|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{b9ee4d4 uid=10201 pid=25016 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      }
+    ],
+    "focusSamplesTruncated": false,
+    "metrics": [
+      {
+        "key": "foreground",
+        "label": "未归因前台切换",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "原始切换 0；显式交接关联 0；触摸关联 0；数据不足 0（关联不等于因果证明）"
+      },
+      {
+        "key": "focus",
+        "label": "焦点丢失次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "主焦点指向本任务虚拟屏的次数"
+      },
+      {
+        "key": "ime",
+        "label": "键盘被抢次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "活动输入法目标变为本任务虚拟屏"
+      },
+      {
+        "key": "clipboard",
+        "label": "剪贴板内容变化",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "仅比较摘要，不保存剪贴板内容"
+      },
+      {
+        "key": "jank",
+        "label": "指定 App 掉帧率",
+        "value": 0.03968253968253968,
+        "available": true,
+        "pass": true,
+        "reason": "新增卡顿帧 40 / 1008，阈值 5%；仅任务开始时的 [前台App]，不代表其他 App 或持续信息流流畅度",
+        "measuredPackage": "[前台App]",
+        "scope": "task_start_foreground_package_process",
+        "foregroundSamples": 101,
+        "totalSamples": 101,
+        "coversOtherApps": false,
+        "frames": 1008,
+        "jankyFrames": 40
+      }
+    ],
+    "events": [],
+    "foregroundPackage": "[前台App]",
+    "samples": 101,
+    "backgroundSafetyIssue": "",
+    "backgroundSafetyTriggered": false,
+    "sampleIntervalMs": 500,
+    "avgSampleMs": 129.06867265346534,
+    "maxSampleMs": 191.326563,
+    "skippedTicks": 0,
+    "touchMethod": "dumpsys input / RecentQueue / displayId=0 MotionEvent / age",
+    "rawForegroundSwitches": 0,
+    "authorizedHandoffSwitches": 0,
+    "unattributedForegroundSwitches": 0,
+    "unknownForegroundSwitches": 0,
+    "userForegroundSwitches": 0,
+    "eventsTruncated": false,
+    "zeroDisturbanceVerified": false,
+    "assessmentScope": "采样观察与显式交接关联，非全程无打扰认证",
+    "samplingError": ""
+  },
+  "isolation": {
+    "selectedFlags": 331,
+    "selectedFlagsHex": "14b",
+    "candidateIndex": 2,
+    "ownFocusSupported": false,
+    "noStealSupported": false,
+    "ownFocusRequested": false,
+    "noStealRequested": false,
+    "localImeVerified": false,
+    "configurationAvailable": false,
+    "behaviorValidated": false,
+    "experimentalOverride": true,
+    "backgroundAllowed": true,
+    "status": "experimental_unverified",
+    "message": "兼容实验模式：隔离能力不足，不保证主屏输入和焦点不受影响",
+    "touchNoFocusChangeFlag": 64,
+    "touchNoFocusChangeAvailable": true,
+    "mitigations": {
+      "noFocusChangeTouch": true,
+      "dangerousKeyGate": true,
+      "accessibilityTextWrites": true,
+      "clipboardSnapshotRestore": true,
+      "localImePolicy": false
+    },
+    "capture": {
+      "mode": "layer_stack_mirror",
+      "fallback": "",
+      "requests": 1,
+      "misses": 0,
+      "surfaceSwitches": 0,
+      "frames": 400
+    },
+    "creationAttempts": [
+      {
+        "candidateIndex": 0,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 1,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 2,
+        "flags": 331,
+        "accepted": true
+      }
+    ],
+    "platformDisplayFlags": 8,
+    "localImeSetSucceeded": false,
+    "imePolicyBefore": 1,
+    "imePolicyReadback": 1,
+    "sdkInt": 31,
+    "manufacturer": "HUAWEI",
+    "model": "NOH-AN01",
+    "nativeBackgroundKeysAllowed": false
+  },
+  "skillId": "huawei.notepad.create_and_verify_note",
+  "sourceSteps": {
+    "model": 11,
+    "skill": 1,
+    "rescue": 3,
+    "query_recovery": 0
+  },
+  "comparison": "模型调用 11 → 15 次，耗时 33.1 → 52.7 秒",
+  "evidenceScreenshot": "/data/local/tmp/shadowauto/evidence/step6-skill-reuse-1792833004.png",
+  "createdAtMs": 1792833004874,
+  "finishedAtMs": 1792833057547,
+  "waitingSinceMs": 0,
+  "transcript": "",
+  "intakeElapsedMs": 0,
+  "pendingConfirmation": false,
+  "requiresConfirmation": false,
+  "confirmDeadlineMs": 0,
+  "protectedScreen": false,
+  "resultReady": false,
+  "transferState": "idle",
+  "elapsedMs": 52673,
+  "steps": [
+    {
+      "step": 1,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "华为备忘录新建并核对笔记 · 1/6",
+        "searched": "",
+        "source": "skill",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 10,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "新建",
+        "resourceId": "com.huawei.notepad:id/fab_add",
+        "className": "android.widget.ImageButton",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/app_bar_menu",
+        "parentText": "",
+        "bounds": "900,1928,1068,2096",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 5629,
+      "stepText": "华为备忘录新建并核对笔记 · 1/6",
+      "injectionMethod": "accessibility_click",
+      "source": "skill",
+      "reason": "华为备忘录新建并核对笔记 · 1/6",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]"
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]"
+        ]
+      },
+      "action": {
+        "action": "back",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "回到备忘录列表以恢复界面",
+        "searched": "",
+        "source": "rescue",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": null,
+      "elapsedMs": 9372,
+      "stepText": "回到备忘录列表以恢复界面",
+      "injectionMethod": "unrecorded",
+      "source": "rescue",
+      "reason": "回到备忘录列表以恢复界面",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]"
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "点击左上角向上导航返回笔记列表，恢复预期界面“备忘录”",
+        "searched": "",
+        "source": "rescue",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 12,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "向上导航",
+        "resourceId": "",
+        "className": "android.widget.ImageButton",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/hwtoolbar_edit",
+        "parentText": "",
+        "bounds": "42,0,210,196",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 12684,
+      "stepText": "点击左上角向上导航返回笔记列表，恢复预期",
+      "injectionMethod": "accessibility_click",
+      "source": "rescue",
+      "reason": "点击左上角向上导航返回笔记列表，恢复预期界面“备忘录”",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      }
+    },
+    {
+      "step": 4,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "点击“新建”按钮打开空白笔记编辑页（标题占位符“标题”），恢复预期界面后停止救援",
+        "searched": "",
+        "source": "rescue",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 10,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "新建",
+        "resourceId": "com.huawei.notepad:id/fab_add",
+        "className": "android.widget.ImageButton",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/app_bar_menu",
+        "parentText": "",
+        "bounds": "900,1928,1068,2096",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 19016,
+      "stepText": "点击“新建”按钮打开空白笔记编辑页（标题",
+      "injectionMethod": "accessibility_click",
+      "source": "rescue",
+      "reason": "点击“新建”按钮打开空白笔记编辑页（标题占位符“标题”），恢复预期界面后停止救援",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]"
+        ]
+      }
+    },
+    {
+      "step": 5,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]"
+        ]
+      },
+      "action": {
+        "action": "focus_input",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 1,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "聚焦标题输入框以写入笔记标题",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "标题",
+        "contentDesc": "",
+        "resourceId": "com.huawei.notepad:id/title",
+        "className": "android.widget.EditText",
+        "hint": "标题",
+        "parentResourceId": "com.huawei.notepad:id/layout_title",
+        "parentText": "",
+        "bounds": "84,196,1068,322",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 22013,
+      "stepText": "聚焦标题输入框以写入笔记标题",
+      "injectionMethod": "accessibility_focus",
+      "source": "model",
+      "reason": "聚焦标题输入框以写入笔记标题",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]"
+        ]
+      }
+    },
+    {
+      "step": 6,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]"
+        ]
+      },
+      "action": {
+        "action": "text",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "写入笔记标题",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "Step6技能测试2",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "标题",
+        "contentDesc": "",
+        "resourceId": "com.huawei.notepad:id/title",
+        "className": "android.widget.EditText",
+        "hint": "标题",
+        "parentResourceId": "com.huawei.notepad:id/layout_title",
+        "parentText": "",
+        "bounds": "84,196,1068,322",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 24655,
+      "stepText": "写入笔记标题",
+      "injectionMethod": "accessibility_set_text",
+      "source": "model",
+      "reason": "写入笔记标题",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 7,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "点击正文输入区域以输入完整正文",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 4,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "请输入",
+        "resourceId": "com.huawei.notepad:id/notetext_textview",
+        "className": "android.widget.EditText",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/note_elements_container",
+        "parentText": "",
+        "bounds": "84,463,1068,553",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 26624,
+      "stepText": "点击正文输入区域以输入完整正文",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "点击正文输入区域以输入完整正文",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 8,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "text",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "输入完整正文",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "这是技能复用测试，测试消息：测试2。",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "请输入",
+        "resourceId": "com.huawei.notepad:id/notetext_textview",
+        "className": "android.widget.EditText",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/note_elements_container",
+        "parentText": "",
+        "bounds": "84,463,1068,553",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 29531,
+      "stepText": "输入完整正文",
+      "injectionMethod": "accessibility_set_text",
+      "source": "model",
+      "reason": "输入完整正文",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      }
+    },
+    {
+      "step": 9,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "点击“完成”保存笔记",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 14,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "完成",
+        "resourceId": "com.huawei.notepad:id/toolbar_save_p",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/toolbar_custom_menu",
+        "parentText": "",
+        "bounds": "942,14,1110,182",
+        "siblingIndex": 2
+      },
+      "elapsedMs": 32198,
+      "stepText": "点击“完成”保存笔记",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "点击“完成”保存笔记",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      }
+    },
+    {
+      "step": 10,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "点击向上导航返回笔记列表",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 10,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "向上导航",
+        "resourceId": "",
+        "className": "android.widget.ImageButton",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/hwtoolbar_edit",
+        "parentText": "",
+        "bounds": "42,0,210,196",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 35282,
+      "stepText": "点击向上导航返回笔记列表",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "点击向上导航返回笔记列表",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字23]",
+          "[界面文字4]",
+          "[界面文字6]",
+          "[界面文字24]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字16]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      }
+    },
+    {
+      "step": 11,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字23]",
+          "[界面文字4]",
+          "[界面文字6]",
+          "[界面文字24]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字16]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "打开同名笔记 Step6技能测试2 逐字核对",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 3,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "",
+        "resourceId": "com.huawei.notepad:id/swipelayout",
+        "className": "android.widget.FrameLayout",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/notes_listview",
+        "parentText": "",
+        "bounds": "0,683,1152,977",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 38696,
+      "stepText": "打开同名笔记 Step6技能测试2 逐字",
+      "injectionMethod": "display_touch",
+      "source": "model",
+      "reason": "打开同名笔记 Step6技能测试2 逐字核对",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      }
+    },
+    {
+      "step": 12,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      },
+      "action": {
+        "action": "back",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "核对完成，返回笔记列表",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": null,
+      "elapsedMs": 41058,
+      "stepText": "核对完成，返回笔记列表",
+      "injectionMethod": "unrecorded",
+      "source": "model",
+      "reason": "核对完成，返回笔记列表",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      }
+    },
+    {
+      "step": 13,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "返回笔记列表，随后重新打开同名笔记核对",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 10,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "向上导航",
+        "resourceId": "",
+        "className": "android.widget.ImageButton",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/hwtoolbar_edit",
+        "parentText": "",
+        "bounds": "42,0,210,196",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 44006,
+      "stepText": "返回笔记列表，随后重新打开同名笔记核对",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "返回笔记列表，随后重新打开同名笔记核对",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字23]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字6]",
+          "[界面文字24]",
+          "[界面文字8]",
+          "[界面文字16]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]"
+        ]
+      }
+    },
+    {
+      "step": 14,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字23]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字6]",
+          "[界面文字24]",
+          "[界面文字8]",
+          "[界面文字16]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "打开 Step6技能测试2 笔记以逐字核对标题与正文",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 3,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "",
+        "resourceId": "com.huawei.notepad:id/swipelayout",
+        "className": "android.widget.FrameLayout",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/notes_listview",
+        "parentText": "",
+        "bounds": "0,683,1152,977",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 46806,
+      "stepText": "打开 Step6技能测试2 笔记以逐字核",
+      "injectionMethod": "display_touch",
+      "source": "model",
+      "reason": "打开 Step6技能测试2 笔记以逐字核对标题与正文",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      }
+    },
+    {
+      "step": 15,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      },
+      "action": {
+        "action": "done",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "笔记编辑页中 title 字段文本为 Step6技能测试2，notetext_textview 字段文本为 这是技能复用测试，测试消息：测试2。",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "重新打开同名笔记后，标题输入框文本为「Step6技能测试2」，正文输入框文本为「这是技能复用测试，测试消息：测试2。」，与用户要求的标题及完整正文逐字一致，字数显示“共 18 字”也与正文长度吻合。",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": null,
+      "elapsedMs": 50797,
+      "stepText": "重新打开同名笔记后，标题输入框文本为「S",
+      "injectionMethod": "unrecorded",
+      "source": "model",
+      "reason": "重新打开同名笔记后，标题输入框文本为「Step6技能测试2」，正文输入框文本为「这是技能复用测试，测试消息：测试2。」，与用户要求的标题及完整正文逐字一致，字数显示“共 18 字”也与正文长度吻合。",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字16]",
+          "[界面文字13]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字14]",
+          "[界面文字17]"
+        ]
+      }
+    }
+  ]
+}

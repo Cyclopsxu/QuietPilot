@@ -26,7 +26,10 @@ public final class SkillCompiler {
                 联系人、消息、搜索词等任务变量用 {param} 参数化，同时参数化 expect.stableTexts/target/evidence 内相应文字。
                 严格保持步骤顺序、动作与输入次数；每步 text 代入 example 必须与轨迹 action.text 原文完全一致。
                 非文字动作 text=null；可用动作 tap_target/focus_input/input_text/long_press/scroll/back/key/submit_search/clear_text。
-                坐标点击必须改为原 target 特征定位，无法定位则放弃返回 {}。不允许保存坐标、index 作为定位器。
+                坐标点击必须改为原 target 特征定位；有resourceId、text或contentDesc等语义特征即可，不要求每个控件都有resourceId。
+                target.bounds是原始记录的参考字段，应原样保留以通过一致性校验，但运行时不把bounds用作定位器。
+                不允许在步骤顶层保存坐标、index作为定位器。仅当target为null等确实无法语义定位时，返回{"rejection":"具体原因"}。
+                输入的步骤已预处理过：未改变界面指纹的focus_input可能被省略；input_text的target会由运行时重新定位并聚焦，不得因此放弃或补造步骤。
                 查询 type=query 时用 question 替代 evidence，只保存导航路线和参数化问题，不保存答案、quote 或 outcome 中的内容。
                 action 的方向、按键、时长等参数从轨迹 action 保留。不要创建轨迹中没有的操作或交接。
                 输入：
@@ -34,6 +37,7 @@ public final class SkillCompiler {
         int begin = raw.indexOf('{'), end = raw.lastIndexOf('}');
         if (begin < 0 || end <= begin) throw new IllegalArgumentException("Compiler returned no JSON");
         JsonObject compiled = JsonParser.parseString(raw.substring(begin, end + 1)).getAsJsonObject();
+        if(compiled.has("rejection"))throw new IllegalArgumentException("Compiler declined: "+UiSnapshot.text(compiled,"rejection"));
         String type=UiSnapshot.text(input,"type");
         if(!compiled.has("type"))compiled.addProperty("type","action");
         if(!type.equals(UiSnapshot.text(compiled,"type")))throw new IllegalArgumentException("Compiler changed task type");

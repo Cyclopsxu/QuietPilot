@@ -11,11 +11,14 @@ public final class UiSnapshot {
         dump = JsonParser.parseString(json).getAsJsonObject();
         for (JsonElement item : array(dump, "windows")) {
             JsonObject window = item.getAsJsonObject();
-            if (window.has("root") && window.get("root").isJsonObject()) walk(window.getAsJsonObject("root"), null, 0);
+            if (window.has("root") && window.get("root").isJsonObject()) walk(window.getAsJsonObject("root"), null, 0, false);
         }
     }
-    private void walk(JsonObject node, JsonObject parent, int sibling) {
+    private void walk(JsonObject node, JsonObject parent, int sibling, boolean inCollection) {
+        String typeName=text(node,"class");
+        boolean collection=inCollection||typeName.endsWith("RecyclerView")||typeName.endsWith("ListView")||typeName.endsWith("GridView");
         JsonObject enriched = node.deepCopy(); enriched.remove("children");
+        enriched.addProperty("inCollection",collection);
         enriched.addProperty("siblingIndex", sibling);
         enriched.addProperty("parentId", parent == null ? "" : text(parent, "id"));
         enriched.addProperty("parentText", parent == null ? "" : text(parent, "text"));
@@ -25,7 +28,7 @@ public final class UiSnapshot {
             if (!child.isJsonObject()) continue;
             JsonObject value = child.getAsJsonObject(); String type = text(value, "class");
             int index = counts.getOrDefault(type, 0); counts.put(type, index + 1);
-            walk(value, node, index);
+            walk(value, node, index, collection);
         }
     }
     public JsonObject target(com.silentauto.shell.ActionDecision action) {

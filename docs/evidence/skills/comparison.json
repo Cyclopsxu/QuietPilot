@@ -1,0 +1,146 @@
+[
+  {
+    "label": "skill-first",
+    "taskId": "step6-skill-first-1792832423",
+    "status": "VERIFIED",
+    "steps": 10,
+    "sourceSteps": {
+      "model": 10,
+      "skill": 0,
+      "rescue": 0,
+      "query_recovery": 0
+    },
+    "calls": {
+      "executor": 12,
+      "verifier": 0,
+      "intake": 0
+    },
+    "elapsedMs": 31958
+  },
+  {
+    "label": "skill-first-fixed",
+    "taskId": "step6-skill-first-fixed-1792832711",
+    "status": "VERIFIED",
+    "steps": 9,
+    "sourceSteps": {
+      "model": 9,
+      "skill": 0,
+      "rescue": 0,
+      "query_recovery": 0
+    },
+    "calls": {
+      "executor": 11,
+      "verifier": 0,
+      "intake": 0
+    },
+    "elapsedMs": 33098
+  },
+  {
+    "label": "skill-reuse",
+    "taskId": "step6-skill-reuse-1792833004",
+    "status": "VERIFIED",
+    "steps": 15,
+    "sourceSteps": {
+      "model": 11,
+      "skill": 1,
+      "rescue": 3,
+      "query_recovery": 0
+    },
+    "calls": {
+      "executor": 15,
+      "verifier": 0,
+      "intake": 0
+    },
+    "elapsedMs": 52673
+  },
+  {
+    "label": "skill-reuse-fixed",
+    "taskId": "step6-skill-reuse-fixed-1792833513",
+    "status": "VERIFIED",
+    "steps": 12,
+    "sourceSteps": {
+      "model": 9,
+      "skill": 0,
+      "rescue": 3,
+      "query_recovery": 0
+    },
+    "calls": {
+      "executor": 13,
+      "verifier": 0,
+      "intake": 0
+    },
+    "elapsedMs": 44539
+  },
+  {
+    "label": "skill-rescue",
+    "taskId": "step6-skill-rescue-1792833608",
+    "status": "FAILED",
+    "steps": 13,
+    "sourceSteps": {
+      "model": 10,
+      "skill": 0,
+      "rescue": 3,
+      "query_recovery": 0
+    },
+    "calls": {
+      "executor": 16,
+      "verifier": 0,
+      "intake": 0
+    },
+    "elapsedMs": 56990
+  },
+  {
+    "label": "skill-explore-v2",
+    "taskId": "step6-skill-explore-v2-1792833789",
+    "status": "VERIFIED",
+    "steps": 8,
+    "sourceSteps": {
+      "model": 8,
+      "skill": 0,
+      "rescue": 0,
+      "query_recovery": 0
+    },
+    "calls": {
+      "executor": 10,
+      "verifier": 0,
+      "intake": 0
+    },
+    "elapsedMs": 27661
+  },
+  {
+    "label": "skill-reuse-v2",
+    "taskId": "step6-skill-reuse-v2-1792833893",
+    "status": "VERIFIED",
+    "steps": 10,
+    "sourceSteps": {
+      "model": 2,
+      "skill": 5,
+      "rescue": 3,
+      "query_recovery": 0
+    },
+    "calls": {
+      "executor": 8,
+      "verifier": 0,
+      "intake": 0
+    },
+    "elapsedMs": 49444
+  },
+  {
+    "label": "skill-rescue-v2",
+    "taskId": "step6-skill-rescue-v2-1792833985",
+    "status": "VERIFIED",
+    "steps": 13,
+    "sourceSteps": {
+      "model": 6,
+      "skill": 3,
+      "rescue": 4,
+      "query_recovery": 0
+    },
+    "calls": {
+      "executor": 14,
+      "verifier": 0,
+      "intake": 0
+    },
+    "elapsedMs": 63328
+  }
+]
