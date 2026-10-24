@@ -1,0 +1,45 @@
+{
+  "note": "两次续测的原片仅留本地；主屏可能含账号页面，不公开。续测旧屏139未再次发READY，改为手动启动对应scrcpy，开头有缺口；142由脚本自动捕获。文件时长不保证持续动态画面。",
+  "files": [
+    {
+      "file": "coffee-resume-recordings/main.mp4",
+      "duration": 110.836067,
+      "streams": [
+        {
+          "width": 1152,
+          "height": 2376
+        }
+      ]
+    },
+    {
+      "file": "coffee-resume-recordings/meituan-resume-vd.mp4",
+      "duration": 77.282756,
+      "streams": [
+        {
+          "width": 1152,
+          "height": 2376
+        }
+      ]
+    },
+    {
+      "file": "coffee-waimai-recordings/main.mp4",
+      "duration": 94.955489,
+      "streams": [
+        {
+          "width": 1152,
+          "height": 2376
+        }
+      ]
+    },
+    {
+      "file": "coffee-waimai-recordings/step6-meituan-waimai-1792835674-vd.mp4",
+      "duration": 75.663767,
+      "streams": [
+        {
+          "width": 1152,
+          "height": 2376
+        }
+      ]
+    }
+  ]
+}
