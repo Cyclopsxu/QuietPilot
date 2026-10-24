@@ -30,6 +30,8 @@ public final class UiBridge {
     private final HandlerThread thread = new HandlerThread("ui-automation");
     private final LogHub logs;
     private UiAutomation automation;
+    private final java.util.Map<Integer,String> expectedPackages=new java.util.HashMap<>();
+    public synchronized void expectPackage(int displayId,String value){if(value==null)expectedPackages.remove(displayId);else expectedPackages.put(displayId,value);}
     private volatile long connectionGeneration;
     public long generation(){return connectionGeneration;}
     // Privileged app_process lifecycle, like connect(); unsupported platforms fail closed.
@@ -156,6 +158,7 @@ public final class UiBridge {
             if (result == null) {
                 result = findInputLikeTarget(displayId, query);
             }
+            if(result!=null&&!verifiedNodeOwnership(result.node,displayId))return null;
             if (result != null) {
                 result.accessibility = !"com.sankuai.meituan".equals(String.valueOf(result.node.getPackageName()))
                         && !"com.autonavi.minimap".equals(String.valueOf(result.node.getPackageName()))
@@ -176,6 +179,7 @@ public final class UiBridge {
                 AccessibilityNodeInfo root = window.getRoot();
                 ClickResult result = findTarget(root, counter, "w" + windowIndex);
                 if (result != null) {
+                    if(!verifiedNodeOwnership(result.node,displayId))return null;
                     // Amap's virtual route/POI nodes can acknowledge ACTION_CLICK
                     // without activating. Use their fresh, display-local centers
                     // through ActionExecutor instead, without issuing two clicks.
@@ -203,7 +207,7 @@ public final class UiBridge {
                 }
                 windowIndex++;
             }
-            if (best == null) {
+            if (best == null || !verifiedNodeOwnership(best.node,displayId)) {
                 return null;
             }
             ClickResult result = new ClickResult(-1, best.x, best.y, best.label, best.path, best.node);
@@ -340,7 +344,7 @@ public final class UiBridge {
             }
             List<AccessibilityWindowInfo> result = all.get(displayId);
             if (result != null) {
-                snapshot.windows.addAll(result);
+                for(AccessibilityWindowInfo window:result)if(windowDisplayId(window)==displayId)snapshot.windows.add(window);
                 return snapshot;
             }
             snapshot.error = "no windows for display " + displayId;
@@ -406,14 +410,24 @@ public final class UiBridge {
         for (AccessibilityWindowInfo window : orderedWindows(displayId, false)) {
             AccessibilityNodeInfo root = window.getRoot();
             AccessibilityNodeInfo focused = findEditable(root, true);
-            if (focused != null) {
+            if (focused != null && verifiedNodeOwnership(focused,displayId)) {
                 return focused;
             }
             if (fallback == null) {
-                fallback = findEditable(root, false);
+                AccessibilityNodeInfo candidate=findEditable(root,false);
+                if(candidate!=null&&verifiedNodeOwnership(candidate,displayId))fallback=candidate;
             }
         }
         return fallback;
+    }
+
+    private boolean verifiedNodeOwnership(AccessibilityNodeInfo node,int displayId) {
+        AccessibilityWindowInfo actual=node.getWindow();
+        int actualDisplay=actual==null?-1:windowDisplayId(actual);
+        String pkg=String.valueOf(node.getPackageName()),expected=expectedPackages.get(displayId);
+        boolean allowed=com.silentauto.shell.ext.guard.NodeWritePolicy.permits(displayId,actualDisplay,pkg,expected);
+        logs.info("NODE_OWNERSHIP requestedDisplay="+displayId+" actualDisplay="+actualDisplay+" package="+pkg+" expected="+expected+" allowed="+allowed);
+        return allowed;
     }
 
     private AccessibilityNodeInfo findEditable(AccessibilityNodeInfo node, boolean requireFocus) {

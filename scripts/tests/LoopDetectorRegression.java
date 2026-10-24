@@ -21,6 +21,10 @@ public final class LoopDetectorRegression {
         check(com.silentauto.shell.ext.guard.SubmitTargetPolicy.alternateInput("语音搜索"),"voice search is not submit");
         check(com.silentauto.shell.ext.guard.SubmitTargetPolicy.alternateInput("Voice Search"),"English voice search");
         check(!com.silentauto.shell.ext.guard.SubmitTargetPolicy.alternateInput("搜索 android.widget.Button"),"text search remains available");
+        check(com.silentauto.shell.ext.guard.NodeWritePolicy.permits(12,12,"app","app"),"own node accepted");
+        check(!com.silentauto.shell.ext.guard.NodeWritePolicy.permits(12,0,"app","app"),"main display rejected");
+        check(!com.silentauto.shell.ext.guard.NodeWritePolicy.permits(12,12,"memo","amap"),"wrong package rejected");
+        check(!com.silentauto.shell.ext.guard.NodeWritePolicy.permits(12,-1,"app","app"),"unknown display rejected");
         System.out.println("LoopDetectorRegression passed");
     }
 }
