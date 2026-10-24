@@ -14,7 +14,7 @@ The [Chinese manual](README.zh-CN.md) contains the full operational reference, i
 
 Operate real Android apps on a background virtual display while the owner uses the main screen. This is a prototype with the measured scope below.
 
-**Demo:** [five-segment runbook and recording procedure](docs/DEMO.md). The full downstream demo has not been recorded; its real URL and timestamps remain pending. A [15-second public-name/memo result comparison](docs/evidence/demo-path/context-name-preview.mp4) is available as an excerpt. The upstream video is not downstream validation.
+**Demo:** [five-segment evidence film (02:57)](docs/evidence/demo-path/step6-five-segments.mp4) · [timestamps and limits](docs/evidence/demo-path/VIDEO.md). 00:08 parallel input/WeChat failure; 00:46 skills; 01:20 context; 01:45 queries; 02:15 coffee amendment/handoff. Footage, still evidence, freezes and archive explanations are labeled. Completing this edit does not mean all paths passed or form one continuous successful run.
 
 **Design choices:** a virtual display keeps the task on the same phone and app/account environment, and allows handing the original page back to its owner. A cloud or second phone adds account/device cost; app clones depend on vendors and separate data; main-screen accessibility automation occupies the user's UI; iPhone does not expose the shell/display capabilities used here. Apache-2.0 ShadowAuto supplies the shell, UI/OCR, input and streaming foundation. Attribution and downstream scope are in [Derivative Changes](docs/DERIVATIVE_CHANGES.md).
 
