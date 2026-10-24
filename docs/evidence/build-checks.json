@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-24",
+  "sourceCommit": "cedab1905a69ac3b916c3c9ba79c05e78df69e48",
+  "note": "测试在此提交前执行，受测源文件与此提交一致；后续仅整理文档和证据。主机通过不代表指定手机演示全部通过。",
+  "checks": [
+    {
+      "name": "build-and-lint",
+      "passed": true,
+      "logSha256": "2ad5180620ee4d57f4d5b28558bd161b12213e835b1d2e6aec8937163a97b0a4",
+      "summary": "shell/controller assembleDebug + lintDebug"
+    },
+    {
+      "name": "interaction-regressions",
+      "passed": true,
+      "logSha256": "a0b0d7850d66b6d5ed54b2c9c9d28acbf0ff72b367fbaee2c4db4d8a6fd0c62e",
+      "summary": "七组Java回归、isolation-report、record-demo CLI；包括指纹时间与集合变化回归"
+    }
+  ]
+}

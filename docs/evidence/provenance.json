@@ -234,5 +234,29 @@
     "sourceSha256": "9ac7980fe2350c0e4a24b2a10f09e8348eb4b0fefbbd9a8557ee07348a7962d8",
     "redactedSha256": "8f4aec8e00d4887927dde62588d85fd45dc0fd9c72aa19a6a56f4ba98a900134",
     "note": "技能副本仅为脱敏摘录，不可导入"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/skill-recording-inventory.json",
+    "artifact": "demo-path/skill-recording-inventory.json",
+    "sourceSha256": "ad0a488c2ad944613c5f1c32d2d822b7a485ed4c09902d52f0985ea833de24b2",
+    "redactedSha256": "ad0a488c2ad944613c5f1c32d2d822b7a485ed4c09902d52f0985ea833de24b2"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-public-query-1792834655-final.json",
+    "artifact": "demo-path/public-hours.json",
+    "sourceSha256": "f6cdbf34d39f6b1ff3c95121a0f5f2162958f6ad6464bccf460907ac81dc8639",
+    "redactedSha256": "fee71601e17d52dabe534c95635d716f57928c0a09cfad500fe354f5751f3adb"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-public-address-1792834944-final.json",
+    "artifact": "demo-path/public-address.json",
+    "sourceSha256": "c56ff28b77feff383f2647b738edd552271b440c098eb02240deee14e17e714c",
+    "redactedSha256": "52b692e12947e2a5c0deac736f01b1afacd684c1fc323ac451639fe740685b0e"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-meituan-coffee-1792834448-current.json",
+    "artifact": "demo-path/meituan-coffee.json",
+    "sourceSha256": "19e48de5cdf05dc825d18eb6a08695be39a9b1b15eeceb6f6c2b8e8718ab1bcb",
+    "redactedSha256": "3fc3b9391e6abf959776f001b50e6870e5fd09f4e62ffe2c1d7059c2de59dea0"
   }
 ]

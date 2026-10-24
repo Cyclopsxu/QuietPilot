@@ -1,0 +1,222 @@
+{
+  "type": "action",
+  "answer": "",
+  "quote": "",
+  "uncertain": false,
+  "sourceApp": "com.sankuai.meituan",
+  "searched": "",
+  "taskId": "step6-meituan-coffee-1792834448",
+  "status": "WAITING_USER",
+  "originalGoal": "在美团选择一款可切换大杯规格的咖啡，先查看商品与规格。暂不下单，不支付；遇登录、验证码或付款边界请求本人处理。",
+  "amendments": [],
+  "goal": "在美团选择一款可切换大杯规格的咖啡，先查看商品与规格。暂不下单，不支付；遇登录、验证码或付款边界请求本人处理。",
+  "app": "com.sankuai.meituan",
+  "appName": "美团",
+  "stepText": "",
+  "step": 2,
+  "displayId": 139,
+  "source": "model",
+  "message": "请在主屏完成操作，完成后点“交回后台继续”",
+  "evidence": "屏幕中央弹出白色弹窗，标题为“请依次点击下图图标”，下方有四个图标（耳机、星、齿轮、闪电），弹窗右上角有关闭按钮“×”，背景为搜索页（含搜索框和底部导航栏）",
+  "boundary": "屏幕中央弹出验证码弹窗，提示\"请依次点击下图图标\"，带关闭按钮X，位于搜索页上方",
+  "llmCalls": {
+    "executor": 6,
+    "verifier": 18,
+    "intake": 0
+  },
+  "finalized": false,
+  "disturbance": {},
+  "isolation": {
+    "selectedFlags": 331,
+    "selectedFlagsHex": "14b",
+    "candidateIndex": 2,
+    "ownFocusSupported": false,
+    "noStealSupported": false,
+    "ownFocusRequested": false,
+    "noStealRequested": false,
+    "localImeVerified": false,
+    "configurationAvailable": false,
+    "behaviorValidated": false,
+    "experimentalOverride": true,
+    "backgroundAllowed": true,
+    "status": "experimental_unverified",
+    "message": "兼容实验模式：隔离能力不足，不保证主屏输入和焦点不受影响",
+    "touchNoFocusChangeFlag": 64,
+    "touchNoFocusChangeAvailable": true,
+    "mitigations": {
+      "noFocusChangeTouch": true,
+      "dangerousKeyGate": true,
+      "accessibilityTextWrites": true,
+      "clipboardSnapshotRestore": true,
+      "localImePolicy": false
+    },
+    "capture": {
+      "mode": "layer_stack_mirror",
+      "fallback": "",
+      "requests": 0,
+      "misses": 0,
+      "surfaceSwitches": 0,
+      "frames": 0
+    },
+    "creationAttempts": [
+      {
+        "candidateIndex": 0,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 1,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 2,
+        "flags": 331,
+        "accepted": true
+      }
+    ],
+    "platformDisplayFlags": 8,
+    "localImeSetSucceeded": false,
+    "imePolicyBefore": 1,
+    "imePolicyReadback": 1,
+    "sdkInt": 31,
+    "manufacturer": "HUAWEI",
+    "model": "NOH-AN01",
+    "nativeBackgroundKeysAllowed": false
+  },
+  "skillId": "",
+  "sourceSteps": {
+    "model": 0,
+    "skill": 0,
+    "rescue": 0,
+    "query_recovery": 0
+  },
+  "comparison": "",
+  "evidenceScreenshot": "",
+  "createdAtMs": 1792834448921,
+  "finishedAtMs": 0,
+  "waitingSinceMs": 1792834467940,
+  "transcript": "",
+  "intakeElapsedMs": 0,
+  "pendingConfirmation": false,
+  "requiresConfirmation": false,
+  "confirmDeadlineMs": 0,
+  "protectedScreen": false,
+  "resultReady": false,
+  "transferState": "manual_main",
+  "elapsedMs": 816342,
+  "steps": [
+    {
+      "step": 1,
+      "fingerprint": {
+        "packageName": "com.sankuai.meituan",
+        "title": "yoda",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]"
+        ]
+      },
+      "action": {
+        "action": "tap",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Tap search bar to search for coffee",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 299,
+        "y": 346
+      },
+      "target": null,
+      "elapsedMs": 8324,
+      "stepText": "Tap search bar to se",
+      "injectionMethod": "display_touch",
+      "source": "model",
+      "reason": "Tap search bar to search for coffee",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.sankuai.meituan",
+        "title": "",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]"
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "fingerprint": {
+        "packageName": "com.sankuai.meituan",
+        "title": "",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]"
+        ]
+      },
+      "action": {
+        "action": "request_user",
+        "answer": "",
+        "boundary": "屏幕中央弹出验证码弹窗，提示\"请依次点击下图图标\"，带关闭按钮X，位于搜索页上方",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "captcha",
+        "message": "美团弹出了\"请依次点击下图图标\"的验证码，请本人完成验证后再继续搜索咖啡。",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": null,
+      "elapsedMs": 12441,
+      "stepText": "",
+      "injectionMethod": "unrecorded",
+      "source": "model",
+      "reason": "",
+      "uiChanged": false
+    }
+  ]
+}
