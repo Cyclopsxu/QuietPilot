@@ -17,3 +17,6 @@ java -cp "$work:$classes:$gson" com.silentauto.shell.ext.tests.QueryProbe
 java -cp "$work:$classes:$gson" com.silentauto.shell.RpcOutputRegression
 
 java -cp "$work:$classes:$gson" LoopDetectorRegression
+
+node "$repo/scripts/tests/isolation-report.test.mjs"
+python3 "$repo/scripts/tests/record-demo.test.py"
