@@ -293,5 +293,18 @@
     "sourceSha256": "32470ee3c7c0a0032af833f79843a89fc6e220862ae92a07fc083a6e69271be3",
     "redactedSha256": "32470ee3c7c0a0032af833f79843a89fc6e220862ae92a07fc083a6e69271be3",
     "note": "截图已目视核看，仅有咖啡商品规格与商品列表，不含账号或配送地址"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/coffee-voice-checkout-snapshot.json",
+    "artifact": "demo-path/coffee-voice-checkout.json",
+    "sourceSha256": "fa689924977e8d8be4a0cb4b235f2d6005927c71704421d6aaf70f4163692263",
+    "redactedSha256": "bf44931b8de37052db4c7385bec4548992e0ada8aaf856422b7209e2cffcc674",
+    "note": "机主自行通过悬浮球发起并追加语音；支付前WAITING_USER、manual_main，非VERIFIED完成；保留固定时刻快照，不覆盖成最终任务"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/coffee-owner-confirmation.json",
+    "artifact": "demo-path/coffee-owner-confirmation.json",
+    "sourceSha256": "9aabeeb4d9c90d9e41ebcc96e9971461806b2323f162087e4a40d609788e3723",
+    "redactedSha256": "9aabeeb4d9c90d9e41ebcc96e9971461806b2323f162087e4a40d609788e3723"
   }
 ]
