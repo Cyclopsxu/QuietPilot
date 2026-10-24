@@ -1,6 +1,6 @@
 # 二次开发出处与改动说明 / Derivative Changes
 
-更新日期：2026-10-22。
+更新日期：2026-10-23。
 
 ## 原项目出处
 
@@ -27,8 +27,11 @@
 | --- | --- | --- |
 | 执行扩展 | 从主循环提取执行上下文、动作执行器、步骤监听与来源扩展；复用上游动作逻辑并继续扩展 | `android-shell/.../ext/`、`AutomationEngine.java` |
 | 验收与人工交接 | 独立视觉验收、任务状态、证据截图、验证码等边界等待、触摸预览、原任务临时转主屏人工处理与交回后台继续，人工期间暂停自动恢复 | `ext/verify/`、`ext/handoff/`、控制端任务视图与 RPC |
-| 异常路径复查（2026-10-23） | 人工转移失败后重新确认位置并保留归属，位置未知不自动恢复；主屏人工期间暂停等待超时；控制端前台恢复刷新、旧 socket 隔离清理与连接超时，不自动重放操作。构建/Lint及模拟器回归通过，最新修复尚未安装实体手机 | `ManualTaskTransfer`、`HandoffManager`、`AutomationEngine`、`MainActivity`、`RpcClient` |
+| 异常路径复查（2026-10-23） | 人工转移失败后重新确认位置并保留归属，位置未知不自动恢复；主屏人工期间暂停等待超时；控制端前台恢复刷新、旧 socket 隔离清理与连接超时，不自动重放操作。构建/Lint及模拟器回归通过，相关后台修复已部署实体手机，完整美团验收仍对应此前版本 | `ManualTaskTransfer`、`HandoffManager`、`AutomationEngine`、`MainActivity`、`RpcClient` |
 | 隔离能力与指标归因（2026-10-23） | 记录实际 flags/候选回退/IME 回读，能力不足默认阻止后台，显式兼容实验标为未验证；保留原始切换，区分交接/触摸关联及未归因；掉帧注明采样 App，合成并行双画面测试不替代真机中文候选词验收 | `DisplayIsolation`、`VirtualDisplaySession`、`DisturbanceMonitor`、`DisturbanceCounters`、任务历史 |
+| 高德交互与焦点安全（2026-10-23） | 起终点只读输入限定、规划控件身份复核与触摸、拒绝导航/打车；长文档原文锚点；发现全局焦点干扰锁定暂停，禁止自动重启丢失页面；预览返回入口与幂等取消。真机备忘录同页转移通过，Mate 40 Pro 隔离不足仍默认阻止后台，不宣称零干扰 | `ObservedTarget`、`ReadOnlyGuard`、`PageIdentity`、`BackgroundFocusGuard`、执行循环与控制端 |
+| RPC慢连接隔离（2026-10-23） | 每连接独立有界输出队列，慢读者断开而不阻塞任务日志/状态/视频发布；真实socket回归通过。真机重试主屏交接和停止恢复；后台全局焦点隔离仍不足，转移后回退首次证据未确认仍保留限制 | `RpcServer.Client`、`RpcOutputRegression` |
+| 事前触摸焦点保护（2026-10-23） | 按手机实际支持的FLAG_NO_FOCUS_CHANGE生成后台触摸，主屏与不支持设备保留原行为，记录运行时能力；三轮高德与备忘录后台打开未触发暂停。真实中文输入反馈正常，但前台夹具短暂无焦点/IME不活跃记录及候选词机器核验仍有证据限制，不认证全程零干扰 | `InputBridge`、`VirtualDisplaySession`、`TouchFlagsDeviceRegression` |
 | 调度与输入保护 | 两任务并发上限、同 App 排队、前台冲突暂停/恢复、剪贴板保护及任务收尾隔离 | `ext/guard/`、`ClipboardBridge.java` |
 | 技能学习 | 轨迹录制、参数化技能编译与存储、语义控件匹配、重放、有限救援与 suspect 状态 | `ext/skill/` |
 | 执行中追加 | 线程安全追加队列、有效目标及旧规划失效、语音归属选择、暂停/排队/交接恢复、追加历史与技能编译排除 | `ext/amend/`、`ext/voice/VoiceRouting.java`、执行循环与胶囊 |
@@ -69,3 +72,13 @@ This is an independently modified distribution of [android-notes/ShadowAuto](htt
 Upstream provides the shell/VirtualDisplay automation architecture, UI/OCR and input bridges, streaming, controller, launcher, original articles, and demo. Downstream work adds execution extensions, independent verification and handoff, scheduling and input protection, parameterized skills and recovery, multimodal voice/context entry, floating controls, history and metrics, Huawei fixes, and retained-result delivery. The initial extracted action executor reuses upstream action logic.
 
 See [NOTICE](../NOTICE), the change table above, and Git history for provenance and scope. Modified upstream source files carry modification notices. This derivative is not presented as an official upstream release or as independently authoring the inherited architecture. Verification limits are recorded in both READMEs.
+
+- 2026-10-23 川西重测：兼容虚拟屏原生键盘注入前拦截，Enter/Search 优先可见提交控件；保留高德ANR、引用失败及焦点暂停记录。补齐模型工具观察多轮对话的流式 reasoning_content 回传（不写任务日志），实际部署/验收见本轮验证记录。
+
+- 同轮轨迹发布改为同目录原子替换，修复历史读取半份JSON；手机并发读写检查通过。川西4段路线及新备忘录重开/同页交接有实证，2段与美团商家仍待核实；高德ANR、空控件及写入长文验收失败均保留。
+
+- 2026-10-24 续测：新增根子树缺失诊断及有限无障碍重连、仅查询一次重启与保留页面交接；执行前重新绑定控件、重连后丢弃旧动作；新增预订/订座/预约查询拦截。华为长文按完整标题/正文、真实列表与重开序列确定性验收，兼容卡片标题截短；六段路线补齐，真实去查看同一任务229由109转0、全文一致且次屏释放。美团商家仍受本人验证阻塞，不能算全流程通过。控制端新增避开目标端口的源端口绑定，修复实测RPC自连接；构建与真实socket回归通过，控制端此项尚未覆盖安装。
+
+- 2026-10-24 后续排查：为美团MSC公开城市导航和地点输入、高德匿名搜索表单增加严格上下文识别，继续拒绝私人地址、交易及密码字段；查询不再自动推断总目标词灌入当前字段。构建/Lint与六组回归通过；固定Surface诊断探针可选康定并读公开页面，但餐饮返回B3001_1401，酒店新验证等待本人，生产抓图稳定性及商家核验均未通过。未把诊断对照或未验收候选作为完成证据。
+
+- 2026-10-24 抓图稳定性：新增CaptureMirror，从已拥有的次屏图层栈生成独立非安全合成输出；原VirtualDisplay保持原Surface，读帧持续排空并保留最新帧，异常不切回原屏。新增模式/失败/切换诊断与三轮资源故障设备回归。控制端连接修复已覆盖安装；60轮抓图读取和两个短查询通过，首轮计算模型重复清除失败仍保留。美团完整商家、其他Android版本与全程无打扰不在通过结论内。

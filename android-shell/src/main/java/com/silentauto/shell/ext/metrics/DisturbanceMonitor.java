@@ -20,6 +20,8 @@ public final class DisturbanceMonitor implements StepListener {
         final ScheduledExecutorService sampler=Executors.newSingleThreadScheduledExecutor(low("disturbance-sampler"));
         volatile DisturbanceCounters counts;String mainPackage="",clipBefore;long[] framesBefore;
         volatile int display=-1,step;volatile String action="准备",source="model";
+        volatile boolean backgroundRunning;
+        final com.silentauto.shell.ext.guard.BackgroundFocusGuard safety=new com.silentauto.shell.ext.guard.BackgroundFocusGuard();
         ScheduledFuture<?> polling;long sampleNanos,maxNanos,nextEligible;int skipped;String error="";
         Session(String id,ClipboardBridge clipboard){this.id=id;this.clipboard=clipboard;}
         long elapsed(){return (System.nanoTime()-started)/1_000_000;}
@@ -32,7 +34,12 @@ public final class DisturbanceMonitor implements StepListener {
         DisturbanceReadings reading()throws Exception{return DisturbanceReadings.parse(read("dumpsys","window"),read("dumpsys","input"),read("dumpsys","input_method"));}
         void sample(){
             long begin=System.nanoTime();if(begin<nextEligible){skipped++;return;}
-            try{counts.sample(reading(),display,System.nanoTime()/1_000_000,elapsed(),step,action,source);}
+            try{
+                DisturbanceReadings current=reading();
+                counts.sample(current,display,System.nanoTime()/1_000_000,elapsed(),step,action,source);
+                String before=safety.issue();safety.observe(backgroundRunning,display,current.focusedDisplay);
+                if(before.isEmpty()&&!safety.issue().isEmpty())counts.event("background_safety",elapsed(),step,action,source,safety.issue());
+            }
             catch(Exception failure){error=failure.getClass().getSimpleName();counts.foregroundAvailable=false;counts.focusAvailable=false;counts.imeAvailable=false;}
             long duration=System.nanoTime()-begin;sampleNanos+=duration;maxNanos=Math.max(maxNanos,duration);
             if(duration>450_000_000)nextEligible=System.nanoTime()+500_000_000; // Back off rather than catch up in a tight loop.
@@ -51,10 +58,15 @@ public final class DisturbanceMonitor implements StepListener {
             metrics.add(DisturbanceCounters.metric("clipboard","剪贴板内容变化",changed?1:0,clipboardAvailable,!changed,clipboardAvailable?"仅比较摘要，不保存剪贴板内容":"剪贴板读取不可用"));
             JsonObject frame=DisturbanceCounters.metric("jank","指定 App 掉帧率",rate,frameAvailable&&frames>0,rate<=.05,frameAvailable?(frames==0?"本次主屏无新增帧，无法评估掉帧率":"新增卡顿帧 "+janky+" / "+frames+"，阈值 5%") : "gfxinfo 不可用或计数重置");frame.addProperty("measuredPackage",mainPackage);frame.addProperty("scope","task_start_foreground_package_process");frame.addProperty("foregroundSamples",counts.foregroundSamples.getOrDefault(mainPackage,0));frame.addProperty("totalSamples",counts.samples);frame.addProperty("coversOtherApps",false);frame.addProperty("frames",frames);frame.addProperty("jankyFrames",janky);frame.addProperty("reason",frame.get("reason").getAsString()+"；仅任务开始时的 "+mainPackage+"，不代表其他 App 或持续信息流流畅度");metrics.add(frame);
             JsonObject report=new JsonObject();report.add("metrics",metrics);report.add("events",counts.events);report.addProperty("foregroundPackage",mainPackage);report.addProperty("samples",counts.samples);
+            report.addProperty("backgroundSafetyIssue",safety.issue());
+            report.addProperty("backgroundSafetyTriggered",safety.triggered());
             report.addProperty("sampleIntervalMs",500);report.addProperty("avgSampleMs",counts.samples==0?0:sampleNanos/1_000_000.0/counts.samples);report.addProperty("maxSampleMs",maxNanos/1_000_000.0);report.addProperty("skippedTicks",skipped);
             report.addProperty("touchMethod","dumpsys input / RecentQueue / displayId=0 MotionEvent / age");report.addProperty("rawForegroundSwitches",counts.totalSwitches);report.addProperty("authorizedHandoffSwitches",counts.authorizedSwitches);report.addProperty("unattributedForegroundSwitches",counts.switches);report.addProperty("unknownForegroundSwitches",counts.unknownSwitches);report.addProperty("userForegroundSwitches",counts.userSwitches);report.addProperty("eventsTruncated",counts.eventsTruncated);report.addProperty("zeroDisturbanceVerified",false);report.addProperty("assessmentScope","采样观察与显式交接关联，非全程无打扰认证");report.addProperty("samplingError",error);return report;
         }
     }
+    public String backgroundIssue(String id){Session s=active.get(id);return s==null?"":s.safety.issue();}
+    public void backgroundRunning(String id,boolean running){Session s=active.get(id);if(s!=null)s.backgroundRunning=running;}
+    public void explicitBackgroundRetry(String id){Session s=active.get(id);if(s!=null)s.safety.explicitRetry();}
     public void handoffEntry(String id){Session s=active.get(id);if(s!=null&&s.counts!=null)s.counts.authorizeEntry("com.silentauto.controller",System.nanoTime()/1_000_000);}
     public void handoffTarget(String id,String target,boolean returning){
         Session s=active.get(id);if(s==null||s.counts==null)return;long now=System.nanoTime()/1_000_000;
@@ -62,7 +74,7 @@ public final class DisturbanceMonitor implements StepListener {
         else{s.counts.authorize("com.silentauto.controller",target,"user_take_on_main",now);s.counts.authorize(s.mainPackage,target,"user_take_on_main",now);}
     }
     public void prepare(String id,ClipboardBridge clipboard){Session session=new Session(id,clipboard);active.put(id,session);try{session.sampler.submit(session::baseline).get(3,TimeUnit.SECONDS);}catch(Exception error){session.error="baseline timeout/unavailable";if(error instanceof InterruptedException)Thread.currentThread().interrupt();}}
-    @Override public void onTaskStart(ExecutionContext ctx,String goal,String pkg){Session session=active.get(ctx.taskId);if(session==null)return;session.display=ctx.displayId;session.polling=session.sampler.scheduleAtFixedRate(session::sample,0,500,TimeUnit.MILLISECONDS);}
+    @Override public void onTaskStart(ExecutionContext ctx,String goal,String pkg){Session session=active.get(ctx.taskId);if(session==null)return;session.display=ctx.displayId;session.backgroundRunning=true;session.polling=session.sampler.scheduleAtFixedRate(session::sample,0,500,TimeUnit.MILLISECONDS);}
     @Override public void beforeStep(ExecutionContext ctx,int step,String dump){Session session=active.get(ctx.taskId);if(session!=null){session.step=step;session.action="观察/规划";}}
     @Override public void beforeAction(ExecutionContext ctx,int step,ActionDecision action){Session session=active.get(ctx.taskId);if(session!=null){session.step=step;session.action=action.action;session.source=action.source;}}
     @Override public void afterAction(ExecutionContext ctx,int step,ActionDecision action,StepResult result,String dump){Session session=active.get(ctx.taskId);if(session!=null)session.action=action.action+" 后观察";}

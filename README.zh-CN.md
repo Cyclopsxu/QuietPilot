@@ -1,265 +1,712 @@
 # 隐控 ShadowAuto（二次开发版）
 
-[English](README.md) | 中文
+[English](README.md) | 中文详细手册
 
-> 本项目基于 [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto) 二次开发，保留原项目及作者、贡献者署名，继续采用 [Apache-2.0](LICENSE)。上游基线为 `611e5eb`；本分支新增和修复详见 [二次开发改动说明](docs/DERIVATIVE_CHANGES.md) 与 [NOTICE](NOTICE)。
+隐控是基于 [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto) 二次开发的 Android 自动化原型：让真实 App 在虚拟显示屏中运行，由模型读取页面、规划操作，用户通过控制端和悬浮球提交任务、查看进度、处理人工边界并接收结果。
 
-隐控 ShadowAuto 是一个面向 Android 10 及以上设备的开源手机助手原型，支持后台自动化、技能学习和语音发起任务。它通过 `adb shell` 和 `app_process` 启动 AI 驱动的 shell 进程，把真实 App 打开在独立 VirtualDisplay 中运行；支持同机不同 App 并行，同一 App 冲突时优先让用户操作，Agent 排队或暂停。后台执行需满足隔离配置检查，配置可用也不等于已经证明全程无打扰。
+**本手册按截至 2026-10-24 的代码与已有验证记录整理。当前支持同机不同 App 并行；同 App 冲突时用户优先。虚拟屏创建成功不等于焦点隔离通过，兼容实验模式也不等于全程无打扰。**
 
-ShadowAuto 的重点不是简单脚本点击，而是让 AI 具备类似手机助理的屏幕理解和操作能力：shell 进程可以读取虚拟屏上的 UiAutomation UI 节点树，也可以在无障碍节点缺失、自绘页面或复杂业务页面中调用离线 OCR 读取屏幕文字和坐标，再通过 InputManager 把触摸、按键和输入事件注入到指定 display。
+上游提供 shell/app_process、VirtualDisplay、UI/OCR 操作、分屏输入、H.264 预览、Android 控制端与浏览器部署器等基础能力；本分支在其上增加任务验收、人工交接、调度与保护、技能学习、语音与上下文、历史与指标，并修复部分华为设备兼容问题。上游基线为 `611e5eb0e1c94befda3c17c97438912dfd30e8a8`。保留 [Apache-2.0 许可证](LICENSE)，出处见 [NOTICE](NOTICE)，修改范围见 [二次开发说明](docs/DERIVATIVE_CHANGES.md)。本分支与上游无背书关系。
 
-以下功能包含上游基础能力及本分支扩展；各自来源见[改动说明](docs/DERIVATIVE_CHANGES.md)。
+## 目录
 
-## 已实现功能
+- [1. 已实现的功能](#1-已实现的功能)
+- [2. 系统组成与运行方式](#2-系统组成与运行方式)
+- [3. 安装与启动](#3-安装与启动)
+- [4. 模型配置与数据流向](#4-模型配置与数据流向)
+- [5. 实际使用流程](#5-实际使用流程)
+- [6. 自动化循环与动作执行](#6-自动化循环与动作执行)
+- [7. 抓图、视频、控件与恢复机制](#7-抓图视频控件与恢复机制)
+- [8. 焦点隔离、并发与主屏保护](#8-焦点隔离并发与主屏保护)
+- [9. 完成验收与长文写入](#9-完成验收与长文写入)
+- [10. 人工交接、结果交付与失败回退](#10-人工交接结果交付与失败回退)
+- [11. 语音、上下文与追加要求](#11-语音上下文与追加要求)
+- [12. 技能学习与复用](#12-技能学习与复用)
+- [13. 查询任务与来源证据](#13-查询任务与来源证据)
+- [14. 状态、历史、指标与本地存储](#14-状态历史指标与本地存储)
+- [15. RPC 接口与连接可靠性](#15-rpc-接口与连接可靠性)
+- [16. 开发、回归与验收方法](#16-开发回归与验收方法)
+- [17. 已有真机结果与尚未解决的问题](#17-已有真机结果与尚未解决的问题)
+- [18. 故障排查](#18-故障排查)
+- [19. 源码索引与资料组织](#19-源码索引与资料组织)
 
-| 功能 | 当前能力 |
+## 1. 已实现的功能
+
+| 能力 | 当前行为 | 实现入口 |
+| --- | --- | --- |
+| 真实 App 后台执行 | shell 创建任务虚拟屏，在目标 App 内搜索、点击、输入、滚动；控制端显示实时预览 | `AutomationEngine`、`VirtualDisplaySession` |
+| 多任务 | 最多同时运行两个任务；同 App 串行，主屏用户操作优先 | `TaskScheduler`、`MainAppConflictGuard` |
+| 模型分工 | executor 规划，verifier 独立验收，intake 理解语音 | `ModelConfig`、`AiClient` |
+| 文字办事 | 从目标到操作、结果验收、交付与历史归档 | `ActionExecutor`、`ResultVerifier` |
+| 只读查询 | 浏览与搜索后返回短答案、页面引文、来源；执行只读动作约束 | `ReadOnlyGuard`、`AnswerVerifier` |
+| 语音任务 | 64dp 悬浮球，约 1 秒按住，录音就绪后震动，松手提交，上滑取消 | `FloatingBallService`、`VoiceIntake` |
+| 屏幕上下文 | 录音前读取主屏上下文，密码节点遮蔽，可关闭，120 秒过期 | `ScreenContextReader`、`ScreenPrivacy` |
+| 执行中追加 | 修改、补充或取消；多个可能目标时选择任务 | `AmendmentQueue`、`VoiceRouting` |
+| 人工边界 | 登录、验证码等暂停；原页面移到主屏处理，再交回后台 | `HandoffManager`、`ManualTaskTransfer` |
+| 完成后交付 | 保留需查看的页面，提示“去查看”；确认原页面转移成功后释放虚拟屏 | `ResultRetention`、`TaskDisplayTransfer` |
+| 交付失败回退 | 校验转移和回退状态；可用时保留预览供重试或结束查看 | `PageIdentity`、`AutomationTaskView` |
+| 技能学习 | 从符合条件的成功轨迹编译参数化技能，按当前控件定位复用 | `TrajectoryRecorder`、`SkillCompiler`、`SkillRunner` |
+| 技能救援 | 偏离后最多 3 个救援动作；失败回模型，连续弃用后标为 suspect | `SkillRunner`、`SkillStore` |
+| 抓图稳定性 | 独立图层栈镜像抓取次屏，持续排空图像，不切换原视频输出面 | `CaptureMirror` |
+| 控件恢复 | 区分缺失根、遍历不完整与真实叶节点；有限重连，旧目标拒点 | `UiBridge`、`UiRecoveryBudget`、`ObservedTarget` |
+| 历史与指标 | 结果、证据截图、步骤、模型调用、耗时、技能来源和干扰观测 | `TaskArchive`、`TaskProgress`、`DisturbanceMonitor` |
+| 连接保护 | 避免回环自连接、旧读线程误清新连接、慢客户端阻塞任务 | `RpcConnection`、`RpcClient`、`RpcServer` |
+
+这些是代码能力，适用范围仍受设备隔离、App 页面可访问性、登录/验证码、模型规划质量和系统安全策略限制。实际验证范围见第 17 节。
+
+## 2. 系统组成与运行方式
+
+```text
+用户文字 / 悬浮球语音
+           │
+controller-app：配置、任务页、视频预览、交接、历史、技能
+           │ 本机 TCP / 逐行 JSON-RPC
+           ▼
+android-shell：adb shell + app_process
+  ├─ 任务调度、状态、冲突与焦点保护
+  ├─ 当前 UI → 模型/技能 → 动作 → 再观察
+  ├─ VirtualDisplay → 真实目标 App
+  ├─ UiAutomation / OCR / 次屏截图
+  └─ 独立验收 → 查询答案或保留页面交付 → 历史
+           │
+           └─ HTTPS 请求已配置的模型服务
+```
+
+| 模块 | 职责 |
 | --- | --- |
-| 后台执行与实时投屏 | 每个任务使用独立 VirtualDisplay；读取 UI 节点，必要时调用 Paddle Lite 离线 OCR，通过 H.264 查看执行画面 |
-| 自动操作与独立验收 | 支持点击、输入、搜索、滚动、返回等操作；执行模型负责规划，视觉验收模型根据当前界面判断是否完成 |
-| 多任务调度 | 最多同时执行两个任务；同一 App 串行排队，主屏正在使用目标 App 时等待或暂停，离开后重新观察并继续 |
-| 技能学习与复用 | 录制轨迹，将通过验收且未经过人工交接的任务编译为参数化技能；使用当前控件特征定位，支持匹配、重放及停用/删除 |
-| 技能异常救援 | 页面偏离时最多尝试三步救援；失败后回退模型探索，连续放弃的技能标为 suspect，避免继续自动匹配 |
-| 语音悬浮球 | 64dp 触摸区域、曲面屏边距、拖动吸边；按住约 1 秒，录音真正就绪后短震，松手提交，上滑取消 |
-| 边看边办 | 语音发起前可读取主屏截图和文字，辅助理解“这家店”等指代；支持“不读取屏幕”、密码区域遮盖及临时上下文过期清理 |
-| 状态胶囊与人工交接 | 展示执行、排队、待确认和待处理状态；验证码、登录、支付等需要人工处理时通知用户；“到主屏处理”移交原页面，处理后点“交回后台继续”，失败时保留预览 |
-| 查询答案带回 | QUERY 任务只读搜索与浏览，独立提取并核对页面原文；答案和来源在胶囊展示 8 秒，用户可主动复制或打开来源 App；支持没查到及不确定标记 |
-| 执行中追加 | 同一次语音理解可修改、补充或取消进行中的任务；拿不准时询问归属，排队、暂停和人工等待状态均可接收追加；历史记录追加时间线，有追加的任务不编译技能 |
-| 结果保留与主屏接手 | 选餐厅、挑商品、查询比较等任务可保留结果；点“去查看”转移原任务，核对结果名称、地址等关键内容后释放虚拟屏；失败时检查回退结果并提供预览或明确提示 |
-| 任务历史与效率统计 | 查看结果、验收截图、调用次数、耗时、技能命中及 model/skill/rescue 步骤来源 |
-| 干扰观测与输入保护 | 保留原始切换及交接/触摸关联、焦点、输入法、剪贴板指标；掉帧注明采样进程与范围，不代表其他 App；隔离能力不足时默认阻止后台执行 |
-| 分角色模型配置 | executor、verifier、intake 分别配置；密钥保存在手机应用私有配置中，当前没有统一的服务端密钥分发 |
+| `android-shell` | shell 权限的执行进程、系统服务桥接、自动化和本机 RPC |
+| `controller-app` | 手机上安装的“隐控”，负责 UI、录音、配置和交接控制 |
+| `android-stubs` | 编译时 hidden API 声明，不是可独立运行的服务 |
+| `paddler-ocr` | Paddle Lite OCR 封装、原生库、模型和字典准备 |
+| `web-launcher` | Svelte/Vite + TangoADB/WebUSB 部署工具 |
+| `scripts` | 主机回归、设备探针、模拟模型测试 |
 
-### 验证进展（2026-10-23）
+**两个 Android 产物用途不同：**控制端 APK 使用安装器安装；shell APK 作为 `CLASSPATH` 文件由 `app_process` 加载。只安装控制端不会自动获得 shell 权限，也不会自动启动执行后台。无需 root，但需要已授权的 ADB shell；隐藏 API 的行为取决于系统。
 
-- **隔离审核补齐：** 新增实际 flags/回退与本地 IME 回读记录；独立焦点、禁止抢焦点或本地 IME 无法核实时默认阻止后台执行。Mate 40 Pro 当前实际采用 `0x14b`，缺少两项焦点标志且 IME 回读为 fallback，新版只能显式启用兼容实验模式，不能承诺无干扰。指标保留原始切换并单列交接关联，掉帧明确采样 App；旧美团4次切换与桌面8/335帧记录没有改写。
-- **并行验收状态：** 模拟器合成组合输入/滚动与后台 mock 查询、双画面采集和相关回归通过；模拟器掉帧指标不达标，不能认证流畅度。用户已延期真实中文输入法候选词+美团并行测试，尚无“全程无打扰通过”结论。本轮最新版本未安装到手机。
+本项目没有负责客户账号、密钥下发、计费或模型代理的业务后端。手机上的 shell 是本地执行后台，模型推理仍依赖外部服务。两者不能混为“全部离线”。
 
-- **前一轮异常路径复查：** 修复人工移交回退失败后的错误预览/自动恢复、主屏人工处理中仍可能超时、控制端重连与旧连接清理三处异常路径。双 APK 构建/Lint、真实模拟器移交故障注入、连接/超时探针，以及查询、技能、追加、取消、排队等回归通过；该轮相关回归通过。最新修复尚未覆盖安装到实体手机，真机验证对应 2026-10-22 的美团版本。
+## 3. 安装与启动
 
-- **主屏人工处理：** 新增“到主屏处理 → 交回后台继续”。构建/Lint、往返与故障逻辑探针通过；真机美团已通过同一餐厅任务到主屏人工处理、用户点继续后交回后台、最终完成提示和“去查看”，释放虚拟屏后页面仍保留；用户确认主屏操作正常。本轮重跑未再触发滑块，人工流转用选店确认边界验证。
+### 3.1 环境要求
 
-- **本地与模拟器**：Step 2–5 已实现，具备构建、Lint、逻辑探针、mock 集成和原生界面回归记录；这些结果不等于所有真实 App 均已兼容。
-- **新增查询/追加（5.8/5.9）：** 专用模拟器夹具与本地模型 mock 已覆盖答案依据、只读拦截、技能重放、活动任务追加、归属超时、历史及原生胶囊交互。Mate 40 Pro 已用真实模型通过计算器查询、执行中修改/取消与胶囊展示；系统版本查询的重复滚动已通过独立截图/OCR 恢复，在真机读到完整版本号，另增加系统版本字段检查，正常配置连续三轮复查通过；用户已确认震动、录音和语音追加正常。默认办事结果保留、实际“去查看”入口、真实转移失败后的预览回退及重试到主屏均已在计算器上通过，虚拟屏释放后原结果仍在；更多 App 兼容性仍需测试。旧 Settings 输入文字可见性失败日志保留；2026-10-23 同一基线重跑完整通过。
-- **Mate 40 Pro / HarmonyOS 4.2.0.192**：已完成 ADB 部署、真实模型接口测试、计算器及美团餐厅选择；上一版已验证结果预览、同一餐厅任务转到主屏，以及虚拟屏释放后页面仍保留。后台回退另有真机故障注入记录。
-- **最新交接修复 `d1df15e`**：已完成实体文字校验、回退状态区分、语义结果保留、统一查看入口和交接中状态，构建/Lint/本地边界回归通过；后续 `7e9d205` 已用计算器通过同一任务主屏转移和真实转移失败回退；后续已通过美团选店、主屏人工确认往返及最终“去查看”成功流程；本轮未再触发验证码。真实语音理解准确率、长时间保活和其他厂商兼容性仍需继续验证。
+- Android 10 / API 29 或以上是代码最低要求，**不是所有 Android 10+ 设备的兼容保证**。
+- 构建使用 JDK 17，Android SDK Platform 36；SDK 路径通过本地环境或 `local.properties` 配置。
+- 本机 ADB、USB 数据线，手机启用开发者选项与 USB 调试，并允许电脑调试授权。
+- 构建 Web 启动器时需要与其 Vite 版本兼容的 Node.js/npm；浏览器部署需要支持 WebUSB 的浏览器和安全上下文。
+- 初次 Gradle/OCR 准备需要下载依赖；模型任务需要网络与有效 API 配置。
+- 华为安装器可能要求手动确认或锁屏密码。密码只在手机输入，不写入配置或日志。
 
-## 一次任务如何完成
+先检查连接：
 
-输入文字或按住悬浮球说话 → 可选读取当前屏幕 → 模型理解与确认 → 匹配技能或模型探索 → 独立视觉验收 → 办事结果默认保留等待“去查看”（明确不保留时自动结束），查询则把答案带回胶囊。遇到验证码等人工边界时暂停交接；结果需要查看时，将原页面交到主屏继续操作。
+```sh
+adb devices -l
+```
 
-## 上游演示视频
+`device` 才表示授权完成；`unauthorized` 需在手机接受授权。多个设备时，将下文所有 `adb` 改为 `adb -s <设备序列号>`。
 
-以下视频沿用原项目素材，展示上游版本，不代表本分支全部新增功能。
+### 3.2 构建并准备部署资源
 
-<video src="shadowauto.mp4" controls="controls" style="max-width: 100%;"></video>
-
-如果当前页面不支持直接播放视频，可以打开 [shadowauto.mp4](shadowauto.mp4) 查看。
-
-## 上游技术文章
-
-- [Android 虚拟投屏与 AI 后台静默自动化实践](docs/android-virtual-display-ai-automation.md)
-- [Android Virtual Display and AI Background Automation](docs/android-virtual-display-ai-automation.en.md)（英文）
-
-## 工程结构
-
-- `android-shell`：通过 `app_process` 启动的 shell 自动化进程。负责创建 VirtualDisplay、启动应用、读取 UI 节点、调用 OCR、注入输入、操作剪贴板、执行 AI tool-call 循环、提供 JSON-RPC、输出日志和推送 H.264 虚拟投屏。
-- `controller-app`：Android 控制端 App。包含模型配置、文字任务、语音悬浮球、状态胶囊、投屏与交接、任务历史和技能管理。
-- `web-launcher`：Svelte + TangoADB WebUSB 启动器。页面只展示一个启动按钮，点击后选择设备、上传 shell APK、OCR 文件和控制端 APK，并启动 `app_process`。
-- `android-stubs`：shell 模块编译时使用的 Android hidden API stub，仅用于编译。
-- `scripts`：本地测试脚本。
-
-## 环境要求
-
-- Android 10 及以上设备；虚拟屏、hidden API 和主屏转移能力需要按厂商系统验证。
-- 目标设备已开启 ADB 调试。
-- 默认只需要 shell 权限，不需要 root。
-- JDK 17。
-- Web 启动器需要 Node.js 和 npm。
-- `web-launcher` 需要 Chrome 或其他支持 WebUSB 的浏览器。
-- executor 需要支持 streaming 和 tool calls 的兼容 chat-completions 接口；verifier 需要视觉输入，使用语音功能时 intake 还需支持音频与图片输入。各角色可使用不同服务商。
-
-## 编译
-
-编译 shell 和控制端 App：
+在仓库根目录执行：
 
 ```sh
 ./gradlew :android-shell:assembleDebug :controller-app:assembleDebug
-```
-
-把最新 shell APK 和 OCR 运行时文件同步到 Web 启动器静态目录：
-
-```sh
 ./gradlew :android-shell:syncWebLauncherArtifacts
 ```
 
-安装控制端 App：
+主要输出：
 
-```sh
-adb install -r controller-app/build/outputs/apk/debug/controller-app-debug.apk
-```
+| 文件或目录 | 用途 |
+| --- | --- |
+| `controller-app/build/outputs/apk/debug/controller-app-debug.apk` | 安装到手机的控制端 |
+| `android-shell/build/outputs/apk/debug/android-shell-debug.apk` | shell 执行代码 |
+| `android-shell/build/ocr-runtime/` | OCR 原生库、模型与字典 |
+| `web-launcher/static/silent-shell.apk` | 同步后的 shell 产物 |
+| `web-launcher/static/controller-app.apk` | 同步后的控制端产物 |
+| `web-launcher/static/ocr/` | 启动器上传的 OCR 资源 |
 
-## 启动 Shell 进程
-
-### 方式一：浏览器启动器
-
-上游线上启动器：[https://android-notes.github.io/ShadowAuto/](https://android-notes.github.io/ShadowAuto/)。该站点由上游维护，不代表已部署本分支新增功能；使用本分支请构建并部署本地生成的产物。
-
-连接前请先完成手机准备：
-
-- 打开手机开发者选项，并开启 USB 调试。
-- 部分小米手机还需要开启 USB 调试（安全设置）。
-- 首次连接手机可能会弹出允许调试提示，请在手机上点击允许。
-- 安装控制端 App 时，如果手机弹出允许安装提示，请点击允许安装。
-- 安装完成后需要先在隐控 App 中配置 API KEY 才能使用手机自动化。
-- 开发者选项参考：[小米](https://jingyan.baidu.com/article/ce436649ca6c877773afd3e2.html)、[华为](https://jingyan.baidu.com/article/a378c960e87118b3282830bc.html)、[OPPO](https://jingyan.baidu.com/article/cb5d6105b0936a005d2fe052.html)、[VIVO](https://jingyan.baidu.com/article/335530da406f4358cb41c3b4.html)。
-
-也可以在本地运行：
-
-```sh
-cd web-launcher
-npm install
-npm run dev
-```
-
-用 Chrome 打开终端输出的本地地址，点击 **启动隐控Assistant**，选择 Android 设备，并按 Android 弹窗授权 ADB。
-
-如果浏览器提示设备已被其他程序占用，请关闭 Android Studio 并杀死 adb 后再次重试：
-
-```sh
-adb kill-server
-```
-
-### 方式二：手动 ADB
-
-```sh
-./gradlew :android-shell:syncWebLauncherArtifacts
-adb push web-launcher/static/silent-shell.apk /data/local/tmp/silent-shell.apk
-adb shell "rm -rf /data/local/tmp/shadowauto/ocr && mkdir -p /data/local/tmp/shadowauto/ocr"
-adb push web-launcher/static/ocr/. /data/local/tmp/shadowauto/ocr/
-adb shell "if [ -f /data/local/tmp/silent-auto.pid ]; then kill \$(cat /data/local/tmp/silent-auto.pid) 2>/dev/null; rm -f /data/local/tmp/silent-auto.pid; fi"
-adb shell "CLASSPATH=/data/local/tmp/silent-shell.apk nohup sh -c 'exec app_process /system/bin com.silentauto.shell.Main --port=43110' >/data/local/tmp/silent-auto.log 2>&1 </dev/null & echo \$! >/data/local/tmp/silent-auto.pid"
-```
-
-OCR 文件是 `get_screen_ocr` tool call 必需的。只推 `silent-shell.apk` 时，普通自动化可以启动，但遇到无障碍节点缺失的页面时 OCR 兜底会失败。
-
-如果启动后 logcat 出现 `ClassNotFoundException: com.silentauto.shell.Main`，通常是 `silent-shell.apk` 没有成功推送到设备。先检查：
-
-```sh
-adb shell "ls -lh /data/local/tmp/silent-shell.apk"
-```
-
-连接多个设备时，建议所有命令都加 `-s <serial>`，例如 `adb -s emulator-5554 push ...`。
-
-查看 shell 日志：
-
-```sh
-adb logcat -v time -s ShadowAutoShell
-```
-
-停止 shell 进程：
-
-```sh
-adb shell "kill \$(cat /data/local/tmp/silent-auto.pid) 2>/dev/null; rm -f /data/local/tmp/silent-auto.pid"
-```
-
-## 使用 Android App
-
-1. 通过 ADB 启动后台后，在手机打开隐控，分别填写 executor（执行）、verifier（视觉验收）和 intake（语音理解，使用语音时配置）的 API Key、URL 与模型，并测试连接。
-2. 输入文字目标，例如：`在美团帮我选一家适合约会的餐厅，只浏览，不预订、不下单、不支付`，点击执行。
-3. 在任务页查看后台投屏与进度；点击加号可创建其他任务，调度器最多同时运行两个任务。
-4. 使用语音时，在权限引导中启用悬浮窗和麦克风。按住小球约 1 秒，**等短震后再说话**，松手提交，上滑取消；实际就绪时间也取决于上下文读取速度。
-5. 高置信度语音理解有 3 秒取消窗口；低置信度任务需确认，10 秒无确认自动取消。可在设置中关闭屏幕上下文读取。
-6. 遇到验证码、登录或支付边界，点“去处理”并手动完成；受保护页面按提示转到主屏处理。
-7. 需要查看的结果验收后显示“去查看”。点击后尝试把原页面转到主屏；若回退后预览可用，可以操作预览、重试切到主屏或结束查看。未查看的结果仍占用任务槽位。
-8. 在“历史”查看结果、截图和统计，在“技能”管理已学习流程；停止按钮可结束当前任务，顶部停止按钮可停止全部任务。
-
-## 核心原理
-
-隐控采用 shell 侧 ReAct 风格自动化循环：
-
-1. shell 进程通过 `adb shell` + `app_process` 启动，因此可以在 shell 权限下访问 Android 系统服务和 hidden API。
-2. 每个自动化任务启动时，shell 创建一个 VirtualDisplay，并把目标 App 启动到该虚拟屏中。
-3. 控制端 App 通过 `127.0.0.1:43110` 向 shell 发送 JSON-RPC `startTask` 请求，请求中包含用户目标和大模型配置。
-4. shell 请求大模型，让模型根据目标和当前 UI 状态进行推理，并通过 tool call 选择下一步动作。
-5. tool call 会执行真实 UI 操作：获取布局、点击目标节点、点击坐标、聚焦输入框、输入文本、全选、删除、粘贴、滚动、拖拽、返回、回车/搜索、等待或完成任务。
-6. UiAutomation 负责读取虚拟显示屏上的 UI 节点树。shell 可以返回简化后的可操作布局，也可以返回完整布局。
-7. 当 UI 节点为空、错误或不足以决策时，AI 可以调用 `get_screen_ocr`，shell 通过 Paddle Lite OCR 读取屏幕文字、置信度和坐标框。
-8. InputManager 把触摸和按键事件注入到目标 display，而不是手机主屏幕。
-9. VirtualDisplay 直接渲染到 MediaCodec 输入 Surface。shell 推送 H.264 配置和 sample，Android App 解码到 TextureView；进度日志通过同一本机 JSON-RPC 事件通道发送。
-10. 模型声明完成后，视觉验收器核对当前结果；需要人工处理或查看时进入等待交接，交付完成后才清理对应虚拟屏并归档。
-
-这种架构可以让目标应用在虚拟屏里运行，用户则在控制端 App 中观察进度，不需要把自动化操作暴露在主屏幕上。
-
-## Paddle Lite 离线 OCR
-
-`paddler-ocr` 模块负责 PaddleOCR Android 集成，用于对不可访问、自绘页面做视觉兜底。shell 进程会直接调用该模块，controller-app 不再包含 OCR 代码。OCR 默认开启；构建或复制运行时文件执行：
+OCR 默认参与构建。单独准备可用：
 
 ```sh
 ./gradlew :paddler-ocr:preparePaddleLiteOcr
 ./gradlew :android-shell:copyPaddleLiteOcrRuntime
 ```
 
-该任务会下载 PaddleLite v2.10、OpenCV Android SDK、PP-OCRv2 中文移动端模型和字典。生成文件位于 `paddler-ocr/PaddleLite`、`paddler-ocr/OpenCV`、`paddler-ocr/PaddleOcrAssets`，这些目录不会提交到 git。
+准备任务下载 PaddleLite v2.10、OpenCV Android SDK、PP-OCRv2 中文移动端模型和字典；下载目录 `paddler-ocr/PaddleLite`、`OpenCV`、`PaddleOcrAssets` 不提交到 Git。shell APK 不能替代外置 OCR 运行时资源。
 
-Java 入口是 `com.silentauto.paddlerocr.PaddleOcrEngine`，调用 `init()` 后可通过 `recognize(Bitmap)` 获取文本、置信度和坐标框。运行时文件会复制到 `android-shell/build/ocr-runtime`，并由浏览器启动器上传到 `/data/local/tmp/shadowauto/ocr`。
+### 3.3 通过 ADB 手动部署
 
-## JSON-RPC 概览
+安装控制端：
 
-shell 只监听本机回环地址：
-
-```text
-127.0.0.1:43110
+```sh
+adb install -r controller-app/build/outputs/apk/debug/controller-app-debug.apk
 ```
 
-主要方法：
+同包名、同签名覆盖安装通常保留已有配置；卸载、清除应用数据或更换不兼容签名是不同操作，不应当作更新步骤。
 
-- `startTask` / `stopTask` / `listTasks`：启动、停止和查看任务；启动支持分角色 `models` 配置，并保留原有 `apiKey`、`apiBase`、`model` 参数兼容。
-- `submitVoiceTask` / `confirmTask`：一次语音理解，并确认或取消新的办事任务。
-- `amendTask {taskId, kind, text}`：向活动任务追加 `modify`、`add` 或 `cancel`。
-- `resolveVoice {voiceId, taskId}`：选择列出的追加目标或 `"new"`；10 秒未选择则作为新任务处理。
-- `captureContext` / `discardContext` / `setContextReading`：读取、丢弃或关闭屏幕上下文。
-- `resumeTask` / `injectTouch` / `takeResultOnMain`：人工交接、预览触摸和完成结果主屏转移。
-- `listHistory` / `getTask`：任务历史与详情。
-- `listSkills` / `setSkillStatus` / `deleteSkill`：技能列表、状态及删除。
-- `status`：返回当前 shell 状态。
-- `logs`：返回最近日志。
-- `ping`：健康检查。
+上传 shell 和 OCR：
 
-当前 JSON-RPC 没有鉴权，因为它只绑定本机回环地址，并且设计上只给本机控制端 App 使用。不要把该端口暴露到外部网络。
+```sh
+adb push web-launcher/static/silent-shell.apk /data/local/tmp/silent-shell.apk
+adb shell 'mkdir -p /data/local/tmp/shadowauto/ocr'
+adb push web-launcher/static/ocr/. /data/local/tmp/shadowauto/ocr/
+```
+
+停止旧进程后启动。此操作会中断旧后台及其实时虚拟屏页面，先处理完需要保留的任务：
+
+```sh
+adb shell 'if [ -f /data/local/tmp/silent-auto.pid ]; then kill "$(cat /data/local/tmp/silent-auto.pid)" 2>/dev/null; rm -f /data/local/tmp/silent-auto.pid; fi'
+adb shell "CLASSPATH=/data/local/tmp/silent-shell.apk nohup sh -c 'exec app_process /system/bin com.silentauto.shell.Main --port=43110' >/data/local/tmp/silent-auto.log 2>&1 </dev/null & echo \$! >/data/local/tmp/silent-auto.pid"
+```
+
+然后打开手机上的隐控，确认连接，再配置模型。手机重启或 shell 进程被杀后，需要重新启动后台；不能将控制端前台服务理解为保证 shell 永久存活。
+
+日志：
+
+```sh
+adb shell cat /data/local/tmp/silent-auto.log
+adb logcat -v time -s ShadowAutoShell
+```
+
+停止后台：
+
+```sh
+adb shell 'if [ -f /data/local/tmp/silent-auto.pid ]; then kill "$(cat /data/local/tmp/silent-auto.pid)" 2>/dev/null; rm -f /data/local/tmp/silent-auto.pid; fi'
+```
+
+### 3.4 浏览器部署
+
+先同步当前分支产物，再启动本地启动器：
+
+```sh
+./gradlew :android-shell:syncWebLauncherArtifacts
+cd web-launcher
+npm install
+npm run dev
+```
+
+打开 Vite 输出地址，按页面流程连接 USB、上传资源、安装控制端和启动 shell。浏览器与 adb server 可能竞争 USB；只有遇到独占冲突时才考虑 `adb kill-server`，它会停止该电脑的其他 ADB 会话。
+
+[上游在线启动器](https://android-notes.github.io/ShadowAuto/)属于上游发布渠道，不能用来证明已部署本分支最新修改。测试本分支应使用本地构建资源。
+
+### 3.5 隔离能力不足时的兼容实验
+
+默认启动会检查独立焦点、禁止抢焦点和本地输入法策略。能力不足时阻止后台执行，不静默降级为“已经隔离”。
+
+仅在明确接受风险的专用测试中，可在上面的启动命令末尾 `--port=43110` 后追加：
+
+```text
+--allow-unverified-isolation=true
+```
+
+这只是放开实验门禁，不会补齐厂商缺失的能力，也不会授予额外系统权限。状态与历史会保留未验证标记。普通部署不应默认开启。
+
+## 4. 模型配置与数据流向
+
+在手机配置页分别填写角色的 API Key、API Base 和模型名称，然后测试连接。
+
+| 角色 | 工作 | 当前代码预填值 |
+| --- | --- | --- |
+| executor | 目标理解、选 App、动作规划、技能匹配/编译等 | DeepSeek，`deepseek-flash` |
+| verifier | 页面证据、结果核对、查询独立提取等 | 阿里云兼容接口，`qwen3-vl-plus` |
+| intake | 语音理解，区分查询、办事和追加意图 | 阿里云兼容接口，`qwen3.8-omni-flash` |
 
 
-查询 API：`startTask` 可传 `type="query"`（默认 `action`）；查询终态为 `ANSWERED` / `NOT_FOUND`。状态通知使用 `event="status"` 标识事件，`type` 保留任务类型；控制端兼容原 `type="status"` 通知。`openQuerySource` 只在用户点击“去看看”后打开来源 App。
+代码中的预填名称不是服务当前可用性、价格或效果承诺；以账号可用模型和连接测试为准。视觉验收需要相应图像能力，语音理解需要相应音频能力，不能仅凭接口返回 200 就认定所有任务能力齐全。
 
-## 注意事项和限制
+当前远程地址校验只接受以下官方主机的 HTTPS，以及供本机测试使用的回环 HTTP/HTTPS；不是任意 OpenAI-compatible 代理均可直接填写：
 
-- 大模型服务商会收到任务目标和自动化所需的 UI 上下文。请不要在不可信模型服务中处理敏感内容。
-- 受 Android 安全限制，部分受保护页面在投屏时可能黑屏，例如支付密码页面。
-- 已有同 App 冲突暂停及剪贴板保护，但不承诺所有厂商和 App 都完全无干扰；目标 App 被移到主屏时可能暂停或需要恢复观察。
-- 未查看的结果保存在运行中的虚拟屏里；强制停止后台进程或重启手机会丢失该实时页面，历史截图不等于可继续操作的会话。
-- 语音录音需麦克风和悬浮窗权限；实际录音就绪以短震为准，其他 App 的音频恢复取决于其自身实现。
-- hidden API 和 shell 权限行为可能因 Android 版本、厂商系统而变化。
-- 浏览器启动器需要独占 WebUSB 设备。Android Studio 或正在运行的 adb server 可能会占用设备。
+```text
+https://api.deepseek.com/v1
+https://dashscope.aliyuncs.com/compatible-mode/v1
+```
 
-## 开发测试
+地址不允许嵌入用户信息、查询参数或片段。支持按角色的 `models` 配置；旧 `apiKey`、`apiBase`、`model` 字段保留兼容，不建议新集成依赖旧字段代替角色分工。
 
-构建与静态检查：
+shell 还支持启动参数与环境变量（只在实际启动 shell 的环境生效）：
+
+| 配置 | 参数 / 环境变量 |
+| --- | --- |
+| RPC 端口 | `--port` / `SILENT_AUTO_PORT` |
+| 各角色 Key | `--executor-api-key` / `SHADOWAUTO_EXECUTOR_API_KEY`，verifier/intake 同理 |
+| 各角色地址 | `--executor-api-base` / `SHADOWAUTO_EXECUTOR_API_BASE`，其他角色同理 |
+| 各角色模型 | `--executor-model` / `SHADOWAUTO_EXECUTOR_MODEL`，其他角色同理 |
+| 默认服务商 Key | `DEEPSEEK_API_KEY`、`DASHSCOPE_API_KEY` |
+| 旧单模型配置 | `--api-key`、`--api-base`、`--model` / `OPENAI_API_KEY`、`OPENAI_BASE_URL`、`OPENAI_MODEL` |
+
+参数格式为 `--名称=值`。默认角色配置上可叠加角色参数/环境；旧单模型配置会让初始三角色共用同一配置，再接受角色覆盖。任务 RPC 的 `models` 可进一步覆盖。Mac 上导出变量不会自动传入 `adb shell`，也不会自动更新控制端已保存配置。命令行参数可能暴露在进程信息中，日常优先使用控制端配置页。
+
+配置保存于控制端 `MODE_PRIVATE` 的 `ai_config` SharedPreferences，字段为 `<role>.apiKey`、`<role>.apiBase`、`<role>.model`。**当前没有实现自有后端密钥分发，也不是 Keystore 加密密钥方案。**本地环境文件只是开发输入，不能认为安装 APK 会自动导入其中的密钥。
+
+外部模型按流程可能收到用户目标、可见 UI 文本、页面截图、语音和读取的上下文。OCR 在设备侧执行，不代表后续模型推理也在本地。模型配置和测试证据不要提交真实密钥；包含 `models` 的 RPC 请求也不适合完整打印到日志。
+
+## 5. 实际使用流程
+
+### 5.1 文字任务
+
+1. 启动 shell，打开隐控并确认已连接。
+2. 填写并测试 executor/verifier；使用语音再配置 intake。
+3. 输入目标，尽量明确 App、操作对象、限制和交付方式。
+4. 在任务页观察步骤和视频；需要时停止当前任务或停止全部任务。
+5. 遇到人工边界按提示处理。完成后接收结果，不把“模型说完成”直接当作实际成功。
+
+短任务示例：
+
+```text
+查询：用计算器计算12乘13，告诉我结果。
+查询：用高德查苏州博物馆本馆的地址，不启动导航。
+办事：把下列已核实信息写入标题为“测试｜参观信息”的备忘录，保留结果让我查看。
+浏览：在美团选一家适合约会的餐厅，只浏览，不预订、不下单、不支付，选好后保留页面。
+```
+
+同一个自然语言目标能否稳定完成仍取决于模型和页面。先做短任务验证，再增加跨 App 与长文目标；不能将一次成功等同于通用业务可靠性。
+
+### 5.2 语音任务
+
+授权麦克风、悬浮窗及系统要求的通知/前台服务权限，开启悬浮球。按住约 1 秒，等短震后说话，松手提交；上滑超过约 80dp 取消。录音前的拖动可移动悬浮球。
+
+震动代表录音已实际启动，不只是长按计时结束。读取上下文或申请音频焦点可能增加等待时间。上下文可在设置关闭。
+
+### 5.3 完成与人工处理
+
+- **“去处理”**：任务尚未完成，需要本人登录、验证或确认；可以移到主屏处理，再交回后台。
+- **“去查看”**：已到结果交付阶段，尝试把原任务页面移到主屏；成功后才清理虚拟屏。
+- **查询答案胶囊**：显示短答案与引文，可手动复制或打开来源；查询通常不继续占用虚拟屏等待查看。
+- **历史截图**：用于回看证据，不能恢复被关闭的 App 会话。
+
+## 6. 自动化循环与动作执行
+
+`AutomationEngine` 负责调度与生命周期，`ExecutionContext` 汇集当前任务上下文，`ActionDecision` 表达动作，`ActionExecutor` 执行动作。动作来源可区分 `model`、`skill`、`rescue` 和 `query_recovery`，便于记录和比较。
+
+基本循环：
+
+1. 检查停止请求、同 App 冲突、主屏焦点和待处理追加。
+2. 获取目标虚拟屏的当前 UI 与健康诊断，不复用已失效节点编号。
+3. 尝试适用技能；没有可用技能时由执行模型规划。
+4. 模型可读取布局或请求 OCR，再提交动作；单次决策观察工具调用有上限。
+5. 校验只读约束、目标身份与输入策略，执行一个动作。
+6. 等待界面变化，重新观察并写入轨迹。
+7. 对人工请求和完成声明分别走交接或独立验收。
+8. 结束后记录指标、证据与历史，释放资源。
+
+当前主循环最多 25 步，单轮观察工具调用上限为 4。达到上限是失败或受控收尾条件，不代表业务已完成。网络错误、模型输出错误和无效动作也不能伪装为成功。
+
+动作覆盖控件点击、坐标触摸、输入框聚焦、文字输入、全选/清除/粘贴、滚动、拖拽、返回、按键、等待、请求人工处理和报告结果。次屏触摸使用对应 `displayId`；模型给出坐标并不自动绕过页面身份或查询约束。
+
+`ObservedTarget` 保存新鲜观察中的路径、类、资源 ID、文本和边界。执行时重新核对；连接代际改变、目标被替换等情况会放弃旧计划再观察。高德、美团部分节点会返回点击成功但界面没有激活，因此这些页面采用重新定位后的边界触摸；其他页面保留原生控件点击和触摸兜底。
+
+输入优先使用页面可见、可验证的控件。搜索优先点击实际搜索按钮；隔离不足时不注入可能抢主屏焦点的搜索/回车按键。查询模式已关闭“把整段目标自动填进任何疑似搜索框”的宽泛纠正，避免城市选择框被填入商家描述。
+
+## 7. 抓图、视频、控件与恢复机制
+
+### 7.1 H.264 预览与独立抓图
+
+任务虚拟屏正常输出到 MediaCodec 输入 Surface，编码为 H.264；控制端通过 `H264VideoDecoder` 解码到 TextureView。
+
+旧抓图路径临时将虚拟屏输出改接 ImageReader，再恢复编码面，可能扰动目标 App。新增 `CaptureMirror` 将次屏图层栈输出到**单独的非安全合成显示**：
+
+- 仅接受正数次屏 ID 和非主屏图层栈，不抓主屏、不启用安全内容捕获。
+- 反射读取 `DisplayManagerGlobal` 的 display 信息与 layer stack，通过 `SurfaceControl` 建立独立输出。
+- ImageReader 使用 RGBA 格式、3 个缓冲；专用线程持续 `acquireLatestImage`，只保留最新一张并关闭旧图。
+- 需要截图时复制最新图像，不在每一帧创建 Bitmap，避免缓冲积压。
+- 原 VirtualDisplay 输出面保持连接视频编码器，镜像模式不切换原输出 Surface。
+- 释放时关闭图像、监听器、合成显示和读帧线程；等待被中断时恢复中断状态。
+
+若镜像在创建阶段不被系统支持，保留 `legacy_surface_swap` 回退并记录原因。**已经建立的镜像若后来失败，返回截图失败；不会临时切回原屏换面，也不会返回关闭前的旧图。**静态页面在没有新帧时可能读取仍有效的最新渲染帧，这与返回已关闭镜像的旧图不同。
+
+`isolation.capture` 记录抓图模式、回退原因、请求数、失败数、原输出面切换次数及收到帧数；任务释放前写入最终记录。模式为 `layer_stack_mirror` 不等于设备所有隔离能力通过。
+
+### 7.2 UI 读取和空控件判断
+
+`UiBridge` 串行化公共读取/操作入口，并记录连接代际。遇到空窗口会清理 AccessibilityInteractionClient 缓存，等待约 180ms 后重读一次。
+
+诊断包括 `connectionGeneration`、`rawWindowCount`、`nullRootCount`、`rootReadMs`、`rootsUnavailable`、`cacheRecoveryAttempted`、`readableNodeCount`、`nullChildCount`、`incompleteTraversal`。这些字段用于区分无窗口、根不可读和遍历失败，避免把真实无子节点页面误判为空树。
+
+系统无响应弹窗按 `android:id/aerr_wait` / `android:id/aerr_close` 等实际控件识别，不能仅凭页面正文出现“无响应”三个字就重启 App。
+
+### 7.3 有预算的恢复
+
+`UiRecoveryBudget` 对连续不可读观察执行：
+
+| 阶段 | 行为 |
+| --- | --- |
+| 前两次缺失 | 等待，不点击、不输入 |
+| 第三次缺失 | 尝试一次 UiAutomation 重连 |
+| 重连后再次持续缺失 | 仅查询任务可尝试一次 App 恢复重启 |
+| 仍无法恢复 | 暂停交给用户，保留可用页面/预览 |
+
+编辑、写入类任务不靠自动重启 App 恢复，避免丢失未保存内容。目标页面已被移到主屏时，也不反复拉起目标 App 制造前后台闪烁。预算恢复不能保证修复 App 自身 ANR；系统或应用问题仍可能需要人工处理。
+
+### 7.4 OCR
+
+`PaddleOcrEngine.init()` 初始化运行时，`recognize(Bitmap)` 返回文本、置信度和坐标框。模型可以在自绘、节点稀疏或控件不足时调用 OCR；OCR 结果仍需结合页面和动作约束使用，不把识别文字当作可点击控件的无条件授权。
+
+## 8. 焦点隔离、并发与主屏保护
+
+虚拟屏创建会尝试不同 flags，并记录最终 `selectedFlags` / `selectedFlagsHex`、`candidateIndex`、独立焦点和禁止抢焦点请求、本地输入法结果。评估将以下概念分开：
+
+- `configurationAvailable`：需要的配置是否被接受。
+- `behaviorValidated`：实际行为是否已验证；不能因为创建成功就自动置为通过。
+- `experimentalOverride`：是否在能力不足时明确选择实验放行。
+- `backgroundAllowed` / `status`：是否允许继续及原因。
+
+次屏触摸增加 `FLAG_NO_FOCUS_CHANGE`（64），主屏触摸保留原有行为；次屏原生按键由 `BackgroundKeyPolicy` 保护，隔离未确认时禁止危险按键路径。这些改动减少焦点扰动，但不等于给设备补上系统缺失的独立输入法或焦点权限。
+
+`ForegroundWatcher`、`MainAppConflictGuard` 和 `BackgroundFocusGuard` 检查用户正在使用的 App 与主屏窗口。用户打开同一目标 App 时，让用户优先，后台暂停/排队；恢复执行需重新观察当前页面。未授权焦点变化触发保护后，不仅因一次焦点恢复采样就自动继续制造抖动。
+
+最多两个任务并发指不同 App 的受控并发；不是同一个 App 的两套账号或两个完全独立会话。保留结果和等待交接也可能占用任务资源。
+
+剪贴板有快照、恢复及变化观测。它不构成“从未临时触碰全局剪贴板”的证明。是否干扰输入法、中文候选词与滚动，需要专项并行测试，不能只看任务成功或某个计数为 0。
+
+## 9. 完成验收与长文写入
+
+办事任务的 `done` 是模型提交的完成声明，随后 `ResultVerifier` 根据目标、当前页面、截图等证据独立核对。未通过时继续观察、纠正或交接，不直接标为成功。
+
+长文备忘录中的确定性 `DocumentProof` **目前专用于华为备忘录 `com.huawei.notepad`，且要求目标使用约定的完整正文格式**。它按实际资源 ID 核对标题和完整正文，再观察返回列表、重新打开后的相同正文，而不是只认标题或“保存成功”。一般自然语言目标、其他备忘录 App 并不自动获得这套精确证明，仍走通用验收。
+
+目标模板如下；标记需独占对应行，正文结束标记不可在正文中重复：
+
+```text
+把以下内容写入华为备忘录，保存并重新打开核对。
+标题：测试｜参观信息
+完整正文开始：
+这里填写逐字验收的完整正文，包括最后一行和来源链接。
+完整正文结束。
+```
+
+已有测试核对过完整正文并在主屏接收同一备忘录任务。字符截断、只写入部分段落、未保存或打开错误对象都不能以标题匹配代替验收。
+
+视觉验收仍受屏幕覆盖范围和模型判断限制，不是对任意第三方 App 数据库的事务证明。对于搜索/调查任务，缺少来源或未实际核实的项目应保留“待核实”，不能用推断补成已验证事实。
+
+## 10. 人工交接、结果交付与失败回退
+
+### 10.1 任务执行中的人工处理
+
+```text
+后台遇到人工边界 → 暂停并提示
+  → 用户选到主屏处理 → 尝试移动原任务
+  → 用户在主屏完成 → 点交回后台继续
+  → 核验任务/页面并转回虚拟屏 → 重新观察再执行
+```
+
+验证码与登录由本人处理。系统受保护页面可能黑屏，转到主屏比在小预览里拖动验证码更可用。主屏处理期间暂停自动操作；不把模型请求人工处理当作自动抢屏许可。
+
+交接有超时管理，默认等待预算为 10 分钟，并区分手动处理中与返回后的等待。停止、取消和追加需要与转移过程协调，避免一边销毁显示、一边移动页面。
+
+### 10.2 任务完成后的“去查看”
+
+需交付的办事结果会保留页面，显示待查看提示。用户点击后：
+
+1. 记录用户主动交接，暂停相关自动动作。
+2. 查找原任务与所属 display，移动原 task 到主屏。
+3. 通过 `PageIdentity` 核对包名、页面特征和可用实体锚点；不只看目标 App 是否启动。
+4. 确认接收成功后再释放虚拟屏和相关资源。
+5. 若转移失败，尝试恢复原页面并核验回退；可用时保留预览，允许重试或结束查看。
+
+`moved`、回退状态和 `previewAvailable` 必须分别表达，不能把“发出了移动命令”当作转移成功，也不能在没有检查时宣称回退成功。重新启动一个 App 首页不是原页面交付。
+
+### 10.3 正常退出与失效情况
+
+用户可以停止任务、结束查看或停止全部任务。等待与交接路径也应响应取消，不要求靠强杀应用退出。系统杀进程、重启手机、App 自身崩溃仍可能使实时页面丢失；历史截图只保留证据，不提供进程/页面恢复保证。
+
+## 11. 语音、上下文与追加要求
+
+### 11.1 悬浮球与录音
+
+- 球体 64dp，默认避开边缘 28dp，并考虑系统手势边距，改善曲面屏误触返回。
+- 长按门槛 1000ms；上下文读取和录音初始化完成后才发出约 80ms 短震。
+- 16kHz、单声道、16-bit PCM，封装为 WAV；约 30 秒保护上限。
+- 松手停止并提交，上滑取消；取消不创建新语音任务。
+- 录音申请瞬时音频焦点，结束释放；其他 App 是否自动恢复音频由其实现决定。
+
+### 11.2 上下文与隐私
+
+手指按下时先请求上下文，再改变录音/音频焦点和相关反馈，减少把自己的悬浮界面当作用户上下文的机会。上下文包含当前 App 与页面信息；密码节点遮蔽，受保护页面有检测与拒绝路径。条目有效期 120 秒，支持显式丢弃和关闭读取。
+
+遮蔽不意味着自动识别并去除所有私人信息。普通文本、地址和页面内容仍可能包含敏感数据；上下文关闭也不阻止任务执行中为目标 App 验收而读取页面。
+
+### 11.3 意图确认与追加
+
+intake 区分办事、查询和追加。高置信度办事提供 3 秒取消窗口，低置信度办事要求确认，10 秒未确认取消。存在多个追加目标时展示选择，10 秒未选择按新任务处理。查询、办事和追加的路由按不同分支处理，不将所有语音统一强制确认。
+
+`modify` 修改已有要求，`add` 增补，`cancel` 停止。追加进入队列并更新有效目标，保留原目标与修改记录；执行循环在受控点消费，不能在旧动作执行到一半任意改变对象。含追加的任务不用于自动编译新技能，避免将临时修订混入固定流程。
+
+## 12. 技能学习与复用
+
+### 12.1 从轨迹到技能
+
+轨迹记录步骤、动作来源、UI 特征、动作前后指纹、参数与结果。符合学习条件的成功任务由 `SkillCompiler` 编译为参数化步骤，检查元数据、参数引用及动作结构；不是保存所有坐标然后盲目回放。需要人工交接、失败或含追加等不符合条件的轨迹不应沉淀为普通成功技能。
+
+轨迹与技能使用临时文件发布/原子替换等方式，减少半写入文件进入读取流程。损坏技能跳过匹配。
+
+### 12.2 匹配、定位和救援
+
+- 仅将 active 且任务类型相符的技能交给匹配器，明确覆盖目标才匹配。
+- 参数取自本次任务；必需参数缺失、类型错误或跨 App ID 歧义时放弃匹配。
+- `SkillRunner` 根据当前 UI 的语义与指纹定位，不沿用旧 targetIndex 或旧坐标。
+- 界面偏离时进入救援，最多 3 个救援动作，救援只恢复流程，不直接绕过完成验收。
+- 仍失败则弃用本次技能，回到模型规划。
+- 同技能连续弃用 3 次标为 `suspect`，不再作为普通 active 技能匹配。
+
+### 12.3 管理与统计
+
+技能页支持查看、启用、禁用和删除。用户禁用状态不会因普通学习被随意覆盖；成功的新探索可恢复 suspect 技能。记录使用次数、成功次数、平均耗时、平均模型调用，以及首次执行对比。一次“模型调用减少”只说明该样本，不是跨设备或跨任务性能基准。
+
+查询技能保留“如何重新找到答案”的流程，不把上次答案/引文作为下次结果；每次仍需重新读取和验收。
+
+## 13. 查询任务与来源证据
+
+RPC `startTask` 的 `type` 支持 `action`（默认）和 `query`。查询流程：
+
+```text
+只读规划 → 搜索/浏览 → 提交候选答案与引文
+  → 独立从当前证据提取 → 核对 → ANSWERED / NOT_FOUND / 失败或人工处理
+```
+
+`ReadOnlyGuard` 限制搜索、浏览、滚动等操作，阻止查询流程执行下单、支付、预订、发送、收藏/分享、启动导航等写操作。查询的人工请求限定在登录/验证码等允许边界。它是代码约束与页面判断组合，不应描述成对任意恶意页面或所有交易入口都形式化证明安全的沙箱。
+
+输入必须落在当前确认的搜索框或有角色约束的高德路线端点。高德匿名搜索框需满足指定容器、编辑框位置和邻近搜索控件等条件；美团 MSC 城市选择只放行实际城市导航和对应搜索框，不能借此开放任意地址、交易或促销按钮。
+
+`report_answer` 候选短答案上限为 60 个 Unicode 码点，并提供来源页面的连续引文。`AnswerVerifier` 独立提取后再比较，不先看候选答案照抄。系统版本类问题还区分系统版本、内核、构建号等字段。循环停滞时可转为受控的截图/OCR 查询恢复；不是硬编码预期答案。
+
+找不到时应报告已查范围，`NOT_FOUND` 不能解释为整个互联网或整个 App 全局不存在。回答胶囊约显示 8 秒；复制与打开来源由用户点击触发。来源 App 的打开不等于恢复原查询虚拟屏的同一个页面。
+
+## 14. 状态、历史、指标与本地存储
+
+### 14.1 生命周期
+
+| 状态 | 含义 |
+| --- | --- |
+| `QUEUED` | 等待调度或冲突解除 |
+| `RUNNING` | 自动执行 |
+| `PAUSED` | 因保护或冲突暂停 |
+| `WAITING_USER` | 等待本人处理或交付接收 |
+| `VERIFIED` | 办事结果验收通过并进入终态 |
+| `ANSWERED` | 查询答案通过验收 |
+| `NOT_FOUND` | 在本次搜索范围未找到 |
+| `FAILED` | 执行、验收或恢复失败 |
+| `CANCELLED` | 用户取消/停止 |
+| `HANDOFF_TIMEOUT` | 交接等待超时 |
+
+底层兼容字段和进度状态可能同时存在，集成时以字段含义区分，不把单个 `state` 字符串替代完整生命周期。需要读取最终证据的测试应等待归档完成标记 `finalized`，避免终态通知刚发出、截图和指标仍未落盘时就断言缺失。
+
+### 14.2 保存位置
+
+| 位置 | 内容与性质 |
+| --- | --- |
+| 控制端私有 `ai_config` SharedPreferences | 三角色密钥、地址、模型；不是加密保险库 |
+| `/data/local/tmp/silent-shell.apk` | shell 运行文件 |
+| `/data/local/tmp/silent-auto.pid` / `.log` | 后台进程标记与启动日志 |
+| `/data/local/tmp/shadowauto/ocr/` | OCR 库、模型和字典 |
+| `/data/local/tmp/shadowauto/skills/` | 按 App 包名组织的技能 JSON |
+| `/data/local/tmp/shadowauto/trajectories/` | 执行轨迹 |
+| `/data/local/tmp/shadowauto/history/` | 任务归档 |
+| `/data/local/tmp/shadowauto/evidence/` | 证据截图 |
+| `/data/local/tmp/shadowauto/context/` | 上下文临时文件 |
+| `/data/local/tmp/shadowauto/no-screen` | 关闭上下文读取的设置标记 |
+
+shell 文件位于 ADB shell 可访问区域，不等同于控制端私有目录。没有实现云同步、跨设备恢复、统一客户管理或永久审计存储。清理目录前先确认是否还要保留历史/技能，不能把“重新安装控制端”和“清空 shell 数据”混成一步。
+
+### 14.3 干扰和性能指标怎么解释
+
+记录模型角色调用次数、耗时、步骤来源、技能比较、抓图统计，以及前台 App 切换、焦点、IME 目标、剪贴板摘要变化、gfxinfo 等观测。剪贴板指标使用摘要，不能据此声称没有任何瞬时变化。
+
+用户主动交接与意外切屏分别记录相关信息，归因是基于时间关联的辅助解释，不能当作严格因果证明。原始前台切换次数仍应保留。掉帧采样要标明 App/进程与时段；桌面样本不能代表用户持续刷信息流的体验。不可用指标应显示不可用，不能写成零或通过。
+
+## 15. RPC 接口与连接可靠性
+
+服务默认监听 `127.0.0.1:43110`，使用 TCP 上逐行 JSON-RPC，而不是 HTTP REST。请求带 `id`，响应按 ID 关联；订阅还会收到状态、日志或视频事件，不能把读到的第一行无条件当作当前请求结果。
+
+| 方法 | 用途 |
+| --- | --- |
+| `ping` / `status` / `logs` | 健康、后台状态、近期日志 |
+| `subscribeStatus` | 状态订阅，不接收视频流 |
+| `startTask` / `stopTask` / `listTasks` | 创建、停止和列出任务 |
+| `dumpUi` | 诊断读取当前任务 UI |
+| `forceStart` | 显式任务控制入口；不是隔离认证 |
+| `submitVoiceTask` / `confirmTask` | 提交语音理解、确认或取消 |
+| `resolveVoice` | 指定追加目标，或选择 `new` |
+| `amendTask` | `{taskId, kind, text}`，kind 为 modify/add/cancel |
+| `captureContext` / `discardContext` / `setContextReading` | 上下文读取、丢弃和开关 |
+| `resumeTask` / `injectTouch` | 交接响应、预览触摸 |
+| `openTaskOnMain` / `takeManualOnMain` | 主屏查看/人工转移入口，按当前状态处理 |
+| `takeResultOnMain` | 结果接收，返回实际转移与预览状态 |
+| `noteUserHandoff` | 记录用户主动交接 |
+| `openQuerySource` | 用户点击后打开查询来源 App |
+| `listHistory` / `getTask` | 历史列表、步骤与证据 |
+| `listSkills` / `setSkillStatus` / `deleteSkill` | 技能管理 |
+
+无密钥健康请求示例：
+
+```json
+{"jsonrpc":"2.0","id":1,"method":"ping","params":{}}
+```
+
+任务结构示意（占位值不可直接运行；不要把真实密钥写入共享脚本）：
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 2,
+  "method": "startTask",
+  "params": {
+    "taskId": "example-query-001",
+    "type": "query",
+    "goal": "用高德查苏州博物馆本馆地址，不启动导航",
+    "models": {
+      "executor": {"apiBase": "https://api.deepseek.com/v1", "apiKey": "<executor-key>", "model": "<executor-model>"},
+      "verifier": {"apiBase": "https://dashscope.aliyuncs.com/compatible-mode/v1", "apiKey": "<verifier-key>", "model": "<vision-model>"}
+    }
+  }
+}
+```
+
+完整参数以 `RpcServer` 分发和 `AutomationEngine` 实现为准。状态事件使用 `event="status"`，`type` 保留 action/query；控制端兼容旧 `type="status"`。
+
+连接保护：
+
+- `RpcConnection` 先绑定源端口，排除源端口等于服务端口的情况，最多重试 8 次，避免服务未启动时发生回环自连接。
+- `RpcClient` 写入失败清理连接，不自动重放可能已经到达服务端的修改请求。
+- 旧读线程只清理自己的 socket，不能误删已建立的新连接。
+- `OverlayRpc` 使用状态订阅和按 ID 关联的等待结果，支持重连。
+- 服务端每客户端独立发送队列，容量 64；慢客户端断开，不让视频/日志写阻塞全体任务。
+
+当前 RPC 没有应用级鉴权；回环绑定也不等于同机其他进程完全不可访问。不要将端口转发给不可信网络或把它作为公开服务部署。
+
+## 16. 开发、回归与验收方法
+
+### 16.1 构建和静态检查
 
 ```sh
 ./gradlew :android-shell:assembleDebug :controller-app:assembleDebug :android-shell:lintDebug :controller-app:lintDebug
 ```
 
-连接专用测试设备或模拟器后，可运行基础 mock 测试（会操作测试设备）：
+Web 启动器修改后，在 `web-launcher` 执行 `npm run build`。只改文档不需要重新安装或重启手机。
+
+### 16.2 主机交互回归
+
+先完成 Android 构建，让脚本复用已解析的 Gson 2.11.0 缓存，然后：
+
+```sh
+./scripts/test-interaction-regressions.sh
+```
+
+脚本运行六组：`RpcConnectionRegression`、`UiRecoveryRegression`、`InteractionRegression`、`TransferProbe`、`QueryProbe`、`RpcOutputRegression`。覆盖连接拒绝、恢复预算、动作/只读保护、转移判断、查询与发送队列等逻辑。主机测试不证明厂商系统实际接受了 hidden API。
+
+### 16.3 设备探针与模拟任务
+
+`scripts/tests/CaptureMirrorDeviceRegression.java`、`TouchFlagsDeviceRegression.java` 是 Android 运行时探针，需要按专用设备流程编译/部署；不由上面的主机脚本自动运行。镜像探针包括拒绝主屏/负 ID、正常抓图、关闭后失败、UI 继续可读及重复释放。
+
+以下模拟模型脚本会操作连接设备，只在专用测试设备/模拟器运行：
 
 ```sh
 node scripts/emulator-mock-ai-test.mjs
 ```
 
-本地工作区的阶段任务、指南、报告和回归产出集中在仓库同级 `../docs/`（`tasks/`、`guides/`、`reports/`、`validation/`）。该目录不属于当前 Git 仓库，单独克隆仓库不会包含这些资料。
+模型模拟可检查流程，不替代真实模型、真实 App 和真实输入法验收。
 
-## 开源协议
+### 16.4 建议验收顺序
 
-本二次开发版本沿用上游 [Apache License 2.0](LICENSE)，保留原许可证和适用的原始署名。原项目：[android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto)。出处和修改范围见 [NOTICE](NOTICE) 与 [二次开发改动说明](docs/DERIVATIVE_CHANGES.md)。
+1. 后台健康与控制端断线重连，确保服务关闭时正确拒连。
+2. 固定公开页面反复“抓图→读控件”，记录模式、失败、代际、读取耗时与输出切换。
+3. 计算器和地址查询等短任务，等待 finalized 并对照截图/引文。
+4. 人工处理中主屏接管、交回后台、完成后去查看。
+5. 人为制造转移失败、抓图失败、空根、停止/超时，检查真实回退与退出。
+6. 用户在另一 App 持续中文输入、保留拼音候选词并滚动，后台同时搜索输入滚动；结合双方画面与日志验收隔离。
+7. 再扩大到跨 App 调查和长文写入，不因前面测试通过就省略来源和正文核验。
 
-### 隔离兼容实验
+录制主屏或导出截图可能包含私人信息，应事先获得使用者授权并使用空白测试页。
 
-后台启动参数 `--allow-unverified-isolation=true` 仅用于明确选择的受控兼容实验，默认关闭。它不会补齐设备缺失的隔离能力，不代表无打扰通过；任务历史明确标记未验证。请勿把该模式作为普通设备的静默回退。
+## 17. 已有真机结果与尚未解决的问题
+
+主要实测设备为 Mate 40 Pro（NOH-AN01），HarmonyOS 4.2.0.192 / Android API 31。不能把设备名称和最低 SDK 当作适配列表。
+
+### 17.1 最新短测：2026-10-24
+
+已安装控制端连接修复，部署独立抓图镜像，完成构建/Lint与六组主机回归。实际控制端重连确认连接到了后台而非自身。
+
+| 项目 | 结果 | 范围 |
+| --- | --- | --- |
+| 计算器抓图后读 UI | 20/20 成功，根不可读 0 | 读取中位/最大 7/170ms |
+| 美团当前公开页抓图后读 UI | 20/20 成功，根不可读 0 | 9/15ms；验证弹窗关闭后的页面 |
+| 高德首页抓图后读 UI | 20/20 成功，根不可读 0 | 33/393ms |
+| 镜像故障与释放 | 3 轮通过 | 主动关闭后返回失败，不交换原屏面；UI 仍可读 |
+| 普通计算 12×13 | ANSWERED，156，6 步 | 截图和独立提取核对 |
+| 高德查询本馆地址 | ANSWERED，姑苏区东北街204号，4 步 | 搜索结果页确认，未进入独立详情页 |
+| 首轮“先清除再计算” | **FAILED，25 步** | 曾算出 156 后又反复清除，属于仍存在的规划问题 |
+
+60 轮重复抓图均为 `layer_stack_mirror`，misses=0、surfaceSwitches=0。两个成功短查询分别有一次镜像抓图成功。正式任务的前台、焦点、IME、剪贴板观测为 0；掉帧不可用，本轮未做持续中文候选词并行测试，**不认证全程无打扰**。
+
+美团这轮没有通过商家/酒店调查；关闭验证弹窗返回公开页不等于完成验证。直接加载安装 APK 的一个临时设备测试被系统终止，未计为通过；后续使用同一连接源实现编译的设备测试通过，已安装控制端另有实际重连记录。
+
+本轮未复现旧的“抓图后控件丢失”，但尚不能证明所有 ANR 均由旧换面抓图引起，更不能证明所有 App/系统都稳定。
+
+### 17.2 前几轮已经覆盖的能力
+
+- 语音震动、录音和执行中追加由使用者实际确认正常。
+- 主屏处理后交回后台，使用者确认主屏操作流畅并能继续。
+- 美团早期版本验证过完成提示与同页交付；不能代替最新版本完整业务验收。
+- 备忘录有完整正文、保存后列表与重开检查，以及同一任务从虚拟屏移到主屏的记录。
+- 川西路线查询已有部分多段证据；整套旅行规划、全部餐饮与住宿调查没有完成统一验收，不宣称已通过。
+- 曾做另一 App 中文候选词与滚动并行体验，使用者反馈正常；期间旋转/重开导致窗口变化，原始焦点/IME 记录不全为 0，不能包装为严格无干扰通过。
+
+### 17.3 仍需关注
+
+1. **隔离能力：**该华为设备的回退配置未确认独立焦点/禁止抢焦点及本地 IME 完整能力，仍属于明确授权的兼容实验。无焦点触摸与按键门禁改善行为，但不提升为系统隔离认证。
+2. **模型规划：**重复清除、无效等待、循环动作仍可能发生；最新失败样本已保留。
+3. **第三方验证：**美团验证码会重复触发，登录状态和频道验证可能独立；不能自动替本人处理，也不能将未核实商家写成已确认。
+4. **App 无响应：**高德历史上出现厂商窗口/布局相关 ANR。新的抓图和恢复减少一个触发因素，尚未证明根治全部原因。
+5. **其他设备：**隐藏图层栈抓图和隔离 flags 依赖系统；旧抓图回退存在输出面切换，需独立验收。
+6. **证据边界：**原始切屏计数、用户交接与测量范围必须一起报告；桌面掉帧不能外推到信息流，缺失指标不能记作通过。
+7. **实时结果：**强杀或重启会丢失实时页面；没有跨重启恢复原 UI 会话的能力。
+8. **产品化：**没有客户账号、服务端密钥分发、统一计费、发布更新系统或通用设备认证。
+
+最新详细报告位于本地工作区 `../docs/validation/capture-stability-2026-10-24/report.md`，同目录含部署哈希、循环数据、最终任务 JSON、截图及日志。这个目录不在本 Git 仓库内，克隆仓库不会自带这些证据。
+
+## 18. 故障排查
+
+| 现象 | 优先检查和处理 |
+| --- | --- |
+| ADB 没设备 | 数据线、USB 调试、授权弹窗；华为还需检查仅充电时允许 ADB 的选项 |
+| 安装命令等待 | 查看手机系统安装器/锁屏验证；未确认前不能当作安装成功 |
+| 控制端连接不上 | 先看 shell 日志与进程；安装控制端不等于启动后台；重连后确认 ping |
+| 连接显示异常但后台未启动 | 确认使用包含 `RpcConnection` 修复的控制端，不把回环自连接当作成功 |
+| 看不见悬浮球 | 悬浮窗权限、服务是否启动、通知/省电限制；先打开隐控检查权限引导 |
+| 长按后不能立刻说话 | 等实际就绪震动；检查麦克风、音频焦点、上下文请求与 intake 配置 |
+| 任务排队或无法再加 | 检查两任务上限、同 App 冲突、待接收结果/交接是否仍占资源 |
+| 设备拒绝后台执行 | 查看 isolation 原因；不要删除门禁或默认打开实验参数 |
+| 主屏闪烁/输入被影响 | 保留焦点、IME、前台和用户交接时间线；停止任务，确认隔离模式，不用自动拉起 App 掩盖 |
+| 截图失败或黑屏 | 看 capture mode、misses 和回退原因；受保护页面转主屏本人处理 |
+| 截图正常但空控件 | 看 rootsUnavailable、遍历诊断和代际；等待有限恢复，不对旧编号盲点 |
+| 高德点击后没反应 | 检查新鲜目标、真实触摸和页面变化；App 自身 ANR 走有限恢复/人工处理 |
+| 搜索无法回车 | 隔离不足时按键可能被主动阻止；应找实际搜索控件，不强行注入主屏按键 |
+| 完成但没页面 | 区分查询自动收尾与办事保留结果；查验收、WAITING_USER、转移/回退与 finalized |
+| 去查看失败 | 查看 moved 与 previewAvailable，使用可用预览重试或结束；不要重启 App 假装原页面恢复 |
+| 长文看似写了但验收失败 | 核对完整正文、保存、列表和重开对象，不只对标题 |
+| 模型接口失败 | 检查允许主机、角色配置、余额/权限和能力；日志不要包含 Key |
+| OCR 不可用 | 检查外置 OCR 库、模型与字典是否上传到正确目录 |
+
+## 19. 源码索引与资料组织
+
+以下路径均相对仓库根目录：
+
+| 要读什么 | 文件或目录 |
+| --- | --- |
+| 执行总流程 | `android-shell/src/main/java/com/silentauto/shell/AutomationEngine.java` |
+| RPC 分发、事件和队列 | 同目录 `RpcServer.java` |
+| 虚拟屏、截图、输入与 UI | 同目录 `VirtualDisplaySession.java`、`CaptureMirror.java`、`InputBridge.java`、`UiBridge.java` |
+| 扩展模块 | 同目录 `ext/`，按 guard/handoff/skill/query/verify/context/voice/amend/history/metrics 分包 |
+| 控制端任务页与配置 | `controller-app/src/main/java/com/silentauto/controller/` |
+| 悬浮球、历史与上下文保护 | 控制端 `ext/overlay/`、`ext/history/`、`ext/context/` |
+| OCR | `paddler-ocr/` |
+| 浏览器部署 | `web-launcher/` |
+| 回归脚本与探针 | `scripts/test-interaction-regressions.sh`、`scripts/tests/` |
+
+本地工作区资料按用户约定放在仓库同级 `../docs/`：`tasks/` 为阶段任务，`guides/` 为指南，`reports/` 为分析，`validation/` 为原始验证产出。它们与仓库内的 `docs/` 不同；公开仓库不使用个人电脑绝对路径作为证据链接。
+
+上游技术原理文章：[中文](docs/android-virtual-display-ai-automation.md) / [English](docs/android-virtual-display-ai-automation.en.md)。它们介绍上游架构，不覆盖本分支全部扩展与最新验证。
+
+上游演示视频（不是本分支新增功能的验收录像）：
+
+<video src="shadowauto.mp4" controls width="100%"></video>
+
+本项目沿用 [Apache License 2.0](LICENSE)。再分发时保留适用的原始署名、许可证与修改说明；原始贡献者的权利和本分支修改说明分别见 [NOTICE](NOTICE) 与 [DERIVATIVE_CHANGES](docs/DERIVATIVE_CHANGES.md)。

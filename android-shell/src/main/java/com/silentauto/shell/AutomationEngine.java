@@ -145,6 +145,7 @@ public final class AutomationEngine {
     }
 
     JsonObject takeResultOnMain(String taskId) {
+        logs.task(taskId,"HANDOFF_RPC takeResultOnMain atMs="+System.currentTimeMillis());
         final TaskState task; final VirtualDisplaySession display;
         synchronized(this) {
             task=tasks.get(taskId);
@@ -224,6 +225,7 @@ public final class AutomationEngine {
     }
 
     JsonObject takeManualOnMain(String taskId) throws Exception {
+        logs.task(taskId,"HANDOFF_RPC takeManualOnMain atMs="+System.currentTimeMillis());
         final TaskState task; final HandoffManager handoff;
         final com.silentauto.shell.ext.handoff.ManualTaskTransfer transfer;
         synchronized(this) {
@@ -268,6 +270,7 @@ public final class AutomationEngine {
     }
 
     void resumeTask(String taskId, String outcome) throws Exception {
+        logs.task(taskId,"HANDOFF_RPC resumeTask outcome="+outcome+" atMs="+System.currentTimeMillis());
         final TaskState task; final HandoffManager handoff;
         synchronized(this) {
             task=tasks.get(taskId);
@@ -305,6 +308,7 @@ public final class AutomationEngine {
     }
 
     private void transition(TaskState task, TaskStatus status, String message, String evidence, String boundary) {
+        disturbance.backgroundRunning(task.taskId,status==TaskStatus.RUNNING);
         task.progress.transition(status, message, evidence, boundary);
         task.state = task.progress.status().name().toLowerCase(Locale.ROOT);
     }
@@ -512,7 +516,10 @@ public final class AutomationEngine {
             ClipboardBridge clipboard = new ClipboardBridge();
             applyAmendments(task);
             task.progress.action("正在选择应用", "model");
-            task.searchText = task.amendments.version()==0?searchTextFromGoal(task.amendments.goal()):"";
+            // Query workflows may search city, destination and merchant in different fields.
+            // Never inject a goal-wide inferred keyword into whichever field was just activated.
+            task.searchText = task.type!=com.silentauto.shell.ext.query.TaskType.QUERY
+                    &&task.amendments.version()==0?searchTextFromGoal(task.amendments.goal()):"";
             if (!Config.empty(task.searchText)) {
                 logs.task(task.taskId, "search text hint: " + task.searchText);
             }
@@ -560,7 +567,8 @@ public final class AutomationEngine {
                         if(state==TaskStatus.RUNNING&&task.progress.status()!=TaskStatus.PAUSED)return;
                         transition(task,state,detail,"","");
                     }},()->{if(task.ai!=null)task.ai.cancel();if(task.verifierAi!=null)task.verifierAi.cancel();});
-            input.inputAllowed(()->task.conflict.inputAllowed()&&!task.stop.get()&&!task.progress.status().terminal());
+            input.inputAllowed(()->task.conflict.inputAllowed()&&!task.stop.get()&&!task.progress.status().terminal()
+                    &&disturbance.backgroundIssue(task.taskId).isEmpty());
             task.conflict.awaitClear();
             disturbance.prepare(task.taskId,clipboard);
             if(task.stop.get()||Thread.currentThread().isInterrupted())throw new InterruptedException("Task stopped before display creation");
@@ -568,6 +576,8 @@ public final class AutomationEngine {
             task.videoStreamer = new VideoStreamer(logs, task.taskId, displaySpec.width, displaySpec.height);
             task.display = VirtualDisplaySession.create(task.videoStreamer.width(), task.videoStreamer.height(), displaySpec.dpi, task.videoStreamer.inputSurface());
             JsonObject isolation=task.display.isolation(baseConfig.allowUnverifiedIsolation);
+            input.backgroundKeysAllowed(isolation.get("configurationAvailable").getAsBoolean());
+            isolation.addProperty("nativeBackgroundKeysAllowed",input.backgroundKeysAllowed());
             task.progress.isolation(isolation);logs.task(task.taskId,"display isolation: "+isolation);
             if(!isolation.get("backgroundAllowed").getAsBoolean())throw new IllegalStateException(isolation.get("message").getAsString());
             task.videoStreamer.start();
@@ -586,13 +596,40 @@ public final class AutomationEngine {
             AiClient verifierAi = new AiClient(config.forRole(config.verifier), logs, task.taskId, () -> task.progress.call("verifier"));
             task.verifierAi = verifierAi;
             ResultVerifier verifier = new ResultVerifier(verifierAi::completeVision, () -> screenOcrJson(task),
-                    () -> EvidenceFrame.from(task.display.captureBitmap(8, 120)));
+                    () -> EvidenceFrame.from(task.display.captureBitmap(8, 120)),"com.huawei.notepad".equals(task.packageName)?task.documentProof:null);
             for (int step = 1; step <= MAX_STEPS && !task.stop.get(); step++) {
+                if(awaitBackgroundSafety(task)){step--;continue;}
                 if (task.conflict.awaitClear()) recoverAfterConflict(task);
                 applyAmendments(task);
                 long goalVersion=task.amendments.version();
                 long planningEpoch=task.conflict.epoch();
+                long uiGeneration=bridge.generation();
                 String dump = bridge.dump(task.display.displayId, task.display.width, task.display.height, UiBridge.MODE_SIMPLE);
+                com.silentauto.shell.ext.guard.UiRecoveryBudget.Next health=task.uiRecovery.observe(dump,task.type==com.silentauto.shell.ext.query.TaskType.QUERY);
+                if(health==com.silentauto.shell.ext.guard.UiRecoveryBudget.Next.WAIT){task.lastAction="ui_recovery_wait";task.lastReason="等待窗口根节点恢复";sleep(task,1000);step--;continue;}
+                if(health==com.silentauto.shell.ext.guard.UiRecoveryBudget.Next.RECONNECT) {
+                    logs.task(task.taskId,"UI_RECOVERY reconnect accessibility once without moving app or injecting input");
+                    bridge.reconnect();task.lastAction="ui_connection_recovery";task.lastReason="已重新连接无障碍服务，原页面保留；重新观察";sleep(task,500);step--;continue;
+                }
+                if(health==com.silentauto.shell.ext.guard.UiRecoveryBudget.Next.RESTART_QUERY) {
+                    com.silentauto.shell.ext.guard.ForegroundWatcher watcher=new com.silentauto.shell.ext.guard.ForegroundWatcher();
+                    if(watcher.appOnDisplay(task.display.displayId,task.packageName)&&!task.packageName.equals(watcher.foregroundPackage())) {
+                        logs.task(task.taskId,"UI_RECOVERY restart own read-only app once on existing virtual display");
+                        appCatalog.launchPackage(task.taskId,task.packageName,task.display.displayId);
+                        task.pendingSearchSubmit=false;task.searchSubmitAttempts=0;task.queryProgress.reset();
+                        task.lastAction="ui_recovery_restart";task.lastReason="控件连接/应用无响应，已在原虚拟屏重新打开查询；从头观察，不沿用旧坐标";
+                        sleep(task,1200);step--;continue;
+                    }
+                    health=com.silentauto.shell.ext.guard.UiRecoveryBudget.Next.HANDOFF;
+                }
+                if(health==com.silentauto.shell.ext.guard.UiRecoveryBudget.Next.HANDOFF) {
+                    task.handoff=new HandoffManager();
+                    transition(task,TaskStatus.WAITING_USER,"控件读取持续失败，已停止自动输入，页面保留供人工处理或取消","","页面控件不可读或应用无响应");
+                    String outcome=task.handoff.awaitAcknowledgement();task.handoff=null;
+                    if(task.stop.get()||!("done".equals(outcome)||"amend".equals(outcome))){transition(task,TaskStatus.CANCELLED,"已停止界面恢复","","");break;}
+                    transition(task,TaskStatus.RUNNING,"重新检查页面控件","","");continue;
+                }
+                if("com.huawei.notepad".equals(task.packageName)){task.documentProof.observe(task.amendments.goal(),dump);logs.task(task.taskId,"DOCUMENT_PROOF "+task.documentProof.state());}
                 rememberUiObservation(task, dump);
                 for (StepListener listener : listeners) listener.beforeStep(ctx, step, dump);
                 ResultVerifier.Extracted recoveredQuery=null;
@@ -626,7 +663,9 @@ public final class AutomationEngine {
                 } catch(Exception changed){if(task.amendments.version()!=goalVersion){step--;continue;}throw changed;}
                 }
                 if(task.amendments.version()!=goalVersion){step--;continue;}
+                if(uiGeneration!=bridge.generation()){task.lastAction="ui_connection_changed";task.lastReason="控件连接已更新，丢弃旧规划并重新观察";continue;}
                 if (task.stop.get() || Thread.currentThread().isInterrupted()) throw new InterruptedException("task cancelled");
+                if(!disturbance.backgroundIssue(task.taskId).isEmpty()){step--;continue;}
                 boolean recovered=task.conflict.awaitClear();
                 if (recovered || planningEpoch!=task.conflict.epoch()) {
                     if(task.skillRunner!=null)task.skillRunner.retryUnexecuted(action);
@@ -715,6 +754,7 @@ public final class AutomationEngine {
                         task.progress.evidenceScreenshot(verifier.saveEvidence(ctx,proof));
                         synchronized(task.amendments) {
                         if(task.amendments.version()!=goalVersion){step--;continue;}
+                        if(!disturbance.backgroundIssue(task.taskId).isEmpty()){step--;continue;}
                         task.progress.answer(answer,quote,uncertain,searched);task.completed=true;task.resultStatus=found?"answered":"not_found";
                         transition(task,found?TaskStatus.ANSWERED:TaskStatus.NOT_FOUND,found?(uncertain?"可能是：":"")+answer:"没查到："+searched,quote,"");
                         logs.result(task.taskId,task.resultStatus,found?answer:searched);break;
@@ -729,16 +769,33 @@ public final class AutomationEngine {
                 if ("done".equals(action.action)) {
                     ResultVerifier.Result verification = verifier.verify(ctx, task.amendments.goal(), action.expectedEvidence);
                     if(task.amendments.version()!=goalVersion){step--;continue;}
+                    if(!disturbance.backgroundIssue(task.taskId).isEmpty()){step--;continue;}
                     if(task.conflict.awaitClear()||planningEpoch!=task.conflict.epoch()){recoverAfterConflict(task);step--;continue;}
                     if (verification.verified) {
+                        boolean retain=com.silentauto.shell.ext.handoff.ResultRetention.requested(task.amendments.goal(),verification.delivery);
+                        java.util.List<String> anchors=retain?com.silentauto.shell.ext.handoff.PageIdentity.validatedAnchors(
+                                new com.silentauto.shell.ext.skill.UiSnapshot(bridge.dump(task.display.displayId,task.display.width,task.display.height,UiBridge.MODE_FULL)),
+                                task.packageName,task.amendments.goal(),verification.pageAnchors):java.util.List.of();
+                        if(retain&&anchors.isEmpty()) {
+                            task.lastAction="verification_failed";
+                            task.lastReason="完成交接缺少可核实的具体页面原文，请重新观察结果标题和正文，不要使用省略概括或通用按钮作为依据";
+                            logs.task(task.taskId,"result anchors not grounded; completion withheld");
+                            if(++task.verificationFailures>=3) {
+                                task.resultStatus="unverified";
+                                transition(task,TaskStatus.FAILED,task.lastReason,verification.evidence,"");
+                                break;
+                            }
+                            continue;
+                        }
                         String evidencePath = verifier.saveEvidence(ctx, verification);
                         task.progress.evidenceScreenshot(evidencePath);
                         logs.task(task.taskId, "evidence saved: " + evidencePath);
                         task.completed = true;
                         task.resultStatus = "verified";
-                        if (com.silentauto.shell.ext.handoff.ResultRetention.requested(task.amendments.goal(),verification.delivery)) {
-                            task.resultAnchors=java.util.List.copyOf(verification.pageAnchors);
+                        if (retain) {
+                            task.resultAnchors=anchors;
                             task.handoff = new HandoffManager();
+                            task.progress.transfer("idle", "结果已重新验收，等待查看");
                             task.progress.resultReady(true);
                             transition(task, TaskStatus.WAITING_USER, "已完成，后台页面已保留，点击去查看", verification.evidence, "结果已验收，等待查看");
                             logs.task(task.taskId, "result retained until user acknowledgement");
@@ -773,12 +830,14 @@ public final class AutomationEngine {
                     continue;
                 }
                 StepResult result = null;boolean interruptedInput=false;
-                try { result = actionExecutor.execute(ctx, task, action); }
+                try { result = actionExecutor.execute(ctx, task, action,dump); }
                 catch(com.silentauto.shell.ext.guard.ReadOnlyGuard.Blocked blocked){task.lastAction="READONLY_BLOCKED";task.lastReason=blocked.getMessage();logs.task(task.taskId,task.lastReason);continue;}
+                catch(com.silentauto.shell.ext.guard.BackgroundKeyPolicy.Blocked blocked){task.lastAction="INPUT_BLOCKED";task.lastReason=blocked.getMessage();logs.task(task.taskId,task.lastReason);continue;}
                 catch (com.silentauto.shell.ext.guard.MainAppConflictGuard.PausedInputException paused) { interruptedInput=true; }
                 finally { for (StepListener listener : listeners) listener.afterAction(ctx, step, action, result, dump); }
                 if(interruptedInput){
                     if(task.skillRunner!=null){task.skillRunner.retryUnexecuted(action);task.skillRunner.forceRescue();}
+                    if(!disturbance.backgroundIssue(task.taskId).isEmpty()){step--;continue;}
                     task.conflict.awaitClear();recoverAfterConflict(task);continue;
                 }
                 rememberAction(task, action, result.clickResult, result.focusResult);
@@ -843,6 +902,24 @@ public final class AutomationEngine {
         }
     }
 
+    private boolean awaitBackgroundSafety(TaskState task) throws InterruptedException {
+        String issue=disturbance.backgroundIssue(task.taskId);
+        if(issue.isEmpty())return false;
+        HandoffManager handoff=new HandoffManager();task.handoff=handoff;
+        recorder.handedOff(task.taskId);
+        task.progress.protectedScreen(false);
+        transition(task,TaskStatus.WAITING_USER,issue,"系统采样检测到全局焦点转到虚拟屏","后台隔离不足");
+        logs.task(task.taskId,"BACKGROUND_SAFETY_PAUSE: "+issue);
+        String outcome=handoff.awaitAcknowledgement();task.handoff=null;
+        if(task.stop.get()||!"done".equals(outcome)) {
+            if("amend".equals(outcome))return true;
+            throw new InterruptedException("Background safety handling ended");
+        }
+        disturbance.explicitBackgroundRetry(task.taskId);
+        transition(task,TaskStatus.RUNNING,"已按你的明确操作重试后台；若仍影响主屏会再次暂停","","");
+        return true;
+    }
+
     private void recoverAfterConflict(TaskState task) throws Exception {
         if(task.stop.get())throw new InterruptedException("Task stopped during conflict");
         boolean visible=false;
@@ -854,8 +931,7 @@ public final class AutomationEngine {
         }
         boolean moved=!visible||!foreground.appOnDisplay(task.display.displayId,task.packageName);
         if(moved){
-            task.conflict.awaitClear();appCatalog.launchPackage(task.taskId,task.packageName,task.display.displayId);sleep(task,1800);
-            if(task.skillRunner!=null)task.skillRunner.forceRescue();
+            throw new IllegalStateException("目标页面已离开虚拟屏，已停止自动重启以免抢占主屏；请保留当前页面并重新发起任务");
         }
         JsonObject trace=recorder.trajectory(task.taskId);JsonArray completed=new JsonArray();
         if(trace!=null)for(JsonElement value:com.silentauto.shell.ext.skill.UiSnapshot.array(trace,"steps")){
@@ -1036,7 +1112,9 @@ public final class AutomationEngine {
                 logLayoutDump(task.taskId, displayId, mode, observation);
                 logs.task(task.taskId, "layout returned to AI");
             }
-            messages.add(ActionTools.toolCallMessage(call, observationCalls));
+            JsonObject assistantMessage=ActionTools.toolCallMessage(call, observationCalls);
+            if(!result.reasoningContent.isEmpty())assistantMessage.addProperty("reasoning_content",result.reasoningContent);
+            messages.add(assistantMessage);
             messages.add(ActionTools.toolResultMessage(ActionTools.toolCallId(call, observationCalls), truncate(observation, MAX_UI_CHARS)));
         }
         return ActionDecision.wait(1000);
@@ -1388,6 +1466,11 @@ public final class AutomationEngine {
             task.videoStreamer = null;
         }
         if (task.display != null) {
+            JsonObject snapshot=task.progress.json();
+            JsonObject isolation=snapshot.has("isolation")&&snapshot.get("isolation").isJsonObject()
+                    ?snapshot.getAsJsonObject("isolation").deepCopy():new JsonObject();
+            isolation.add("capture",task.display.captureStats());
+            task.progress.isolation(isolation);
             task.display.release();
             task.display = null;
         }
@@ -1445,6 +1528,8 @@ public final class AutomationEngine {
         public volatile AiClient verifierAi;
         public volatile Future<?> future;
         public volatile VirtualDisplaySession display;
+        final com.silentauto.shell.ext.guard.UiRecoveryBudget uiRecovery=new com.silentauto.shell.ext.guard.UiRecoveryBudget();
+        final com.silentauto.shell.ext.verify.DocumentProof documentProof=new com.silentauto.shell.ext.verify.DocumentProof();
         public volatile VideoStreamer videoStreamer;
         public volatile AiClient ai;
         public com.silentauto.shell.ext.query.TaskType type=com.silentauto.shell.ext.query.TaskType.ACTION;

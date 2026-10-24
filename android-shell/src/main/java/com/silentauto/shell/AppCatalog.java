@@ -78,7 +78,11 @@ final class AppCatalog {
         if (component == null) {
             throw new IllegalStateException("no launch component for " + packageName);
         }
-        if (forceStop) new ProcessBuilder("sh", "-c", "am force-stop " + shellQuote(packageName)).start().waitFor();
+        if (forceStop) {
+            if(packageName.equals(new com.silentauto.shell.ext.guard.ForegroundWatcher().foregroundPackage()))
+                throw new IllegalStateException("目标 App 正在主屏使用，已取消后台启动");
+            new ProcessBuilder("sh", "-c", "am force-stop " + shellQuote(packageName)).start().waitFor();
+        }
         String command = "am start --display " + displayId
                 + (forceStop ? " -f 0x10008000 -n " : " -f 0x10000000 -n ") + shellQuote(component.flattenToShortString());
         Process process = new ProcessBuilder("sh", "-c", command).redirectErrorStream(true).start();
@@ -91,6 +95,18 @@ final class AppCatalog {
         }
         int code = process.waitFor();
         logs.info(taskId, "am start exit=" + code + " " + output.toString().trim());
+        if(code!=0||output.toString().contains("Error:"))throw new IllegalStateException("目标 App 未成功启动，已停止；不回退到主屏启动");
+        if(displayId>0) {
+            boolean located=false;
+            com.silentauto.shell.ext.guard.ForegroundWatcher watcher=new com.silentauto.shell.ext.guard.ForegroundWatcher();
+            // am start returns before a cold-started Activity is necessarily listed.
+            // Wait for that one launch; never launch again or fall back to display 0.
+            for(int i=0;i<12;i++) {
+                if(watcher.appOnDisplay(displayId,packageName)){located=true;break;}
+                Thread.sleep(150);
+            }
+            if(!located)throw new IllegalStateException("目标 App 没有留在指定虚拟屏，已停止自动执行；不会反复启动或强拉回后台");
+        }
     }
 
     private static String shellQuote(String value) {

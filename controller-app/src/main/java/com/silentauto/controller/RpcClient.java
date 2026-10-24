@@ -51,9 +51,8 @@ final class RpcClient {
         if (socket != null && socket.isConnected() && !socket.isClosed()) {
             return;
         }
-        Socket connected=new Socket();
+        Socket connected=RpcConnection.connect(host,port,3000);
         try {
-            connected.connect(new InetSocketAddress(host,port),3000);
             BufferedReader reader=new BufferedReader(new InputStreamReader(connected.getInputStream(),StandardCharsets.UTF_8));
             writer=new BufferedWriter(new OutputStreamWriter(connected.getOutputStream(),StandardCharsets.UTF_8));
             socket=connected;

@@ -1,4 +1,4 @@
-// Modified by Codex for ShadowAuto: accept handoff outcomes, typed queries and voice amendment routing. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: accept handoff outcomes, typed queries and voice amendment routing. Bound client output so slow readers cannot block automation. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import com.google.gson.JsonElement;
@@ -13,6 +13,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 final class RpcServer {
     private final int port;
@@ -52,6 +54,7 @@ final class RpcServer {
         } finally {
             if (client != null) {
                 logs.remove(client);
+                client.close();
             }
             try {
                 socket.close();
@@ -160,25 +163,51 @@ final class RpcServer {
     }
 
     private static final class Client implements LogHub.Sink {
+        private final Socket socket;
         private final BufferedWriter writer;
+        private final ArrayBlockingQueue<String> outbound = new ArrayBlockingQueue<>(64);
+        private final AtomicBoolean closed = new AtomicBoolean();
+        private final Thread sender;
         private volatile boolean statusOnly;
 
         Client(Socket socket) throws Exception {
+            this.socket = socket;
             writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+            sender = new Thread(this::writeLoop, "rpc-output");
+            sender.setDaemon(true);
+            sender.start();
         }
 
         @Override
-        public synchronized void send(JsonObject object) {
+        public void send(JsonObject object) {
+            if (closed.get()) return;
             if (statusOnly && object.has("params")) {
                 JsonObject event = object.getAsJsonObject("params");
                 if (!"status".equals(JsonRpc.text(event,event.has("event")?"event":"type"))) return;
             }
+            // Never wait for a socket while publishing state or holding the engine monitor.
+            // Disconnect a slow reader instead of silently dropping a response or video config.
+            if (!outbound.offer(JsonRpc.GSON.toJson(object))) close();
+        }
+
+        private void writeLoop() {
             try {
-                writer.write(JsonRpc.GSON.toJson(object));
-                writer.write('\n');
-                writer.flush();
+                while (!closed.get()) {
+                    writer.write(outbound.take());
+                    writer.write('\n');
+                    writer.flush();
+                }
             } catch (Exception ignored) {
+            } finally {
+                close();
             }
+        }
+
+        private void close() {
+            if (!closed.compareAndSet(false, true)) return;
+            try { socket.close(); } catch (Exception ignored) {}
+            outbound.clear();
+            sender.interrupt();
         }
     }
 }

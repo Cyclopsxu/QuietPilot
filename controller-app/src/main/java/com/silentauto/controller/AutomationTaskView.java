@@ -258,7 +258,9 @@ final class AutomationTaskView {
             Button done = new Button(activity); done.setText(status.optBoolean("resultReady") ? "结束查看" : "我处理好了"); content.addView(done);
             done.setOnClickListener(v -> listener.onHandoffAction(taskId, "resumeTask", "done"));
             Button cancel = new Button(activity); cancel.setText("取消任务"); cancel.setVisibility(status.optBoolean("resultReady") ? View.GONE : View.VISIBLE); content.addView(cancel);
-            cancel.setOnClickListener(v -> listener.onHandoffAction(taskId, "resumeTask", "cancel"));
+            cancel.setOnClickListener(v -> listener.onTaskStop(taskId));
+            Button back = new Button(activity); back.setText("返回任务"); content.addView(back);
+            back.setOnClickListener(v -> { if (screenDialog != null) screenDialog.dismiss(); });
             AlertDialog handoffDialog = new AlertDialog.Builder(activity).setView(content).create();
             H264VideoDecoder handoffDecoder = dialogDecoder;
             screenDialog = handoffDialog;

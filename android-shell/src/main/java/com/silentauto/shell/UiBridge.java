@@ -30,15 +30,25 @@ public final class UiBridge {
     private final HandlerThread thread = new HandlerThread("ui-automation");
     private final LogHub logs;
     private UiAutomation automation;
+    private volatile long connectionGeneration;
+    public long generation(){return connectionGeneration;}
+    // Privileged app_process lifecycle, like connect(); unsupported platforms fail closed.
+    @SuppressLint("SoonBlockedPrivateApi")
+    public synchronized boolean reconnect(){
+        try{
+            if(automation!=null)UiAutomation.class.getDeclaredMethod("disconnect").invoke(automation);
+            connect();return true;
+        }catch(Exception unavailable){logs.info("UiAutomation reconnect failed: "+unavailable.getMessage());return false;}
+    }
 
     UiBridge(LogHub logs) {
         this.logs = logs;
     }
 
     @SuppressLint("SoonBlockedPrivateApi")
-    void connect() {
+    synchronized void connect() {
         try {
-            thread.start();
+            if(!thread.isAlive())thread.start();
             automation = UiAutomation.class
                     .getConstructor(android.os.Looper.class, IUiAutomationConnection.class)
                     .newInstance(thread.getLooper(), new UiAutomationConnection());
@@ -52,21 +62,26 @@ public final class UiBridge {
                     | AccessibilityServiceInfo.FLAG_REPORT_VIEW_IDS
                     | AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS;
             automation.setServiceInfo(info);
-            logs.info("UiAutomation connected");
+            connectionGeneration++;
+            logs.info("UiAutomation connected generation="+connectionGeneration);
         } catch (Throwable e) {
             throw new IllegalStateException("UiAutomation connect failed", e);
         }
     }
 
-    public String dump(int displayId) {
+    public synchronized String dump(int displayId) {
         return dump(displayId, 0, 0);
     }
 
-    public String dump(int displayId, int width, int height) {
+    public synchronized String dump(int displayId, int width, int height) {
         return dump(displayId, width, height, MODE_SIMPLE);
     }
 
-    public String dump(int displayId, int width, int height, String mode) {
+    public synchronized String dump(int displayId, int width, int height, String mode) {
+        return dumpOnce(displayId,width,height,mode,true);
+    }
+
+    private String dumpOnce(int displayId,int width,int height,String mode,boolean retry) {
         DumpContext context = new DumpContext(MODE_FULL.equals(mode) ? MODE_FULL : MODE_SIMPLE);
         WindowSnapshot snapshot = windowSnapshot(displayId);
         Map<String, Object> out = object();
@@ -80,11 +95,13 @@ public final class UiBridge {
         out.put("coordinateSpace", "display-local");
 
         ArrayList<Object> windows = new ArrayList<>();
+        int nullRoots=0;long began=android.os.SystemClock.uptimeMillis();
         try {
             int windowIndex = 0;
             for (AccessibilityWindowInfo window : orderedWindows(snapshot.windows, true)) {
                 AccessibilityNodeInfo root = window.getRoot();
                 if (root == null) {
+                    nullRoots++;
                     windowIndex++;
                     continue;
                 }
@@ -96,13 +113,38 @@ public final class UiBridge {
             error.put("error", e.getMessage());
             windows.add(error);
         }
+        boolean incomplete = com.silentauto.shell.ext.guard.UiRecoveryBudget.incompleteTraversal(
+                windows.size(), context.readableNodes, context.nullChildren,
+                !context.targets.isEmpty() || !context.inputs.isEmpty());
+        if((windows.isEmpty() || incomplete)&&retry&&clearAccessibilityCache()) {
+            android.os.SystemClock.sleep(180);
+            return dumpOnce(displayId,width,height,mode,false);
+        }
+        out.put("connectionGeneration",connectionGeneration);
+        out.put("rawWindowCount",snapshot.windows.size());
+        out.put("nullRootCount",nullRoots);
+        out.put("rootReadMs",android.os.SystemClock.uptimeMillis()-began);
+        out.put("rootsUnavailable",windows.isEmpty() || incomplete);
+        out.put("incompleteTraversal",incomplete);
+        out.put("readableNodeCount",context.readableNodes);
+        out.put("nullChildCount",context.nullChildren);
+        out.put("cacheRecoveryAttempted",!retry);
         out.put("windows", windows);
         out.put("inputs", inputMaps(context.inputs));
         out.put("targets", targetMaps(context.targets));
         return GSON.toJson(out);
     }
 
-    public FocusResult focusInput(int displayId, int inputIndex, String query) {
+    private boolean clearAccessibilityCache() {
+        try {
+            Class<?> type=Class.forName("android.view.accessibility.AccessibilityInteractionClient");
+            Object client=type.getMethod("getInstance").invoke(null);
+            type.getMethod("clearCache").invoke(client);
+            return true;
+        }catch(ReflectiveOperationException|SecurityException unavailable){return false;}
+    }
+
+    public synchronized FocusResult focusInput(int displayId, int inputIndex, String query) {
         try {
             FocusResult result = inputIndex > 0 ? findInputByIndex(displayId, inputIndex) : null;
             if (result == null && !empty(query)) {
@@ -115,7 +157,9 @@ public final class UiBridge {
                 result = findInputLikeTarget(displayId, query);
             }
             if (result != null) {
-                result.accessibility = performInputFocus(result.node);
+                result.accessibility = !"com.sankuai.meituan".equals(String.valueOf(result.node.getPackageName()))
+                        && !"com.autonavi.minimap".equals(String.valueOf(result.node.getPackageName()))
+                        && performInputFocus(result.node);
             }
             return result;
         } catch (Throwable e) {
@@ -124,7 +168,7 @@ public final class UiBridge {
         }
     }
 
-    public ClickResult clickTarget(int displayId, int targetIndex) {
+    public synchronized ClickResult clickTarget(int displayId, int targetIndex) {
         try {
             TargetCounter counter = new TargetCounter(targetIndex);
             int windowIndex = 0;
@@ -132,7 +176,11 @@ public final class UiBridge {
                 AccessibilityNodeInfo root = window.getRoot();
                 ClickResult result = findTarget(root, counter, "w" + windowIndex);
                 if (result != null) {
-                    result.clicked = performTargetClick(result.node);
+                    // Amap's virtual route/POI nodes can acknowledge ACTION_CLICK
+                    // without activating. Use their fresh, display-local centers
+                    // through ActionExecutor instead, without issuing two clicks.
+                    result.clicked = !"com.autonavi.minimap".equals(String.valueOf(result.node.getPackageName()))
+                            && performTargetClick(result.node);
                     return result;
                 }
                 windowIndex++;
@@ -143,7 +191,7 @@ public final class UiBridge {
         return null;
     }
 
-    public ClickResult clickBestSubmitTarget(int displayId, int width, int height) {
+    public synchronized ClickResult clickBestSubmitTarget(int displayId, int width, int height) {
         try {
             SubmitCandidate best = null;
             int windowIndex = 0;
@@ -167,7 +215,7 @@ public final class UiBridge {
         }
     }
 
-    public boolean hasInputMethodWindow(int displayId) {
+    public synchronized boolean hasInputMethodWindow(int displayId) {
         try {
             for (AccessibilityWindowInfo window : orderedWindows(displayId, true)) {
                 if (window.getType() == AccessibilityWindowInfo.TYPE_INPUT_METHOD) {
@@ -180,7 +228,7 @@ public final class UiBridge {
         return false;
     }
 
-    public boolean setText(int displayId, String text) {
+    public synchronized boolean setText(int displayId, String text) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable == null) {
@@ -196,7 +244,7 @@ public final class UiBridge {
         }
     }
 
-    public boolean paste(int displayId) {
+    public synchronized boolean paste(int displayId) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable == null) {
@@ -210,7 +258,7 @@ public final class UiBridge {
         }
     }
 
-    public boolean copySelection(int displayId) {
+    public synchronized boolean copySelection(int displayId) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable != null && editable.performAction(AccessibilityNodeInfo.ACTION_COPY)) {
@@ -228,7 +276,7 @@ public final class UiBridge {
         return false;
     }
 
-    public boolean selectAll(int displayId) {
+    public synchronized boolean selectAll(int displayId) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable == null) {
@@ -247,7 +295,7 @@ public final class UiBridge {
         }
     }
 
-    public boolean deleteSelection(int displayId) {
+    public synchronized boolean deleteSelection(int displayId) {
         try {
             AccessibilityNodeInfo editable = findEditable(displayId);
             if (editable == null) {
@@ -587,8 +635,10 @@ public final class UiBridge {
 
     private Map<String, Object> nodeMap(AccessibilityNodeInfo node, DumpContext context, String path) {
         if (node == null) {
+            context.nullChildren++;
             return null;
         }
+        context.readableNodes++;
 
         Rect rect = new Rect();
         node.getBoundsInScreen(rect);
@@ -820,13 +870,9 @@ public final class UiBridge {
     }
 
     private boolean performTargetClick(AccessibilityNodeInfo node) {
-        if (node.performAction(AccessibilityNodeInfo.ACTION_CLICK)) {
-            return true;
-        }
-        if (isEditable(node) && node.performAction(AccessibilityNodeInfo.ACTION_FOCUS)) {
-            return true;
-        }
-        return node.isFocusable() && node.performAction(AccessibilityNodeInfo.ACTION_FOCUS);
+        // Focusing a virtual/custom node does not activate it. Let ActionExecutor
+        // inject the observed node center when ACTION_CLICK is unsupported.
+        return node.performAction(AccessibilityNodeInfo.ACTION_CLICK);
     }
 
     private boolean performInputFocus(AccessibilityNodeInfo node) {
@@ -901,6 +947,7 @@ public final class UiBridge {
 
     private final class DumpContext {
         final String mode;
+        int readableNodes, nullChildren;
         final ArrayList<Target> targets = new ArrayList<>();
         final ArrayList<InputTarget> inputs = new ArrayList<>();
 

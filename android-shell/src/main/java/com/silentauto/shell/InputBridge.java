@@ -1,4 +1,4 @@
-// Modified by Codex for ShadowAuto: expose execution context bridge API. Original: ShadowAuto (Apache-2.0).
+// Modified by Codex for ShadowAuto: preserve main-display focus for display-local background touches. Original: ShadowAuto (Apache-2.0).
 package com.silentauto.shell;
 
 import android.content.Context;
@@ -13,9 +13,17 @@ import java.lang.reflect.Method;
 
 public final class InputBridge {
     private static final int INJECT_WAIT_FOR_FINISH = 2;
+    private static final int NO_FOCUS_CHANGE = noFocusChangeFlag();
+    static int noFocusChangeFlag() {
+        try { return MotionEvent.class.getField("FLAG_NO_FOCUS_CHANGE").getInt(null); }
+        catch (ReflectiveOperationException | SecurityException unavailable) { return 0; }
+    }
     private final Object inputManager;
     private final Method inject;
     private final Method setDisplayId;
+    private boolean backgroundKeysAllowed;
+    public void backgroundKeysAllowed(boolean value) { backgroundKeysAllowed=value; }
+    public boolean backgroundKeysAllowed() { return backgroundKeysAllowed; }
     private java.util.function.BooleanSupplier allowed=()->true;
     public void inputAllowed(java.util.function.BooleanSupplier check){allowed=check;}
     public void checkAllowed(){if(!allowed.getAsBoolean())throw new com.silentauto.shell.ext.guard.MainAppConflictGuard.PausedInputException();}
@@ -27,13 +35,13 @@ public final class InputBridge {
     }
 
     public boolean touch(int displayId, int action, float x, float y, long downTime) throws Exception {
-        return send(displayId, motion(downTime, SystemClock.uptimeMillis(), action, x, y));
+        return send(displayId, motion(displayId, downTime, SystemClock.uptimeMillis(), action, x, y));
     }
 
     public boolean tap(int displayId, int x, int y) throws Exception {
         long now = SystemClock.uptimeMillis();
-        MotionEvent down = motion(now, now, MotionEvent.ACTION_DOWN, x, y);
-        MotionEvent up = motion(now, now + 80, MotionEvent.ACTION_UP, x, y);
+        MotionEvent down = motion(displayId, now, now, MotionEvent.ACTION_DOWN, x, y);
+        MotionEvent up = motion(displayId, now, now + 80, MotionEvent.ACTION_UP, x, y);
         boolean downOk = send(displayId, down);
         boolean upOk = send(displayId, up);
         return downOk && upOk;
@@ -42,9 +50,9 @@ public final class InputBridge {
     public boolean longPress(int displayId, int x, int y, int durationMs) throws Exception {
         int duration = Math.max(450, durationMs);
         long now = SystemClock.uptimeMillis();
-        boolean downOk = send(displayId, motion(now, now, MotionEvent.ACTION_DOWN, x, y));
+        boolean downOk = send(displayId, motion(displayId, now, now, MotionEvent.ACTION_DOWN, x, y));
         SystemClock.sleep(duration);
-        boolean upOk = send(displayId, motion(now, now + duration, MotionEvent.ACTION_UP, x, y));
+        boolean upOk = send(displayId, motion(displayId, now, now + duration, MotionEvent.ACTION_UP, x, y));
         return downOk && upOk;
     }
 
@@ -52,16 +60,16 @@ public final class InputBridge {
         int duration = Math.max(120, durationMs);
         int steps = Math.max(6, duration / 24);
         long downTime = SystemClock.uptimeMillis();
-        boolean ok = send(displayId, motion(downTime, downTime, MotionEvent.ACTION_DOWN, startX, startY));
+        boolean ok = send(displayId, motion(displayId, downTime, downTime, MotionEvent.ACTION_DOWN, startX, startY));
         for (int i = 1; i < steps; i++) {
             float progress = i / (float) steps;
             int x = Math.round(startX + (endX - startX) * progress);
             int y = Math.round(startY + (endY - startY) * progress);
             long eventTime = downTime + Math.round(duration * progress);
-            ok = send(displayId, motion(downTime, eventTime, MotionEvent.ACTION_MOVE, x, y)) && ok;
+            ok = send(displayId, motion(displayId, downTime, eventTime, MotionEvent.ACTION_MOVE, x, y)) && ok;
             SystemClock.sleep(8);
         }
-        return send(displayId, motion(downTime, downTime + duration, MotionEvent.ACTION_UP, endX, endY)) && ok;
+        return send(displayId, motion(displayId, downTime, downTime + duration, MotionEvent.ACTION_UP, endX, endY)) && ok;
     }
 
     public boolean key(int displayId, int keyCode) throws Exception {
@@ -98,10 +106,21 @@ public final class InputBridge {
         return ok;
     }
 
-    private MotionEvent motion(long downTime, long eventTime, int action, float x, float y) {
-        MotionEvent event = MotionEvent.obtain(downTime, eventTime, action, x, y, 1f, 1f, 0, 1f, 1f, 0, 0);
-        event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
-        return event;
+    private MotionEvent motion(int displayId, long downTime, long eventTime, int action, float x, float y) {
+        if (displayId <= 0 || NO_FOCUS_CHANGE == 0) {
+            MotionEvent event = MotionEvent.obtain(downTime, eventTime, action, x, y, 1f, 1f, 0, 1f, 1f, 0, 0);
+            event.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+            return event;
+        }
+        MotionEvent.PointerProperties pointer = new MotionEvent.PointerProperties();
+        pointer.id = 0;
+        pointer.toolType = MotionEvent.TOOL_TYPE_FINGER;
+        MotionEvent.PointerCoords coords = new MotionEvent.PointerCoords();
+        coords.x = x; coords.y = y; coords.pressure = 1; coords.size = 1;
+        return MotionEvent.obtain(downTime, eventTime, action, 1,
+                new MotionEvent.PointerProperties[]{pointer}, new MotionEvent.PointerCoords[]{coords},
+                0, 0, 1f, 1f, -1, 0, InputDevice.SOURCE_TOUCHSCREEN,
+                NO_FOCUS_CHANGE);
     }
 
     private boolean chord(int displayId, int modifierKey, int metaState, int keyCode) throws Exception {
@@ -114,6 +133,8 @@ public final class InputBridge {
 
     private boolean send(int displayId, InputEvent event) throws Exception {
         checkAllowed();
+        if (event instanceof KeyEvent)
+            com.silentauto.shell.ext.guard.BackgroundKeyPolicy.requireAllowed(displayId,backgroundKeysAllowed);
         setDisplayId.invoke(event, displayId);
         Object result = inject.invoke(inputManager, event, INJECT_WAIT_FOR_FINISH);
         return !(result instanceof Boolean) || (Boolean) result;

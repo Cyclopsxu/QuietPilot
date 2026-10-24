@@ -18,7 +18,26 @@ public final class ActionExecutor {
     }
 
     public StepResult execute(ExecutionContext ctx, TaskState task, ActionDecision action) throws Exception {
+        return execute(ctx,task,action,null);
+    }
+
+    public StepResult execute(ExecutionContext ctx, TaskState task, ActionDecision action,String plannedDump) throws Exception {
         ctx.input.checkAllowed();
+        if("tap_target".equals(action.action)&&plannedDump!=null) {
+            String current=ctx.ui.dump(ctx.displayId,ctx.width,ctx.height,UiBridge.MODE_FULL);
+            com.google.gson.JsonObject target=com.silentauto.shell.ext.guard.ObservedTarget.resolve(plannedDump,current,action.targetIndex);
+            if(target==null){logs.task(ctx.taskId,"Observed target changed; reobserve without clicking");return new StepResult(null,null);}
+            int[] bounds=com.silentauto.shell.ext.skill.UiSnapshot.bounds(target);
+            if(bounds[2]<=bounds[0]||bounds[3]<=bounds[1]||bounds[0]<0||bounds[1]<0||bounds[2]>ctx.width||bounds[3]>ctx.height)
+                return new StepResult(null,null);
+            ActionDecision tap=new ActionDecision();tap.action="tap";tap.x=(bounds[0]+bounds[2])/2;tap.y=(bounds[1]+bounds[3])/2;
+            if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY)ReadOnlyGuard.check(tap,current);
+            logs.task(ctx.taskId,"Observed target touch "+tap.x+","+tap.y+" #"+action.targetIndex);
+            if(!"com.autonavi.minimap".equals(task.packageName)&&!"com.sankuai.meituan".equals(task.packageName))
+                return new StepResult(tapTarget(ctx.taskId,ctx.ui,ctx.input,ctx.displayId,ctx.width,ctx.height,target.get("targetIndex").getAsInt()),null);
+            ctx.input.tap(ctx.displayId,tap.x,tap.y);
+            return new StepResult(null,null);
+        }
         if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY)ReadOnlyGuard.check(action,ctx.ui.dump(ctx.displayId,ctx.width,ctx.height,UiBridge.MODE_FULL));
         UiBridge.ClickResult clickResult = null;
         UiBridge.FocusResult focusResult = null;
@@ -84,7 +103,10 @@ public final class ActionExecutor {
         } else if ("back".equals(action.action)) {
             ctx.input.key(ctx.displayId, KeyEvent.KEYCODE_BACK);
         } else if ("key".equals(action.action)) {
-            pressKey(ctx.taskId, ctx.input, ctx.displayId, action.key);
+            if(ctx.displayId>0&&!ctx.input.backgroundKeysAllowed()
+                    &&("enter".equalsIgnoreCase(action.key)||"search".equalsIgnoreCase(action.key)))
+                submitSearch(task,ctx.ui,ctx.input,ctx.displayId,ctx.width,ctx.height);
+            else pressKey(ctx.taskId, ctx.input, ctx.displayId, action.key);
         } else if ("submit_search".equals(action.action)) {
             submitSearch(task, ctx.ui, ctx.input, ctx.displayId, ctx.width, ctx.height);
         } else {
@@ -254,9 +276,12 @@ public final class ActionExecutor {
             clearSearchSubmitIfExhausted(task);
             return;
         }
-        boolean injected = input.key(displayId, KeyEvent.KEYCODE_ENTER);
-        logs.task(task.taskId, "submit search by enter key displayId=" + displayId + " injected=" + injected);
-        clearSearchSubmitIfExhausted(task);
+        try {
+            boolean injected = input.key(displayId, KeyEvent.KEYCODE_ENTER);
+            logs.task(task.taskId, "submit search by enter key displayId=" + displayId + " injected=" + injected);
+        } finally {
+            clearSearchSubmitIfExhausted(task);
+        }
     }
 
     private void clearSearchSubmitIfExhausted(TaskState task) {

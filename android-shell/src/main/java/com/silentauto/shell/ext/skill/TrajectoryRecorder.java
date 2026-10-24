@@ -68,7 +68,12 @@ public final class TrajectoryRecorder implements StepListener {
         File directory=new File("/data/local/tmp/shadowauto/trajectories");
         if(!directory.isDirectory()&&!directory.mkdirs())throw new IllegalStateException("cannot create trajectory directory");
         File file=new File(directory,UiSnapshot.text(s.root,"taskId")+".json");
-        try(Writer output=new OutputStreamWriter(new FileOutputStream(file),StandardCharsets.UTF_8)){GSON.toJson(s.root,output);}
-        catch(IOException e){throw new IllegalStateException("cannot save trajectory",e);}
+        java.nio.file.Path temp=null;
+        try{
+            temp=java.nio.file.Files.createTempFile(directory.toPath(),"trajectory-",".tmp");
+            try(Writer output=new OutputStreamWriter(java.nio.file.Files.newOutputStream(temp),StandardCharsets.UTF_8)){GSON.toJson(s.root,output);}
+            java.nio.file.Files.move(temp,file.toPath(),java.nio.file.StandardCopyOption.ATOMIC_MOVE,java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+        }catch(IOException e){throw new IllegalStateException("cannot save trajectory",e);}
+        finally{if(temp!=null)try{java.nio.file.Files.deleteIfExists(temp);}catch(IOException ignored){}}
     }
 }

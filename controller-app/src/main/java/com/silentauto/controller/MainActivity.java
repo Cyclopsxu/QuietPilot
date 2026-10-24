@@ -513,14 +513,10 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
             PendingResult pending = goAsync();
             new Thread(() -> {
                 try {
-                    RpcClient client = new RpcClient("127.0.0.1", PORT, new RpcClient.Listener() {
-                        public void onLine(String line) {}
-                        public void onClosed(Exception error) {}
-                    });
-                    try {
-                        client.send("resumeTask", new JSONObject().put("taskId", taskId).put("outcome", "cancel"));
-                    } finally {
-                        client.close();
+                    try (com.silentauto.controller.ext.overlay.OverlayRpc client =
+                                 new com.silentauto.controller.ext.overlay.OverlayRpc(ignored -> {})) {
+                        // Stop is idempotent and also works while a transfer is in progress.
+                        client.request("stopTask", new JSONObject().put("taskId", taskId), 5);
                     }
                     context.getSystemService(NotificationManager.class).cancel(taskId, 23);
                 } catch (Exception e) {

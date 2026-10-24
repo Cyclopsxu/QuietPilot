@@ -13,8 +13,8 @@ public final class ScreenPrivacy {
         new Thread(()->{try{sync(context);}catch(Exception ignored){}},"screen-privacy").start();
     }
     public static void sync(Context context) throws Exception {
-        try(Socket socket=new Socket()) {
-            socket.connect(new InetSocketAddress("127.0.0.1",43110),3000);socket.setSoTimeout(3000);
+        try(Socket socket=com.silentauto.controller.RpcConnection.connect("127.0.0.1",43110,3000)) {
+            socket.setSoTimeout(3000);
             OutputStream output=socket.getOutputStream();
             output.write((new JSONObject().put("jsonrpc","2.0").put("id",1).put("method","setContextReading")
                     .put("params",new JSONObject().put("enabled",!disabled(context)))+"\n").getBytes(StandardCharsets.UTF_8));output.flush();

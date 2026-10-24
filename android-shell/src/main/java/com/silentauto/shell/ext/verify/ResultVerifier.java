@@ -34,8 +34,14 @@ public final class ResultVerifier {
     private final Completion completion;
     private final Callable<String> ocr;
     private final Callable<EvidenceFrame> capture;
+    private final DocumentProof documentProof;
 
     public ResultVerifier(Completion completion, Callable<String> ocr, Callable<EvidenceFrame> capture) {
+        this(completion,ocr,capture,null);
+    }
+
+    public ResultVerifier(Completion completion,Callable<String> ocr,Callable<EvidenceFrame> capture,DocumentProof documentProof) {
+        this.documentProof=documentProof;
         this.completion = completion;
         this.ocr = ocr;
         this.capture = capture;
@@ -102,6 +108,15 @@ public final class ResultVerifier {
             return unavailable;
         }
         String dump = ctx.ui.dump(ctx.displayId, ctx.width, ctx.height, UiBridge.MODE_SIMPLE);
+        if("complete".equals(scope)&&documentProof!=null) {
+            documentProof.observe(goal,dump);
+            if(documentProof.supported()) {
+                Result exact=new Result(documentProof.verified(),documentProof.verified()?"已逐字核对标题与完整正文，并在返回列表后重新打开确认保存":"",documentProof.missing());
+                exact.assessed=true;exact.frame=frame;
+                if(exact.verified){exact.pageAnchors.add(documentProof.title());exact.pageAnchors.add(documentProof.bodyAnchor());}
+                return exact;
+            }
+        }
         String ocrText = "";
         JsonObject ui = JsonParser.parseString(dump).getAsJsonObject();
         if (size(ui, "inputs") == 0 && size(ui, "targets") == 0) {

@@ -117,6 +117,7 @@ final class AiClient {
                 .build();
 
         StringBuilder full = new StringBuilder();
+        StringBuilder reasoning = new StringBuilder();
         Map<Integer, ToolCallBuilder> tools = new LinkedHashMap<>();
         call = http.newCall(request);
         if(aborted)call.cancel();
@@ -137,7 +138,7 @@ final class AiClient {
                     if ("[DONE]".equals(data)) {
                         break;
                     }
-                    String token = delta(data, tools);
+                    String token = delta(data, tools, reasoning);
                     if (!token.isEmpty()) {
                         full.append(token);
                         logs.ai(taskId, token);
@@ -151,6 +152,7 @@ final class AiClient {
         logs.ai(taskId, "\n");
         ToolResult result = new ToolResult();
         result.content = full.toString();
+        result.reasoningContent = reasoning.toString();
         for (ToolCallBuilder builder : tools.values()) {
             result.toolCalls.add(builder.build());
         }
@@ -173,18 +175,20 @@ final class AiClient {
         return object;
     }
 
-    private static String delta(String data, Map<Integer, ToolCallBuilder> tools) {
+    private static String delta(String data, Map<Integer, ToolCallBuilder> tools, StringBuilder reasoning) {
         try {
             JsonObject root = JsonParser.parseString(data).getAsJsonObject();
             JsonObject choice = root.getAsJsonArray("choices").get(0).getAsJsonObject();
             if (choice.has("delta")) {
                 JsonObject delta = choice.getAsJsonObject("delta");
                 readToolCalls(delta.get("tool_calls"), tools);
+                if(delta.has("reasoning_content")&&!delta.get("reasoning_content").isJsonNull())reasoning.append(delta.get("reasoning_content").getAsString());
                 return delta.has("content") && !delta.get("content").isJsonNull() ? delta.get("content").getAsString() : "";
             }
             if (choice.has("message")) {
                 JsonObject message = choice.getAsJsonObject("message");
                 readToolCalls(message.get("tool_calls"), tools);
+                if(message.has("reasoning_content")&&!message.get("reasoning_content").isJsonNull())reasoning.append(message.get("reasoning_content").getAsString());
                 return message.has("content") ? message.get("content").getAsString() : "";
             }
         } catch (Throwable ignored) {
@@ -234,6 +238,7 @@ final class AiClient {
 
     static final class ToolResult {
         String content = "";
+        String reasoningContent = "";
         final List<ToolCall> toolCalls = new ArrayList<>();
     }
 
