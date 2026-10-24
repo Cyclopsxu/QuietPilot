@@ -597,11 +597,15 @@ public final class AutomationEngine {
             task.verifierAi = verifierAi;
             ResultVerifier verifier = new ResultVerifier(verifierAi::completeVision, () -> screenOcrJson(task),
                     () -> EvidenceFrame.from(task.display.captureBitmap(8, 120)),"com.huawei.notepad".equals(task.packageName)?task.documentProof:null);
+            com.silentauto.shell.ext.guard.LoopDetector loopDetector = new com.silentauto.shell.ext.guard.LoopDetector();
+            long loopGoalVersion=task.amendments.version();
+            int loggedLoopTriggers=0;
             for (int step = 1; step <= MAX_STEPS && !task.stop.get(); step++) {
                 if(awaitBackgroundSafety(task)){step--;continue;}
                 if (task.conflict.awaitClear()) recoverAfterConflict(task);
                 applyAmendments(task);
                 long goalVersion=task.amendments.version();
+                if(loopGoalVersion!=goalVersion){loopDetector.reset();loopGoalVersion=goalVersion;loggedLoopTriggers=0;}
                 long planningEpoch=task.conflict.epoch();
                 long uiGeneration=bridge.generation();
                 String dump = bridge.dump(task.display.displayId, task.display.width, task.display.height, UiBridge.MODE_SIMPLE);
@@ -632,8 +636,18 @@ public final class AutomationEngine {
                 if("com.huawei.notepad".equals(task.packageName)){task.documentProof.observe(task.amendments.goal(),dump);logs.task(task.taskId,"DOCUMENT_PROOF "+task.documentProof.state());}
                 rememberUiObservation(task, dump);
                 for (StepListener listener : listeners) listener.beforeStep(ctx, step, dump);
+                if(loopDetector.triggers()>loggedLoopTriggers){
+                    loggedLoopTriggers=loopDetector.triggers();
+                    logs.task(task.taskId,"LOOP_DETECTED occurrence="+loggedLoopTriggers+" "+loopDetector.feedback());
+                }
+                if(loopDetector.triggers()==1)task.lastReason=loopDetector.feedback();
+                boolean loopVerification=loopDetector.triggers()>=2;
                 ResultVerifier.Extracted recoveredQuery=null;
-                if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY&&task.queryProgress.observe(dump,task.lastAction)) {
+                if(loopVerification&&task.type==com.silentauto.shell.ext.query.TaskType.QUERY){
+                    recoveredQuery=verifier.extractAnswer(ctx,task.amendments.goal(),true);
+                    if(!recoveredQuery.answer.found)throw new IllegalStateException("重复操作，停在 "+task.lastAction+"；当前界面无可核验答案");
+                }
+                if(!loopVerification&&task.type==com.silentauto.shell.ext.query.TaskType.QUERY&&task.queryProgress.observe(dump,task.lastAction)) {
                     logs.task(task.taskId,"QUERY_LOOP_RECOVERY: repeated scroll viewport; inspect screenshot and OCR");
                     try {
                         recoveredQuery=verifier.extractAnswer(ctx,task.amendments.goal(),true);
@@ -650,6 +664,9 @@ public final class AutomationEngine {
                 if(recoveredQuery!=null&&recoveredQuery.answer.found) {
                     action=new ActionDecision();action.action="report_answer";action.source="query_recovery";
                     action.answer=recoveredQuery.answer.answer;action.quote=recoveredQuery.answer.quote;action.reason="重复页面后独立读取截图与OCR";
+                } else if(loopVerification){
+                    action=new ActionDecision();action.action="done";action.source="loop_verifier";
+                    action.reason="重复操作，独立验收当前页面";
                 } else action = task.skillRunner == null ? null : task.skillRunner.next(ctx, task, step, dump);
                 if (action == null) action = firstNonNull(ctx, task, step, dump);
                 if (action == null) {
@@ -818,6 +835,7 @@ public final class AutomationEngine {
                         break;
                         }
                     }
+                    if(loopVerification)throw new IllegalStateException("重复操作，停在 "+task.lastAction+"；"+verification.missing);
                     task.lastAction = "verification_failed";
                     task.lastReason = verification.missing;
                     logs.task(task.taskId, "verification failed: " + verification.missing);
@@ -834,7 +852,10 @@ public final class AutomationEngine {
                 catch(com.silentauto.shell.ext.guard.ReadOnlyGuard.Blocked blocked){task.lastAction="READONLY_BLOCKED";task.lastReason=blocked.getMessage();logs.task(task.taskId,task.lastReason);continue;}
                 catch(com.silentauto.shell.ext.guard.BackgroundKeyPolicy.Blocked blocked){task.lastAction="INPUT_BLOCKED";task.lastReason=blocked.getMessage();logs.task(task.taskId,task.lastReason);continue;}
                 catch (com.silentauto.shell.ext.guard.MainAppConflictGuard.PausedInputException paused) { interruptedInput=true; }
-                finally { for (StepListener listener : listeners) listener.afterAction(ctx, step, action, result, dump); }
+                finally {
+                    for (StepListener listener : listeners) listener.afterAction(ctx, step, action, result, dump);
+                    if(!interruptedInput)loopDetector.afterAction(ctx,step,action,result,dump);
+                }
                 if(interruptedInput){
                     if(task.skillRunner!=null){task.skillRunner.retryUnexecuted(action);task.skillRunner.forceRescue();}
                     if(!disturbance.backgroundIssue(task.taskId).isEmpty()){step--;continue;}

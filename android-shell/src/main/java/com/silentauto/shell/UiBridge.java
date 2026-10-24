@@ -812,6 +812,7 @@ public final class UiBridge {
         if (haystack.isEmpty()) {
             return -1;
         }
+        if(com.silentauto.shell.ext.guard.SubmitTargetPolicy.alternateInput(haystack))return -1;
         if (haystack.contains("cancel") || haystack.contains("clear") || haystack.contains("delete") || haystack.contains("back")
                 || haystack.contains("取消") || haystack.contains("清除") || haystack.contains("删除") || haystack.contains("返回")) {
             return -1;
