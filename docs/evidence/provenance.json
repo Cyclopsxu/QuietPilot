@@ -350,5 +350,102 @@
       }
     ],
     "note": "固定裁剪加黑色留白，原视频按时间段保留；只作结果对照，按metadata近似对齐，非完整执行视频"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-video-edit-plan.json",
+    "artifact": "demo-path/video-edit-plan.json",
+    "sourceSha256": "21b699984cd32d1741299c0435eaa006b6744e5ea1cfad4459e5d8417ad9eb14",
+    "redactedSha256": "21b699984cd32d1741299c0435eaa006b6744e5ea1cfad4459e5d8417ad9eb14",
+    "note": "本轮作者剪辑/检查元数据固定副本，不冒充设备原始轨迹"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-video-build-manifest.json",
+    "artifact": "demo-path/video-build-manifest.json",
+    "sourceSha256": "f392fbab127ee94c38b45d6afcf5c6a9f224bfc13c3fb414d0979f92a98c7239",
+    "redactedSha256": "f392fbab127ee94c38b45d6afcf5c6a9f224bfc13c3fb414d0979f92a98c7239",
+    "note": "本轮作者剪辑/检查元数据固定副本，不冒充设备原始轨迹"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-video-qa.json",
+    "artifact": "demo-path/video-qa.json",
+    "sourceSha256": "1e4e82e3a9b59493478f03faf84b7f896c1d06e4ee3fc731cdf8c49ebd8a695b",
+    "redactedSha256": "1e4e82e3a9b59493478f03faf84b7f896c1d06e4ee3fc731cdf8c49ebd8a695b",
+    "note": "本轮作者剪辑/检查元数据固定副本，不冒充设备原始轨迹"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-five-segments.srt",
+    "artifact": "demo-path/step6-five-segments.srt",
+    "sourceSha256": "6ce4925bf8c295b57d59b5718087fb6de58940d9d5daab1fecfcbeaad9b318d4",
+    "redactedSha256": "6ce4925bf8c295b57d59b5718087fb6de58940d9d5daab1fecfcbeaad9b318d4",
+    "note": "本轮作者剪辑/检查元数据固定副本，不冒充设备原始轨迹"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-video-edit-plan.json",
+    "artifact": "demo-path/step6-five-segments.mp4",
+    "sourceSha256": "21b699984cd32d1741299c0435eaa006b6744e5ea1cfad4459e5d8417ad9eb14",
+    "redactedSha256": "674d995579a891702be04bb72f8ba23f49de5a2c38306203e317a47a5ca69e0b",
+    "additionalSources": [
+      {
+        "root": "validation",
+        "path": "demo-retry-recordings/step6-wechat-retry-1792831237-vd.mp4",
+        "sha256": "ed755d1350af4f3f652efe4fb481794e0adfd6172c2143da89623d18f85e1b65"
+      },
+      {
+        "root": "validation",
+        "path": "isolation-recordings-retry/main.mp4",
+        "sha256": "a1031dfb9dab412f73ec51193fa8f50926cf9daecd692be21d35f35decce0c55"
+      },
+      {
+        "root": "validation",
+        "path": "isolation-recordings-retry/step6-round2-1792814611-vd.mp4",
+        "sha256": "dfec67c52fcd0ccb65236baea3eeab4fbdd4cfe8a38ecbf4d4352f4d28ad7d46"
+      },
+      {
+        "root": "validation",
+        "path": "skill-recordings/step6-skill-explore-v2-1792833789-vd.mp4",
+        "sha256": "95ada7b4f09e28b20b0e4634a524a49ebc1fdfb5a26336d5efd730cb4ebe7516"
+      },
+      {
+        "root": "validation",
+        "path": "skill-recordings/step6-skill-reuse-v2-1792833893-vd.mp4",
+        "sha256": "fac84e8df86a71e85e5d559541db17e99381cab5735f1ab0437f59ab9615b6f8"
+      },
+      {
+        "root": "validation",
+        "path": "skill-recordings/step6-skill-rescue-v2-1792833985-vd.mp4",
+        "sha256": "6b3851d2468324169071d9a0542c3f22d209da28910460d6b87c8064f925ce57"
+      },
+      {
+        "root": "validation",
+        "path": "context-memo-recordings/main.mp4",
+        "sha256": "b87ce51bff66ddf7e77a332d87edc33eb31812093d10b6d10e246228a8e0e17c"
+      },
+      {
+        "root": "validation",
+        "path": "context-memo-recordings/voice-6e751430-5c4b-4e08-a426-032febeced12-vd.mp4",
+        "sha256": "1da807c332ef7a0a545883f574ebfd07b0983a4b1f11e64745f8cf574e9027a8"
+      },
+      {
+        "root": "validation",
+        "path": "calculator-vd.mp4",
+        "sha256": "2a3facf3e6240edd5d68c05d476e53db96aeaa810cb3fe0c1320a5d3ebdc9257"
+      },
+      {
+        "root": "repo",
+        "path": "docs/evidence/query/calculator-simple-source.png",
+        "sha256": "3ecb254c0035588699c6f59ffbb93efb8f1f509f9c92432207736f2ca08c1a66"
+      },
+      {
+        "root": "validation",
+        "path": "coffee-resume-recordings/meituan-resume-vd.mp4",
+        "sha256": "2c83ecfb5324e850277844b601cb7005565a7ce1accb602fd3286726ccca1e8d"
+      },
+      {
+        "root": "repo",
+        "path": "docs/evidence/demo-path/meituan-large-cup-evidence.png",
+        "sha256": "32470ee3c7c0a0032af833f79843a89fc6e220862ae92a07fc083a6e69271be3"
+      }
+    ],
+    "note": "按固定计划从真实录像、已核看静态图及文字说明渲染；所有媒体源均有SHA256；缺录像处不生成虚构App页面"
   }
 ]

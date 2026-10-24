@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-24",
+  "video": "step6-five-segments.mp4",
+  "sha256": "674d995579a891702be04bb72f8ba23f49de5a2c38306203e317a47a5ca69e0b",
+  "durationSeconds": 177,
+  "width": 1280,
+  "height": 720,
+  "frames": 2655,
+  "fps": 15,
+  "fullDecodePassed": true,
+  "chapterStartsSeconds": [
+    0,
+    8,
+    46,
+    80,
+    105,
+    135,
+    167
+  ],
+  "audioTracks": 0,
+  "ocr": {
+    "method": "Apple Vision fast English OCR on every decoded frame; URL, credential-prefix and mainland-mobile patterns",
+    "ocrFailures": 0,
+    "processedFrames": 2655,
+    "scope": "Heuristic OCR plus separately recorded visual crop review; OCR does not detect all private information",
+    "sensitivePatternFrameTimes": []
+  },
+  "visualReview": {
+    "sceneMidpoints": 16,
+    "sceneStartAndEndContactSheetsReviewed": true,
+    "adjustedInputTimesSeconds": [
+      17,
+      22,
+      26,
+      35.9
+    ],
+    "paymentArchiveCardReviewedAtSeconds": 155,
+    "fixedCropsReviewed": true,
+    "notes": "16场景中帧及起末抽帧、调整后的输入段另查4帧；不是2655帧逐帧人工阅读。地图阶段前8秒黑色遮挡，字幕明确说明。"
+  },
+  "limitations": [
+    "咖啡支付前成功段无连续录像，用任务归档及机主确认呈现",
+    "并排素材仅按启动时间近似对齐，非帧精确同步",
+    "OCR只筛查链接、凭据前缀和完整手机号模式，不覆盖所有语义和隐私",
+    "五段证据剪辑完成，不代表五段原指定路径全部通过"
+  ],
+  "rendererSha256": "5480c542b9da66aa73bc2a3dfd1e7d161e4c5a98f6072eaf8f2f8fae10977f80",
+  "ocrCheckerSha256": "8ce38cbd6d578700067479fb67934ef308daacb94ec47a13d15beb5f4edf6885"
+}

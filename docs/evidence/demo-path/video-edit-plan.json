@@ -1,0 +1,743 @@
+{
+  "version": 1,
+  "title": "Step6 五段证据演示（含失败与缺失标注）",
+  "date": "2026-10-24",
+  "durationSeconds": 177,
+  "policy": "只使用本地真实记录；标明实录、定格、静态验收图、归档说明；不补造缺失录像。",
+  "chapters": [
+    {
+      "start": 8,
+      "end": 46,
+      "title": "01 并行输入与微信启动"
+    },
+    {
+      "start": 46,
+      "end": 80,
+      "title": "02 技能探索复用救援"
+    },
+    {
+      "start": 80,
+      "end": 105,
+      "title": "03 主屏上下文到备忘录"
+    },
+    {
+      "start": 105,
+      "end": 135,
+      "title": "04 只读查询与重复检测"
+    },
+    {
+      "start": 135,
+      "end": 167,
+      "title": "05 咖啡语音追加与交接"
+    }
+  ],
+  "scenes": [
+    {
+      "section": "ShadowAuto · 2026-10-24 · Mate 40 Pro",
+      "title": "Step 6｜五段证据演示",
+      "subtitle": "后台虚拟屏操作真实 App；成功、失败和证据缺口一并呈现",
+      "duration": 8,
+      "badge": "无声视频｜素材标签：真实录屏 / 静态验收图 / 归档说明",
+      "text": [
+        {
+          "x": 65,
+          "y": 220,
+          "content": "01  并行输入与微信启动\n02  技能探索、复用、救援\n03  主屏上下文到备忘录\n04  只读查询与重复检测\n05  咖啡语音追加与支付前交接",
+          "width": 1120,
+          "size": 30,
+          "color": "#f0f4fa",
+          "bottom": 632
+        },
+        {
+          "x": 790,
+          "y": 250,
+          "content": "HarmonyOS 4.2 / SDK31\n兼容实验模式\n不认证全程焦点隔离",
+          "width": 420,
+          "size": 25,
+          "color": "#ffda89",
+          "bottom": 632
+        }
+      ],
+      "media": []
+    },
+    {
+      "section": "01 / 并行输入与微信启动",
+      "title": "微信路径：启动未通过",
+      "subtitle": "真实启动录屏节选；不是消息发送成功画面",
+      "duration": 8,
+      "badge": "失败样本｜微信未发送消息；不把启动失败剪成成功",
+      "text": [
+        {
+          "x": 400,
+          "y": 220,
+          "content": "两次真机启动后退出或读不到根控件。\n系统记录 EXIT_SELF / iAware 清理。\n没有异常堆栈，不能扩大为所有设备不兼容。\n后续技能与上下文使用备忘录替代。",
+          "width": 790,
+          "size": 28,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": [
+        {
+          "root": "validation",
+          "path": "demo-retry-recordings/step6-wechat-retry-1792831237-vd.mp4",
+          "kind": "video",
+          "start": 1,
+          "take": 8,
+          "box": [
+            90,
+            185,
+            240,
+            440
+          ],
+          "crop": null,
+          "freeze": false
+        }
+      ]
+    },
+    {
+      "section": "01 / 并行输入与微信启动",
+      "title": "主屏拼音输入与后台搜索",
+      "subtitle": "第二轮同一时段20秒节选，1×；前8秒遮挡地图，按启动时间近似对齐",
+      "duration": 20,
+      "badge": "实录·局部裁剪｜前8秒遮挡地图；主屏同文为机主输入；本轮后台后来不可读",
+      "text": [
+        {
+          "x": 65,
+          "y": 178,
+          "content": "主屏：候选栏与键盘",
+          "width": 540,
+          "size": 24,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 660,
+          "y": 178,
+          "content": "虚拟屏：搜索输入区",
+          "width": 560,
+          "size": 24,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 665,
+          "y": 452,
+          "content": "前8秒遮挡地图。\n随后显示公开路线输入。\n主屏保留中文候选栏。\n本轮后台后来控件不可读。",
+          "width": 550,
+          "size": 26,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": [
+        {
+          "root": "validation",
+          "path": "isolation-recordings-retry/main.mp4",
+          "kind": "video",
+          "start": 114,
+          "take": 20,
+          "box": [
+            50,
+            218,
+            550,
+            390
+          ],
+          "crop": [
+            0,
+            1376,
+            1152,
+            1000
+          ],
+          "freeze": false
+        },
+        {
+          "root": "validation",
+          "path": "isolation-recordings-retry/step6-round2-1792814611-vd.mp4",
+          "kind": "video",
+          "start": 3,
+          "take": 20,
+          "box": [
+            660,
+            218,
+            570,
+            208
+          ],
+          "crop": [
+            0,
+            0,
+            1152,
+            420
+          ],
+          "freeze": false,
+          "hideBefore": 8
+        }
+      ]
+    },
+    {
+      "section": "01 / 并行输入与微信启动",
+      "title": "三轮采样结果与真实边界",
+      "subtitle": "归档说明；三轮机主均反馈输入、滚动、候选词正常",
+      "duration": 10,
+      "badge": "采样四项0 ≠ 全程无打扰认证｜首轮录像缺口与采样间隔限制保留",
+      "text": [
+        {
+          "x": 70,
+          "y": 205,
+          "content": "轮次        采样数       观测时长\n第一轮      292          146.556秒\n第二轮      330          165.059秒\n第三轮      387          193.081秒",
+          "width": 650,
+          "size": 29,
+          "color": "#f0f4fa",
+          "bottom": 632
+        },
+        {
+          "x": 770,
+          "y": 220,
+          "content": "前台切换 0\n焦点离主屏 0\nIME离主屏 0\n剪贴板变化 0",
+          "width": 430,
+          "size": 30,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 70,
+          "y": 475,
+          "content": "设备缺原生独立焦点 / 本地IME确认；behaviorValidated仍为false。\n主屏同文已由机主确认手动输入，不据此宣称跨屏写入。",
+          "width": 1120,
+          "size": 25,
+          "color": "#ffda89",
+          "bottom": 632
+        }
+      ],
+      "media": []
+    },
+    {
+      "section": "02 / 技能探索、复用与救援",
+      "title": "备忘录替代：三个独立任务结果",
+      "subtitle": "三个录像并列，不是并发执行；各4秒实录后定格10秒",
+      "duration": 14,
+      "badge": "真实录屏结果 + 明示定格｜不是技能全部动作的连续录像",
+      "text": [
+        {
+          "x": 90,
+          "y": 180,
+          "content": "首次探索 · 测试1",
+          "width": 350,
+          "size": 25,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 475,
+          "y": 180,
+          "content": "换参复用 · 测试2",
+          "width": 350,
+          "size": 25,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 860,
+          "y": 180,
+          "content": "偏离救援 · 测试3",
+          "width": 350,
+          "size": 25,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 90,
+          "y": 555,
+          "content": "8步 VERIFIED",
+          "width": 350,
+          "size": 26,
+          "color": "#f0f4fa",
+          "bottom": 632
+        },
+        {
+          "x": 475,
+          "y": 555,
+          "content": "10步 VERIFIED",
+          "width": 350,
+          "size": 26,
+          "color": "#f0f4fa",
+          "bottom": 632
+        },
+        {
+          "x": 860,
+          "y": 555,
+          "content": "13步 VERIFIED",
+          "width": 350,
+          "size": 26,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": [
+        {
+          "root": "validation",
+          "path": "skill-recordings/step6-skill-explore-v2-1792833789-vd.mp4",
+          "kind": "video",
+          "start": 30,
+          "take": 4,
+          "box": [
+            70,
+            225,
+            350,
+            300
+          ],
+          "crop": [
+            0,
+            100,
+            1152,
+            1000
+          ],
+          "freeze": true
+        },
+        {
+          "root": "validation",
+          "path": "skill-recordings/step6-skill-reuse-v2-1792833893-vd.mp4",
+          "kind": "video",
+          "start": 44,
+          "take": 4,
+          "box": [
+            465,
+            225,
+            350,
+            300
+          ],
+          "crop": [
+            0,
+            100,
+            1152,
+            1000
+          ],
+          "freeze": true
+        },
+        {
+          "root": "validation",
+          "path": "skill-recordings/step6-skill-rescue-v2-1792833985-vd.mp4",
+          "kind": "video",
+          "start": 58,
+          "take": 4,
+          "box": [
+            860,
+            225,
+            350,
+            300
+          ],
+          "crop": [
+            0,
+            100,
+            1152,
+            1000
+          ],
+          "freeze": true
+        }
+      ]
+    },
+    {
+      "section": "02 / 技能探索、复用与救援",
+      "title": "复用减少调用，但没有提速",
+      "subtitle": "归档对比：调用为executor次数；首次包含技能编译",
+      "duration": 12,
+      "badge": "三段均由DocumentProof确定性验收，verifier模型调用为0",
+      "text": [
+        {
+          "x": 70,
+          "y": 205,
+          "content": "阶段",
+          "width": 250,
+          "size": 27,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 360,
+          "y": 205,
+          "content": "步数",
+          "width": 200,
+          "size": 27,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 610,
+          "y": 205,
+          "content": "执行模型调用",
+          "width": 250,
+          "size": 27,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 975,
+          "y": 205,
+          "content": "执行耗时",
+          "width": 230,
+          "size": 27,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 70,
+          "y": 270,
+          "content": "首次探索\n换参复用\n人为偏离救援",
+          "width": 260,
+          "size": 31,
+          "color": "#f0f4fa",
+          "bottom": 632
+        },
+        {
+          "x": 360,
+          "y": 270,
+          "content": "8\n10\n13",
+          "width": 200,
+          "size": 31,
+          "color": "#f0f4fa",
+          "bottom": 632
+        },
+        {
+          "x": 650,
+          "y": 270,
+          "content": "10\n8\n14",
+          "width": 200,
+          "size": 31,
+          "color": "#f0f4fa",
+          "bottom": 632
+        },
+        {
+          "x": 975,
+          "y": 270,
+          "content": "27.661秒\n49.444秒\n63.328秒",
+          "width": 250,
+          "size": 30,
+          "color": "#f0f4fa",
+          "bottom": 632
+        },
+        {
+          "x": 70,
+          "y": 470,
+          "content": "复用仍有3步rescue和模型回退，不能宣称纯技能回放。\n耗时比首次更长；早期编译失败、指纹误判、救援失败均留档。",
+          "width": 1120,
+          "size": 26,
+          "color": "#ffda89",
+          "bottom": 632
+        }
+      ],
+      "media": []
+    },
+    {
+      "section": "02 / 技能探索、复用与救援",
+      "title": "真实偏离：skill → rescue → skill",
+      "subtitle": "救援过程据真机轨迹说明；没有用结果录像冒充过程",
+      "duration": 8,
+      "badge": "归档说明｜注入与第2步并发；后续仍再次偏离并回退模型",
+      "text": [
+        {
+          "x": 70,
+          "y": 210,
+          "content": "同一虚拟屏138：编辑器打开后启动列表入口。\n实际序列：skill, skill, rescue, skill, rescue×3, model…\n恢复编辑器后曾继续skill；最后由模型补写、保存、重开。\n最终 VERIFIED；可控注入不是执行线程暂停后的精确断点。",
+          "width": 1120,
+          "size": 29,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": []
+    },
+    {
+      "section": "03 / 主屏上下文到备忘录",
+      "title": "从“这家店”到一条真实笔记",
+      "subtitle": "无声录屏结果对照；按启动时间近似对齐，1×",
+      "duration": 15,
+      "badge": "真实录屏·裁剪｜只验证公开店名，没有完整地址；微信发送仍未通过",
+      "text": [
+        {
+          "x": 65,
+          "y": 180,
+          "content": "主屏：酒店列表的公开店名",
+          "width": 560,
+          "size": 24,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 660,
+          "y": 180,
+          "content": "虚拟屏：保存并重开的笔记",
+          "width": 560,
+          "size": 24,
+          "color": "#56d9bf",
+          "bottom": 632
+        },
+        {
+          "x": 65,
+          "y": 430,
+          "content": "机主原话：\n“把这家店记到备忘录里”\n\n没有手工代填店名或合成语音。",
+          "width": 535,
+          "size": 26,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": [
+        {
+          "root": "validation",
+          "path": "context-memo-recordings/main.mp4",
+          "kind": "video",
+          "start": 178,
+          "take": 15,
+          "box": [
+            55,
+            240,
+            550,
+            132
+          ],
+          "crop": [
+            360,
+            1090,
+            792,
+            190
+          ],
+          "freeze": false
+        },
+        {
+          "root": "validation",
+          "path": "context-memo-recordings/voice-6e751430-5c4b-4e08-a426-032febeced12-vd.mp4",
+          "kind": "video",
+          "start": 45,
+          "take": 15,
+          "box": [
+            660,
+            240,
+            550,
+            370
+          ],
+          "crop": [
+            0,
+            100,
+            1152,
+            1000
+          ],
+          "freeze": false
+        }
+      ]
+    },
+    {
+      "section": "03 / 主屏上下文到备忘录",
+      "title": "店名理解、写入、验收与同页交付",
+      "subtitle": "归档说明：10步VERIFIED；原Android任务/根任务均291",
+      "duration": 10,
+      "badge": "替代路径通过｜不是大众点评→微信，也没有补造酒店地址",
+      "text": [
+        {
+          "x": 70,
+          "y": 210,
+          "content": "主屏公开原文：苏州丽思卡尔顿酒店\n理解目标：在备忘录新建笔记，记录该酒店名\n标题与正文一致，保存后重新打开，再交到主屏\nmodel / skill / rescue：2 / 5 / 3\nexecutor / verifier / intake：8 / 1 / 1",
+          "width": 1120,
+          "size": 29,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": []
+    },
+    {
+      "section": "04 / 只读查询与重复检测",
+      "title": "计算器录像：失败样本也保留",
+      "subtitle": "本段录像属于16步重复失败重测，不是7步成功任务",
+      "duration": 12,
+      "badge": "真实失败录像节选·1×｜不将某一帧算出结果等同任务验收成功",
+      "text": [
+        {
+          "x": 430,
+          "y": 220,
+          "content": "任务：先清除，再计算12×13。\n这次录屏任务最终16步FAILED。\n\nLoopDetector：首次提示，第二次独立验收；\n技能回放期间排除。\n另一次7步ANSWERED156有独立归档。",
+          "width": 780,
+          "size": 28,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": [
+        {
+          "root": "validation",
+          "path": "calculator-vd.mp4",
+          "kind": "video",
+          "start": 6,
+          "take": 12,
+          "box": [
+            90,
+            190,
+            270,
+            430
+          ],
+          "crop": null,
+          "freeze": false
+        }
+      ]
+    },
+    {
+      "section": "04 / 只读查询与重复检测",
+      "title": "可核对的成功结果：156",
+      "subtitle": "静态验收图：另一普通计算任务，6步ANSWERED",
+      "duration": 10,
+      "badge": "静态验收图 + 归档说明｜与上一失败录像来自不同任务",
+      "text": [
+        {
+          "x": 430,
+          "y": 220,
+          "content": "界面公式与结果：12×13 = 156\n答案必须有页面原文依据。\n\nStep6“先清除再算”另有7步成功样本。\n成功和失败的任务JSON均随仓库提供。",
+          "width": 770,
+          "size": 29,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": [
+        {
+          "root": "repo",
+          "path": "docs/evidence/query/calculator-simple-source.png",
+          "kind": "still",
+          "box": [
+            90,
+            185,
+            270,
+            435
+          ],
+          "crop": null
+        }
+      ]
+    },
+    {
+      "section": "04 / 只读查询与重复检测",
+      "title": "公开信息查询仍有失败边界",
+      "subtitle": "机主选择跳过私人订单，使用公开信息替代",
+      "duration": 8,
+      "badge": "归档说明｜不确定、截断和不可读都不计合格查询",
+      "text": [
+        {
+          "x": 70,
+          "y": 215,
+          "content": "高德公开开放时间：8步ANSWERED，但uncertain=true且截断。\n公开地址复测：第7步控件持续不可读，停止并取消。\n已有4步公开地点地址成功样本，仅限当时搜索结果页。\n状态叫ANSWERED，不代表答案已经可信。",
+          "width": 1120,
+          "size": 28,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": []
+    },
+    {
+      "section": "05 / 咖啡语音追加与支付前交接",
+      "title": "咖啡第一条路：错误页",
+      "subtitle": "真实录屏节选，1×；验证码后全站搜索仍失败",
+      "duration": 6,
+      "badge": "失败样本｜B3001_1401原因未确认；没有把“暂无结果”说成当地没有咖啡",
+      "text": [
+        {
+          "x": 430,
+          "y": 220,
+          "content": "全站搜索多次换词仍返回错误页。\n25步上限结束，FAILED。\n\n改走正常外卖入口后，由机主完成登录。\n不同尝试保留为不同任务。",
+          "width": 770,
+          "size": 29,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": [
+        {
+          "root": "validation",
+          "path": "coffee-resume-recordings/meituan-resume-vd.mp4",
+          "kind": "video",
+          "start": 68,
+          "take": 6,
+          "box": [
+            90,
+            185,
+            270,
+            435
+          ],
+          "crop": null,
+          "freeze": false
+        }
+      ]
+    },
+    {
+      "section": "05 / 咖啡语音追加与支付前交接",
+      "title": "首轮大杯规格已验收并交付",
+      "subtitle": "静态验收图：拿铁规格；本图不是后一次美式的支付页",
+      "duration": 10,
+      "badge": "静态验收图｜9步VERIFIED；只到规格面板，不计支付前边界通过",
+      "text": [
+        {
+          "x": 610,
+          "y": 210,
+          "content": "真实语音追加：“改成大杯的”\n最终已选规格含“大杯”。\n原任务284交到主屏。\n购物车仍为0，没有下单或付款。\n\n这一轮缺少追加阶段的连续双路录像。",
+          "width": 600,
+          "size": 28,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": [
+        {
+          "root": "repo",
+          "path": "docs/evidence/demo-path/meituan-large-cup-evidence.png",
+          "kind": "still",
+          "box": [
+            60,
+            180,
+            500,
+            440
+          ],
+          "crop": [
+            0,
+            300,
+            1152,
+            1550
+          ]
+        }
+      ]
+    },
+    {
+      "section": "05 / 咖啡语音追加与支付前交接",
+      "title": "另一次双语音：大杯冰美式到支付前",
+      "subtitle": "此段无连续录屏，以任务归档及机主反馈说明，不补造支付页",
+      "duration": 16,
+      "badge": "归档说明·没有支付页录像｜WAITING_USER/payment不是VERIFIED付款成功",
+      "text": [
+        {
+          "x": 70,
+          "y": 205,
+          "content": "起始语音：帮我点一杯瑞幸的中杯卡美式咖啡\n追加modify：帮我改成大杯冰的美式\n第14步选择大杯，第15步加入购物车，第18步去结算\n第20步支付边界：标准美式 / 大杯 / 冰 / x1；底部“立即支付”\n“去处理”后机主确认：是，大杯、冰\n自动任务没有点击支付；之后最终CANCELLED，支付前快照保留。",
+          "width": 1120,
+          "size": 27,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": []
+    },
+    {
+      "section": "收尾 / 已完成与仍未通过",
+      "title": "五段剪辑完成，验收结论分别保留",
+      "subtitle": "原片、脱敏证据、任务JSON、时间索引与来源哈希可交叉核对",
+      "duration": 10,
+      "badge": "完整五段证据剪辑 ≠ 五段全部验收通过 ≠ 同一次连续成功录像",
+      "text": [
+        {
+          "x": 70,
+          "y": 210,
+          "content": "已具备：三轮输入采样、技能三段、店名上下文、查询与咖啡边界证据。\n仍未通过：微信消息路径、完整地址、全程隔离认证。\n录制缺口：咖啡成功支付前阶段缺连续双路视频；已明确用归档说明。\n工程限制：回环RPC未鉴权；其他机型与长期稳定性未覆盖。\n代码构建、Lint和统一回归通过；媒体剪辑另做解码与隐私检查。",
+          "width": 1120,
+          "size": 27,
+          "color": "#f0f4fa",
+          "bottom": 632
+        }
+      ],
+      "media": []
+    }
+  ]
+}

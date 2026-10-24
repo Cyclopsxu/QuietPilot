@@ -1,0 +1,169 @@
+{
+  "durationSeconds": 177,
+  "width": 1280,
+  "height": 720,
+  "fps": 15,
+  "audio": false,
+  "planSha256": "21b699984cd32d1741299c0435eaa006b6744e5ea1cfad4459e5d8417ad9eb14",
+  "outputSha256": "674d995579a891702be04bb72f8ba23f49de5a2c38306203e317a47a5ca69e0b",
+  "timeline": [
+    {
+      "start": 0,
+      "end": 8,
+      "title": "Step 6｜五段证据演示",
+      "section": "ShadowAuto · 2026-10-24 · Mate 40 Pro"
+    },
+    {
+      "start": 8,
+      "end": 16,
+      "title": "微信路径：启动未通过",
+      "section": "01 / 并行输入与微信启动"
+    },
+    {
+      "start": 16,
+      "end": 36,
+      "title": "主屏拼音输入与后台搜索",
+      "section": "01 / 并行输入与微信启动"
+    },
+    {
+      "start": 36,
+      "end": 46,
+      "title": "三轮采样结果与真实边界",
+      "section": "01 / 并行输入与微信启动"
+    },
+    {
+      "start": 46,
+      "end": 60,
+      "title": "备忘录替代：三个独立任务结果",
+      "section": "02 / 技能探索、复用与救援"
+    },
+    {
+      "start": 60,
+      "end": 72,
+      "title": "复用减少调用，但没有提速",
+      "section": "02 / 技能探索、复用与救援"
+    },
+    {
+      "start": 72,
+      "end": 80,
+      "title": "真实偏离：skill → rescue → skill",
+      "section": "02 / 技能探索、复用与救援"
+    },
+    {
+      "start": 80,
+      "end": 95,
+      "title": "从“这家店”到一条真实笔记",
+      "section": "03 / 主屏上下文到备忘录"
+    },
+    {
+      "start": 95,
+      "end": 105,
+      "title": "店名理解、写入、验收与同页交付",
+      "section": "03 / 主屏上下文到备忘录"
+    },
+    {
+      "start": 105,
+      "end": 117,
+      "title": "计算器录像：失败样本也保留",
+      "section": "04 / 只读查询与重复检测"
+    },
+    {
+      "start": 117,
+      "end": 127,
+      "title": "可核对的成功结果：156",
+      "section": "04 / 只读查询与重复检测"
+    },
+    {
+      "start": 127,
+      "end": 135,
+      "title": "公开信息查询仍有失败边界",
+      "section": "04 / 只读查询与重复检测"
+    },
+    {
+      "start": 135,
+      "end": 141,
+      "title": "咖啡第一条路：错误页",
+      "section": "05 / 咖啡语音追加与支付前交接"
+    },
+    {
+      "start": 141,
+      "end": 151,
+      "title": "首轮大杯规格已验收并交付",
+      "section": "05 / 咖啡语音追加与支付前交接"
+    },
+    {
+      "start": 151,
+      "end": 167,
+      "title": "另一次双语音：大杯冰美式到支付前",
+      "section": "05 / 咖啡语音追加与支付前交接"
+    },
+    {
+      "start": 167,
+      "end": 177,
+      "title": "五段剪辑完成，验收结论分别保留",
+      "section": "收尾 / 已完成与仍未通过"
+    }
+  ],
+  "sources": [
+    {
+      "root": "validation",
+      "path": "demo-retry-recordings/step6-wechat-retry-1792831237-vd.mp4",
+      "sha256": "ed755d1350af4f3f652efe4fb481794e0adfd6172c2143da89623d18f85e1b65"
+    },
+    {
+      "root": "validation",
+      "path": "isolation-recordings-retry/main.mp4",
+      "sha256": "a1031dfb9dab412f73ec51193fa8f50926cf9daecd692be21d35f35decce0c55"
+    },
+    {
+      "root": "validation",
+      "path": "isolation-recordings-retry/step6-round2-1792814611-vd.mp4",
+      "sha256": "dfec67c52fcd0ccb65236baea3eeab4fbdd4cfe8a38ecbf4d4352f4d28ad7d46"
+    },
+    {
+      "root": "validation",
+      "path": "skill-recordings/step6-skill-explore-v2-1792833789-vd.mp4",
+      "sha256": "95ada7b4f09e28b20b0e4634a524a49ebc1fdfb5a26336d5efd730cb4ebe7516"
+    },
+    {
+      "root": "validation",
+      "path": "skill-recordings/step6-skill-reuse-v2-1792833893-vd.mp4",
+      "sha256": "fac84e8df86a71e85e5d559541db17e99381cab5735f1ab0437f59ab9615b6f8"
+    },
+    {
+      "root": "validation",
+      "path": "skill-recordings/step6-skill-rescue-v2-1792833985-vd.mp4",
+      "sha256": "6b3851d2468324169071d9a0542c3f22d209da28910460d6b87c8064f925ce57"
+    },
+    {
+      "root": "validation",
+      "path": "context-memo-recordings/main.mp4",
+      "sha256": "b87ce51bff66ddf7e77a332d87edc33eb31812093d10b6d10e246228a8e0e17c"
+    },
+    {
+      "root": "validation",
+      "path": "context-memo-recordings/voice-6e751430-5c4b-4e08-a426-032febeced12-vd.mp4",
+      "sha256": "1da807c332ef7a0a545883f574ebfd07b0983a4b1f11e64745f8cf574e9027a8"
+    },
+    {
+      "root": "validation",
+      "path": "calculator-vd.mp4",
+      "sha256": "2a3facf3e6240edd5d68c05d476e53db96aeaa810cb3fe0c1320a5d3ebdc9257"
+    },
+    {
+      "root": "repo",
+      "path": "docs/evidence/query/calculator-simple-source.png",
+      "sha256": "3ecb254c0035588699c6f59ffbb93efb8f1f509f9c92432207736f2ca08c1a66"
+    },
+    {
+      "root": "validation",
+      "path": "coffee-resume-recordings/meituan-resume-vd.mp4",
+      "sha256": "2c83ecfb5324e850277844b601cb7005565a7ce1accb602fd3286726ccca1e8d"
+    },
+    {
+      "root": "repo",
+      "path": "docs/evidence/demo-path/meituan-large-cup-evidence.png",
+      "sha256": "32470ee3c7c0a0032af833f79843a89fc6e220862ae92a07fc083a6e69271be3"
+    }
+  ]
+}
