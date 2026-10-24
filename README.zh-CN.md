@@ -8,6 +8,39 @@
 
 上游提供 shell/app_process、VirtualDisplay、UI/OCR 操作、分屏输入、H.264 预览、Android 控制端与浏览器部署器等基础能力；本分支在其上增加任务验收、人工交接、调度与保护、技能学习、语音与上下文、历史与指标，并修复部分华为设备兼容问题。上游基线为 `611e5eb0e1c94befda3c17c97438912dfd30e8a8`。保留 [Apache-2.0 许可证](LICENSE)，出处见 [NOTICE](NOTICE)，修改范围见 [二次开发说明](docs/DERIVATIVE_CHANGES.md)。本分支与上游无背书关系。
 
+## 给评审的概览
+
+让模型在手机后台虚拟屏里操作真实 App，用户同时使用主屏；当前为 Android 原型，验证范围见下表。
+
+**演示：**[五段演示操作与录制方案](docs/DEMO.md)。本分支完整演示尚未录制，实际视频链接和时间点待补；上游视频不作为本分支证据。
+
+**路线与取舍：**虚拟屏让任务留在同一台手机、同一真实 App/登录环境，便于原页面交给用户。云手机/第二台设备增加账号与设备成本，应用分身依赖厂商且改变数据环境，主屏无障碍点击会占用用户界面，iPhone 不提供本原型依赖的 shell/虚拟屏能力。选择 Apache-2.0 的 ShadowAuto 复用 shell、UI/OCR、输入和投屏底座；下列新增见[出处与改动说明](docs/DERIVATIVE_CHANGES.md)。
+
+| 相对上游新增 | 源码入口（android-shell/.../ext，另注明者除外） |
+| --- | --- |
+| 原任务页面在主屏与虚拟屏间交接、完成后交付 | [handoff](android-shell/src/main/java/com/silentauto/shell/ext/handoff/) |
+| 参数化技能学习、复用与有限救援 | [skill](android-shell/src/main/java/com/silentauto/shell/ext/skill/) |
+| 另一家模型独立验收；查询只读、答案必须有原文 | [verify](android-shell/src/main/java/com/silentauto/shell/ext/verify/)、[query](android-shell/src/main/java/com/silentauto/shell/ext/query/) |
+| 执行中语音追加；读取当前屏幕“边看边办” | [amend](android-shell/src/main/java/com/silentauto/shell/ext/amend/)、[context](controller-app/src/main/java/com/silentauto/controller/ext/context/) |
+| 镜像抓图与有预算恢复；重复动作退出 | [CaptureMirror](android-shell/src/main/java/com/silentauto/shell/CaptureMirror.java)、[guard](android-shell/src/main/java/com/silentauto/shell/ext/guard/) |
+| 干扰量化和原始时间序列归档 | [metrics](android-shell/src/main/java/com/silentauto/shell/ext/metrics/) |
+
+| Mate 40 Pro 实测（2026-10-23/24） | 结果与限制 |
+| --- | --- |
+| 抓图后读取控件 | 60/60 抓图成功、根不可读0、原屏切换0；仅三类页面短测 |
+| 计算12×13 / 高德公共地点地址 | ANSWERED，6步/4步，有截图与原文；高德仅搜索结果页 |
+| “先清除再计算” | 原版25步FAILED；本轮7步ANSWERED156，另一次16步因重复被终止，两者均保留 |
+| 备忘录同页交接 | VERIFIED，同根任务转主屏、正文哈希一致、次屏释放 |
+| 完整中文输入并行、微信技能三段、支付前追加 | 尚未按 Step 6 完整验收，不计成功 |
+
+证据均从[仓库内索引](docs/evidence/README.md)进入。“不打扰”采用防抢焦点触摸、危险键门禁、无障碍输入和剪贴板恢复；本机缺原生独立焦点与本地 IME 确认，兼容模式仍未认证全程隔离，本轮三轮采样四项0、机主反馈正常，但首轮录像缺口且主屏出现目标同文的来源仍待确认，不认证跨屏文字无影响；历史轮还存在短暂无焦点/IME不活跃记录，见[能力边界](docs/ISOLATION.md)及[三轮验收状态](docs/evidence/isolation/report.md)。
+
+**模型与落地：**executor（DeepSeek）规划，verifier（百炼视觉）独立验收，intake（百炼 Omni）理解语音；国内接口白名单用于限制数据出境路径，仍需服务合规与个人信息授权。普通手机当前需 ADB/app_process；Shizuku + 无线调试是待实现的免电脑启动方向，商用隔离能力需厂商合作，也受平台协议、账号及隐私风险约束。
+
+**与 Coding Agent 协作：**产品/方案文档→任务说明→实现→真机验证→修正。实际反馈包括：交换抓图 Surface 后控件不稳→独立 CaptureMirror；高德/美团节点点击返回成功却未激活→重新定位后边界触摸；查询整段目标误填城市框→关闭宽泛纠正；算出156仍反复清除→加入重复检测和独立验收。对应事实与限制保留在[实测报告](docs/evidence/capture-stability/report.md)。
+
+**已知限制：**①全程隔离待三轮人工录像；②验证码、支付等需本人处理，部分 App 不兼容；③技能救援和语音追加尚缺完整指定路径真机证据；④RPC 仅监听回环但未鉴权，同机 App 可下发任务，计划使用32字节随机 token；⑤跨设备/Android 版本及长期稳定性未覆盖。
+
 ## 目录
 
 - [1. 已实现的功能](#1-已实现的功能)
@@ -209,6 +242,8 @@ npm run dev
 | executor | 目标理解、选 App、动作规划、技能匹配/编译等 | DeepSeek，`deepseek-flash` |
 | verifier | 页面证据、结果核对、查询独立提取等 | 阿里云兼容接口，`qwen3-vl-plus` |
 | intake | 语音理解，区分查询、办事和追加意图 | 阿里云兼容接口，`qwen3.8-omni-flash` |
+
+2026-10-24 核对[DeepSeek 官方接口文档](https://api-docs.deepseek.com/api/responses)：`deepseek-flash` 当前由 DeepSeek-V4.1-Flash-1017 提供服务。别名将来可变；控制端测试连接会显示服务端返回的 `model`，若仍返回别名，不能据此认定权重快照。
 
 
 代码中的预填名称不是服务当前可用性、价格或效果承诺；以账号可用模型和连接测试为准。视觉验收需要相应图像能力，语音理解需要相应音频能力，不能仅凭接口返回 200 就认定所有任务能力齐全。
@@ -660,7 +695,7 @@ node scripts/emulator-mock-ai-test.mjs
 7. **实时结果：**强杀或重启会丢失实时页面；没有跨重启恢复原 UI 会话的能力。
 8. **产品化：**没有客户账号、服务端密钥分发、统一计费、发布更新系统或通用设备认证。
 
-最新详细报告位于本地工作区 `../docs/validation/capture-stability-2026-10-24/report.md`，同目录含部署哈希、循环数据、最终任务 JSON、截图及日志。这个目录不在本 Git 仓库内，克隆仓库不会自带这些证据。
+脱敏后的详细报告、循环数据、任务 JSON 与已检查截图见[仓库内证据索引](docs/evidence/README.md)和[抓图报告](docs/evidence/capture-stability/report.md)。原始资料继续留在工作区外，不直接公开。
 
 ## 18. 故障排查
 

@@ -10,6 +10,39 @@ This is an independent derivative of [android-notes/ShadowAuto](https://github.c
 
 The [Chinese manual](README.zh-CN.md) contains the full operational reference, including field-level diagnostics, exact memo-proof formatting, source navigation, and troubleshooting. This English guide covers the architecture, setup, implementation, interfaces, and evidence boundaries.
 
+## Reviewer overview
+
+Operate real Android apps on a background virtual display while the owner uses the main screen. This is a prototype with the measured scope below.
+
+**Demo:** [five-segment runbook and recording procedure](docs/DEMO.md). The full downstream demo has not been recorded; its real URL and timestamps remain pending. The upstream video is not downstream validation.
+
+**Design choices:** a virtual display keeps the task on the same phone and app/account environment, and allows handing the original page back to its owner. A cloud or second phone adds account/device cost; app clones depend on vendors and separate data; main-screen accessibility automation occupies the user's UI; iPhone does not expose the shell/display capabilities used here. Apache-2.0 ShadowAuto supplies the shell, UI/OCR, input and streaming foundation. Attribution and downstream scope are in [Derivative Changes](docs/DERIVATIVE_CHANGES.md).
+
+| Downstream addition | Source entry |
+| --- | --- |
+| Move the original task between displays for assistance and delivery | [handoff](android-shell/src/main/java/com/silentauto/shell/ext/handoff/) |
+| Learn parameterized skills, replay and recover | [skill](android-shell/src/main/java/com/silentauto/shell/ext/skill/) |
+| Independent verification by another provider; read-only grounded answers | [verify](android-shell/src/main/java/com/silentauto/shell/ext/verify/), [query](android-shell/src/main/java/com/silentauto/shell/ext/query/) |
+| Voice amendments during execution and current-screen context | [amend](android-shell/src/main/java/com/silentauto/shell/ext/amend/), [context](controller-app/src/main/java/com/silentauto/controller/ext/context/) |
+| Mirror capture, bounded recovery and repetition detection | [CaptureMirror](android-shell/src/main/java/com/silentauto/shell/CaptureMirror.java), [guard](android-shell/src/main/java/com/silentauto/shell/ext/guard/) |
+| Disturbance metrics and timestamped raw samples | [metrics](android-shell/src/main/java/com/silentauto/shell/ext/metrics/) |
+
+| Mate 40 Pro measurements, Oct 23–24, 2026 | Result and scope |
+| --- | --- |
+| Repeated capture and UI reads | 60/60 captures, no missing roots or source-surface swaps; three page types |
+| Calculate 12×13 / public place address in Amap | ANSWERED in 6 / 4 steps, grounded evidence; Amap search results only |
+| Clear-then-calculate task | Original 25-step failure; a 7-step ANSWERED 156 retest and a separate 16-step repetition failure are both retained |
+| Memo page delivery | VERIFIED; same root task, unchanged body hash, virtual display released |
+| Full parallel Chinese input, WeChat skill sequence, payment-boundary amendment | Not validated to the Step 6 acceptance criteria |
+
+[Repository evidence](docs/evidence/README.md) includes failures. No-focus-change touches, key gating, accessibility text and clipboard restoration mitigate interference. This phone lacks confirmed native independent focus/local IME; compatibility mode is not certified isolation. Three new rounds sampled zero events and the owner reported normal input, but the first recording has a gap and matching text on the main screen awaits attribution. This is not proof against cross-display text effects. Historical tests also included brief unfocused/inactive-IME samples; see [capability boundaries](docs/ISOLATION.md) and [acceptance status](docs/evidence/isolation/report.md).
+
+**Models and deployment:** DeepSeek executes, Alibaba Cloud vision verifies independently, and Omni handles intake. Mainland endpoint restrictions limit data routing; service compliance and personal-data consent still matter. Current deployment uses ADB/app_process. Shizuku plus wireless debugging is a proposed startup path, not an implemented user flow; commercial isolation needs vendor cooperation and platform/privacy review.
+
+**Coding Agent collaboration:** product/design documents → task specification → implementation → phone measurement → correction. Actual iterations: unstable UI after surface swaps → independent capture mirror; successful accessibility clicks without activation in Amap/Meituan → re-resolve targets and touch their bounds; whole-goal text entered into city fields → remove broad correction; repeated clearing after reaching 156 → repetition detection with independent verification. [Reports](docs/evidence/capture-stability/report.md) retain the limits of these observations.
+
+**Limits:** full isolation needs three human/video rounds; some apps and login/payment boundaries require the owner; designated skill/voice paths lack complete phone evidence; loopback RPC is unauthenticated and can be called by other local apps (planned 32-byte token); other Android versions and long-running stability remain untested.
+
 ## Contents
 
 - [Implemented capabilities](#implemented-capabilities)
@@ -189,6 +222,8 @@ Configure each role in the controller and test connectivity:
 | executor | Planning, app selection, skill matching/compilation. | DeepSeek, `deepseek-flash`. |
 | verifier | Visual evidence and independent result/answer checking. | Alibaba compatible endpoint, `qwen3-vl-plus`. |
 | intake | Voice intent and routing. | Alibaba compatible endpoint, `qwen3.8-omni-flash`. |
+
+Checked on 2026-10-24: [DeepSeek official documentation](https://api-docs.deepseek.com/api/responses) maps `deepseek-flash` to DeepSeek-V4.1-Flash-1017. Aliases may change. The controller connection test displays the response `model`; an alias is not proof of a specific weight snapshot.
 
 
 These are code defaults, not guarantees of current provider availability, pricing, or suitability. Select models with the required image/audio capabilities; a successful basic connection does not test every capability.
@@ -431,7 +466,7 @@ Remaining issues:
 7. Process death/reboot loses live pages; screenshots do not restore sessions.
 8. No hosted customer accounts, key distribution, billing, release updater, or universal device certification exists.
 
-Local evidence lives in `../docs/validation/capture-stability-2026-10-24/`, including `report.md`, deployment hashes, cycle data, final task JSON, screenshots, and logs. This directory is outside this Git repository and is not included in a clone.
+Redacted reports, cycle data, task JSON and a visually reviewed screenshot are available in the [repository evidence index](docs/evidence/README.md) and [capture report](docs/evidence/capture-stability/report.md). Raw private artifacts remain outside the repository.
 
 ## Troubleshooting and source map
 
