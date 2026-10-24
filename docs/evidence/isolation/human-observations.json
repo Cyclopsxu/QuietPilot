@@ -19,5 +19,10 @@
     "source": "机主在本对话明确反馈",
     "observation": "输入和滚动正常，候选词未异常消失",
     "duration": "按开始/暂停提示参与超过60秒，未逐帧完成核验"
+  },
+  {
+    "round": "round2-text-attribution",
+    "source": "机主在本对话明确确认",
+    "observation": "主屏“上海虹桥火车站”是机主手动输入的测试文字，不是自动出现"
   }
 ]

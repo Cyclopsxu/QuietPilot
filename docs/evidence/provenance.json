@@ -90,6 +90,24 @@
     "redactedSha256": "437830b16b82a71321e8f2ac1d938490c74a3adb2c1a3fad7d10ff12a15fe426"
   },
   {
+    "sourceRelative": "step6-2026-10-24/model-probe.json",
+    "artifact": "demo-path/model-probe.json",
+    "sourceSha256": "537ab9cab6d93fa819df6c54fba0ea2425cdcf0198d93045c94ed753f3c4f4d0",
+    "redactedSha256": "85833318acb578472481c646dcc026eab15e71e652b9f28711cec042696bf2da"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/recording-inventory.json",
+    "artifact": "demo-path/recording-inventory.json",
+    "sourceSha256": "18053996dce07d06b43bcd65dd2f230806fc6bee878365c19a57c49e51dd9d14",
+    "redactedSha256": "8785592201ca1d6408236a1d0d5a6c458305d1da18de11e420b1166db1d775ab"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/deployment.json",
+    "artifact": "demo-path/deployment.json",
+    "sourceSha256": "3c23ec009ab40c1e5ee1a94da3bcc24f7a306b576d809719af74e2cf0b014736",
+    "redactedSha256": "b802b58aec39d037805a63c037d827033a955790902e3fb91c47e442f6d89df6"
+  },
+  {
     "sourceRelative": "step6-2026-10-24/step6-calculator-1792813665-final.json",
     "artifact": "query/step6-calculator.json",
     "sourceSha256": "63a8b10f80c84fc369c3ca7cfb5f0d8175bbe0301381c60d6f711c0480ed50fc",
@@ -122,8 +140,8 @@
   {
     "sourceRelative": "step6-2026-10-24/human-observations.json",
     "artifact": "isolation/human-observations.json",
-    "sourceSha256": "d035856fcaa8bede53556925cfd9b295e7df60b64590cf67c34b4f275564771c",
-    "redactedSha256": "40514716f96cc343bdcbf43a7fe0e2a767afed752f2e43723415e6b894058ca1"
+    "sourceSha256": "3508f6ff7502695fd1f6663fc303c34204421031c6af936ad26bcb0d6d50b047",
+    "redactedSha256": "3508f6ff7502695fd1f6663fc303c34204421031c6af936ad26bcb0d6d50b047"
   },
   {
     "sourceRelative": "step6-2026-10-24/step6-round2-1792814611-final.json",
@@ -138,21 +156,21 @@
     "redactedSha256": "88dbb6be8eb1eb99854511eb21581658e832d87abe84b1237fe6348a3d9170ed"
   },
   {
-    "sourceRelative": "step6-2026-10-24/model-probe.json",
-    "artifact": "demo-path/model-probe.json",
-    "sourceSha256": "537ab9cab6d93fa819df6c54fba0ea2425cdcf0198d93045c94ed753f3c4f4d0",
-    "redactedSha256": "85833318acb578472481c646dcc026eab15e71e652b9f28711cec042696bf2da"
+    "sourceRelative": "step6-2026-10-24/wechat-retry-waiting.json",
+    "artifact": "demo-path/wechat-retry-waiting.json",
+    "sourceSha256": "b1dacea27b4606d3794d2c3ae0cc36995d004120e25b803e32a0373551caf02a",
+    "redactedSha256": "98c4fa54d9620747ee7d951393e87ff15427630792048c04267e17a3c64e42e5"
   },
   {
-    "sourceRelative": "step6-2026-10-24/recording-inventory.json",
-    "artifact": "demo-path/recording-inventory.json",
-    "sourceSha256": "18053996dce07d06b43bcd65dd2f230806fc6bee878365c19a57c49e51dd9d14",
-    "redactedSha256": "8785592201ca1d6408236a1d0d5a6c458305d1da18de11e420b1166db1d775ab"
+    "sourceRelative": "step6-2026-10-24/wechat-exit-info.txt",
+    "artifact": "demo-path/wechat-exit-summary.json",
+    "sourceSha256": "842e92191cb9c8d9722975258379ac75f1052a818c43bdaac615d1b8459e31fd",
+    "redactedSha256": "d766f64c09ee8899221505d1234b61d9495ea9ca8c7abc2f9e58771d8d5efb48"
   },
   {
-    "sourceRelative": "step6-2026-10-24/deployment.json",
-    "artifact": "demo-path/deployment.json",
-    "sourceSha256": "3c23ec009ab40c1e5ee1a94da3bcc24f7a306b576d809719af74e2cf0b014736",
-    "redactedSha256": "b802b58aec39d037805a63c037d827033a955790902e3fb91c47e442f6d89df6"
+    "sourceRelative": "step6-2026-10-24/demo-retry-recordings/timeline.jsonl",
+    "artifact": "demo-path/recorder-teardown-check.json",
+    "sourceSha256": "58023be87c5da1b4be38eed54a62b5375900b08a66256bd4d8e2ddb90bad2b13",
+    "redactedSha256": "2a4e6a690355f740bb15b254e477e2750cc56e2ac60a5410b8fc2568648e1b9c"
   }
 ]

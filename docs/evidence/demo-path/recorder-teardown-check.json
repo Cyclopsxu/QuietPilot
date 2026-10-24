@@ -1,0 +1,28 @@
+{
+  "taskId": "step6-wechat-retry-1792831237",
+  "events": [
+    {
+      "event": "virtual_display_ready",
+      "utc": "2026-10-24T08:40:41.214444+00:00",
+      "hostMonotonicNs": 2116115955592625,
+      "taskId": "step6-wechat-retry-1792831237",
+      "displayId": 130,
+      "deviceLog": "1792831241.762  3362 13735 I ShadowAutoShell: [info] [step6-wechat-retry-1792831237] VIRTUAL_DISPLAY_READY taskId=step6-wechat-retry-1792831237 displayId=130"
+    },
+    {
+      "event": "recorder_start_requested",
+      "utc": "2026-10-24T08:40:41.216035+00:00",
+      "hostMonotonicNs": 2116115956973416,
+      "displayId": 130,
+      "file": "step6-wechat-retry-1792831237-vd.mp4"
+    },
+    {
+      "event": "display_removed_stop_recording",
+      "utc": "2026-10-24T08:43:12.923466+00:00",
+      "hostMonotonicNs": 2116267663527916,
+      "displayId": 130,
+      "file": "step6-wechat-retry-1792831237-vd.mp4"
+    }
+  ],
+  "result": "实际检测到显示屏130移除后发送SIGINT，scrcpy日志显示Recording complete；主屏录制继续运行"
+}
