@@ -1,0 +1,3447 @@
+{
+  "type": "action",
+  "answer": "",
+  "quote": "",
+  "uncertain": false,
+  "sourceApp": "com.huawei.notepad",
+  "searched": "",
+  "taskId": "voice-6e751430-5c4b-4e08-a426-032febeced12",
+  "status": "VERIFIED",
+  "originalGoal": "在备忘录新建一条笔记，记录『苏州丽思卡尔顿酒店』",
+  "amendments": [],
+  "goal": "在备忘录新建一条笔记，记录『苏州丽思卡尔顿酒店』",
+  "app": "com.huawei.notepad",
+  "appName": "备忘录",
+  "stepText": "已新建笔记并确认标题与正文均正确保存为『",
+  "step": 10,
+  "displayId": -1,
+  "source": "model",
+  "message": "当前页面已交给你在主屏继续",
+  "evidence": "界面上显示标题为「苏州丽思卡尔顿酒店」，正文同样为「苏州丽思卡尔顿酒店」，时间标签为「今天 18:33」；UI Dump中确认EditText标题文本为'苏州丽思卡尔顿酒店'，正文EditText文本为'苏州丽思卡尔顿酒店'，TextView时间文本为'今天 18:33'，字数统计TextView文本为'共 9 字'（虽在UI Dump中该TextView visible=false，但OCR截图与label中均明确包含'共 9 字'，且文字内容与预期一致）",
+  "boundary": "",
+  "llmCalls": {
+    "executor": 8,
+    "verifier": 1,
+    "intake": 1
+  },
+  "finalized": true,
+  "disturbance": {
+    "focusSamples": [
+      {
+        "atMs": 1792838001242,
+        "elapsedMs": 511,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838001828,
+        "elapsedMs": 1096,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838002436,
+        "elapsedMs": 1705,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838002920,
+        "elapsedMs": 2189,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838003408,
+        "elapsedMs": 2677,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838003802,
+        "elapsedMs": 3070,
+        "step": 1,
+        "action": "tap_target",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838004328,
+        "elapsedMs": 3596,
+        "step": 1,
+        "action": "tap_target 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838004783,
+        "elapsedMs": 4052,
+        "step": 1,
+        "action": "tap_target 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838005260,
+        "elapsedMs": 4528,
+        "step": 2,
+        "action": "text 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838005861,
+        "elapsedMs": 5129,
+        "step": 2,
+        "action": "text 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838006289,
+        "elapsedMs": 5558,
+        "step": 3,
+        "action": "text",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838006868,
+        "elapsedMs": 6137,
+        "step": 3,
+        "action": "text 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838007336,
+        "elapsedMs": 6604,
+        "step": 3,
+        "action": "text 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838007817,
+        "elapsedMs": 7086,
+        "step": 4,
+        "action": "tap_target 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838008305,
+        "elapsedMs": 7574,
+        "step": 4,
+        "action": "tap_target 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838008816,
+        "elapsedMs": 8084,
+        "step": 5,
+        "action": "tap_target",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838009286,
+        "elapsedMs": 8554,
+        "step": 5,
+        "action": "tap_target 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838009802,
+        "elapsedMs": 9070,
+        "step": 5,
+        "action": "tap_target 后观察",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838010320,
+        "elapsedMs": 9588,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838010862,
+        "elapsedMs": 10131,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838011292,
+        "elapsedMs": 10561,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838011836,
+        "elapsedMs": 11104,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838012356,
+        "elapsedMs": 11624,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838012830,
+        "elapsedMs": 12098,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838013329,
+        "elapsedMs": 12598,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838013825,
+        "elapsedMs": 13093,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838014333,
+        "elapsedMs": 13602,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838014822,
+        "elapsedMs": 14091,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838015351,
+        "elapsedMs": 14619,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838015852,
+        "elapsedMs": 15120,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "skill",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838016331,
+        "elapsedMs": 15600,
+        "step": 6,
+        "action": "wait",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838016851,
+        "elapsedMs": 16119,
+        "step": 6,
+        "action": "wait 后观察",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838017332,
+        "elapsedMs": 16600,
+        "step": 6,
+        "action": "wait 后观察",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838017841,
+        "elapsedMs": 17110,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838018341,
+        "elapsedMs": 17610,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838018854,
+        "elapsedMs": 18123,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838019317,
+        "elapsedMs": 18586,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838019841,
+        "elapsedMs": 19109,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838020351,
+        "elapsedMs": 19619,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838020817,
+        "elapsedMs": 20085,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838021345,
+        "elapsedMs": 20614,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838021845,
+        "elapsedMs": 21113,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838022349,
+        "elapsedMs": 21618,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838022849,
+        "elapsedMs": 22117,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838023364,
+        "elapsedMs": 22633,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838023813,
+        "elapsedMs": 23082,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838024353,
+        "elapsedMs": 23622,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838024802,
+        "elapsedMs": 24071,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838025320,
+        "elapsedMs": 24588,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838025836,
+        "elapsedMs": 25104,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838026346,
+        "elapsedMs": 25615,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838026848,
+        "elapsedMs": 26117,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838027332,
+        "elapsedMs": 26600,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838027857,
+        "elapsedMs": 27125,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838028280,
+        "elapsedMs": 27549,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838028844,
+        "elapsedMs": 28113,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838029340,
+        "elapsedMs": 28609,
+        "step": 7,
+        "action": "wait",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838029857,
+        "elapsedMs": 29126,
+        "step": 7,
+        "action": "wait 后观察",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838030332,
+        "elapsedMs": 29601,
+        "step": 7,
+        "action": "wait 后观察",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838030838,
+        "elapsedMs": 30106,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838031331,
+        "elapsedMs": 30599,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838031839,
+        "elapsedMs": 31107,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838032293,
+        "elapsedMs": 31562,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838032828,
+        "elapsedMs": 32096,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838033337,
+        "elapsedMs": 32605,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838033814,
+        "elapsedMs": 33082,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838034339,
+        "elapsedMs": 33608,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838034832,
+        "elapsedMs": 34101,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838035344,
+        "elapsedMs": 34613,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838035839,
+        "elapsedMs": 35108,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "rescue",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838036361,
+        "elapsedMs": 35629,
+        "step": 9,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838036769,
+        "elapsedMs": 36038,
+        "step": 9,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838037341,
+        "elapsedMs": 36610,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838037849,
+        "elapsedMs": 37117,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838038355,
+        "elapsedMs": 37624,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838038864,
+        "elapsedMs": 38133,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838039331,
+        "elapsedMs": 38599,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838039807,
+        "elapsedMs": 39075,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838040361,
+        "elapsedMs": 39630,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838040810,
+        "elapsedMs": 40078,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838041328,
+        "elapsedMs": 40596,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838041826,
+        "elapsedMs": 41095,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838042356,
+        "elapsedMs": 41625,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838042823,
+        "elapsedMs": 42092,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838043343,
+        "elapsedMs": 42612,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838043847,
+        "elapsedMs": 43116,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838044342,
+        "elapsedMs": 43611,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      },
+      {
+        "atMs": 1792838044807,
+        "elapsedMs": 44076,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "foreground": "com.sankuai.meituan",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{f294841 u0 com.sankuai.meituan/com.meituan.android.hotel.search.HotelSearchResultActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0} mCurSeq=1199",
+          "mCurFocusedWindow=android.os.BinderProxy@20dd328 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION client=ClientState{3bd2e46 uid=10206 pid=27073 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ]
+      }
+    ],
+    "focusSamplesTruncated": false,
+    "metrics": [
+      {
+        "key": "foreground",
+        "label": "未归因前台切换",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "原始切换 1；显式交接关联 1；触摸关联 0；数据不足 0（关联不等于因果证明）"
+      },
+      {
+        "key": "focus",
+        "label": "焦点丢失次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "主焦点指向本任务虚拟屏的次数"
+      },
+      {
+        "key": "ime",
+        "label": "键盘被抢次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "活动输入法目标变为本任务虚拟屏"
+      },
+      {
+        "key": "clipboard",
+        "label": "剪贴板内容变化",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "仅比较摘要，不保存剪贴板内容"
+      },
+      {
+        "key": "jank",
+        "label": "指定 App 掉帧率",
+        "value": 0.0,
+        "available": false,
+        "pass": false,
+        "reason": "gfxinfo 不可用或计数重置；仅任务开始时的 com.sankuai.meituan，不代表其他 App 或持续信息流流畅度",
+        "measuredPackage": "com.sankuai.meituan",
+        "scope": "task_start_foreground_package_process",
+        "foregroundSamples": 199,
+        "totalSamples": 202,
+        "coversOtherApps": false,
+        "frames": 0,
+        "jankyFrames": 0
+      }
+    ],
+    "events": [
+      {
+        "metric": "foreground",
+        "atMs": 1792838100788,
+        "elapsedMs": 100057,
+        "step": 10,
+        "action": "done 后观察",
+        "source": "model",
+        "detail": "主屏变化：com.sankuai.meituan → com.huawei.notepad",
+        "from": "com.sankuai.meituan",
+        "to": "com.huawei.notepad",
+        "attribution": "explicit_handoff",
+        "handoffReason": "user_take_on_main"
+      }
+    ],
+    "foregroundPackage": "com.sankuai.meituan",
+    "samples": 202,
+    "backgroundSafetyIssue": "",
+    "backgroundSafetyTriggered": false,
+    "sampleIntervalMs": 500,
+    "avgSampleMs": 155.71635723762378,
+    "maxSampleMs": 269.729688,
+    "skippedTicks": 0,
+    "touchMethod": "dumpsys input / RecentQueue / displayId=0 MotionEvent / age",
+    "rawForegroundSwitches": 1,
+    "authorizedHandoffSwitches": 1,
+    "unattributedForegroundSwitches": 0,
+    "unknownForegroundSwitches": 0,
+    "userForegroundSwitches": 0,
+    "eventsTruncated": false,
+    "zeroDisturbanceVerified": false,
+    "assessmentScope": "采样观察与显式交接关联，非全程无打扰认证",
+    "samplingError": ""
+  },
+  "isolation": {
+    "selectedFlags": 331,
+    "selectedFlagsHex": "14b",
+    "candidateIndex": 2,
+    "ownFocusSupported": false,
+    "noStealSupported": false,
+    "ownFocusRequested": false,
+    "noStealRequested": false,
+    "localImeVerified": false,
+    "configurationAvailable": false,
+    "behaviorValidated": false,
+    "experimentalOverride": true,
+    "backgroundAllowed": true,
+    "status": "experimental_unverified",
+    "message": "兼容实验模式：隔离能力不足，不保证主屏输入和焦点不受影响",
+    "touchNoFocusChangeFlag": 64,
+    "touchNoFocusChangeAvailable": true,
+    "mitigations": {
+      "noFocusChangeTouch": true,
+      "dangerousKeyGate": true,
+      "accessibilityTextWrites": true,
+      "clipboardSnapshotRestore": true,
+      "localImePolicy": false
+    },
+    "capture": {
+      "mode": "layer_stack_mirror",
+      "fallback": "",
+      "requests": 1,
+      "misses": 0,
+      "surfaceSwitches": 0,
+      "frames": 235
+    },
+    "creationAttempts": [
+      {
+        "candidateIndex": 0,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 1,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 2,
+        "flags": 331,
+        "accepted": true
+      }
+    ],
+    "platformDisplayFlags": 8,
+    "localImeSetSucceeded": false,
+    "imePolicyBefore": 1,
+    "imePolicyReadback": 1,
+    "sdkInt": 31,
+    "manufacturer": "HUAWEI",
+    "model": "NOH-AN01",
+    "nativeBackgroundKeysAllowed": false
+  },
+  "skillId": "huawei.notepad.create_note_and_verify",
+  "sourceSteps": {
+    "model": 2,
+    "skill": 5,
+    "rescue": 3,
+    "query_recovery": 0
+  },
+  "comparison": "模型调用 10 → 10 次，耗时 27.7 → 105.2 秒",
+  "evidenceScreenshot": "/data/local/tmp/shadowauto/evidence/voice-6e751430-5c4b-4e08-a426-032febeced12.png",
+  "createdAtMs": 1792837995913,
+  "finishedAtMs": 1792838101148,
+  "waitingSinceMs": 1792838044950,
+  "transcript": "把这家店记到备忘录里",
+  "intakeElapsedMs": 5721,
+  "pendingConfirmation": false,
+  "requiresConfirmation": false,
+  "confirmDeadlineMs": 1792837998913,
+  "protectedScreen": false,
+  "resultReady": false,
+  "transferState": "moved",
+  "elapsedMs": 105236,
+  "steps": [
+    {
+      "step": 1,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]",
+          "[界面文字16]",
+          "[界面文字17]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字23]",
+          "[界面文字24]",
+          "[界面文字25]",
+          "[界面文字26]",
+          "[界面文字27]",
+          "[界面文字28]",
+          "[界面文字29]",
+          "[界面文字30]",
+          "[界面文字31]",
+          "[界面文字32]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "华为备忘录新建并核对笔记 · 1/6",
+        "searched": "",
+        "source": "skill",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 10,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "新建",
+        "resourceId": "com.huawei.notepad:id/fab_add",
+        "className": "android.widget.ImageButton",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/app_bar_menu",
+        "parentText": "",
+        "bounds": "900,1928,1068,2096",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 7897,
+      "stepText": "华为备忘录新建并核对笔记 · 1/6",
+      "injectionMethod": "accessibility_click",
+      "source": "skill",
+      "reason": "华为备忘录新建并核对笔记 · 1/6",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字34]",
+          "[界面文字35]",
+          "[界面文字36]",
+          "[界面文字37]",
+          "[界面文字38]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字44]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字50]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字64]",
+          "[界面文字65]",
+          "[界面文字66]",
+          "[界面文字67]",
+          "[界面文字68]",
+          "[界面文字69]",
+          "[界面文字70]",
+          "[界面文字71]",
+          "[界面文字72]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字75]",
+          "[界面文字76]",
+          "[界面文字77]"
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字34]",
+          "[界面文字35]",
+          "[界面文字36]",
+          "[界面文字37]",
+          "[界面文字38]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字44]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字50]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字64]",
+          "[界面文字65]",
+          "[界面文字66]",
+          "[界面文字67]",
+          "[界面文字68]",
+          "[界面文字69]",
+          "[界面文字70]",
+          "[界面文字71]",
+          "[界面文字72]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字75]",
+          "[界面文字76]",
+          "[界面文字77]"
+        ]
+      },
+      "action": {
+        "action": "text",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 2,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "华为备忘录新建并核对笔记 · 2/6",
+        "searched": "",
+        "source": "skill",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "苏州丽思卡尔顿酒店",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "请输入",
+        "resourceId": "com.huawei.notepad:id/notetext_textview",
+        "className": "android.widget.EditText",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/note_elements_container",
+        "parentText": "",
+        "bounds": "84,463,1068,553",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 9156,
+      "stepText": "华为备忘录新建并核对笔记 · 2/6",
+      "injectionMethod": "accessibility_set_text",
+      "source": "skill",
+      "reason": "华为备忘录新建并核对笔记 · 2/6",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字34]",
+          "[界面文字35]",
+          "[界面文字36]",
+          "[界面文字37]",
+          "[界面文字38]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字44]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字50]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字64]",
+          "[界面文字65]",
+          "[界面文字66]",
+          "[界面文字67]",
+          "[界面文字68]",
+          "[界面文字69]",
+          "[界面文字70]",
+          "[界面文字71]",
+          "[界面文字72]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字75]",
+          "[界面文字76]",
+          "[界面文字77]"
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字34]",
+          "[界面文字35]",
+          "[界面文字36]",
+          "[界面文字37]",
+          "[界面文字38]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字44]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字50]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字64]",
+          "[界面文字65]",
+          "[界面文字66]",
+          "[界面文字67]",
+          "[界面文字68]",
+          "[界面文字69]",
+          "[界面文字70]",
+          "[界面文字71]",
+          "[界面文字72]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字75]",
+          "[界面文字76]",
+          "[界面文字77]"
+        ]
+      },
+      "action": {
+        "action": "text",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 1,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "华为备忘录新建并核对笔记 · 3/6",
+        "searched": "",
+        "source": "skill",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "苏州丽思卡尔顿酒店",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "标题",
+        "contentDesc": "",
+        "resourceId": "com.huawei.notepad:id/title",
+        "className": "android.widget.EditText",
+        "hint": "标题",
+        "parentResourceId": "com.huawei.notepad:id/layout_title",
+        "parentText": "",
+        "bounds": "84,196,1068,322",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 10413,
+      "stepText": "华为备忘录新建并核对笔记 · 3/6",
+      "injectionMethod": "accessibility_set_text",
+      "source": "skill",
+      "reason": "华为备忘录新建并核对笔记 · 3/6",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字34]",
+          "[界面文字35]",
+          "[界面文字36]",
+          "[界面文字37]",
+          "[界面文字38]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字44]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字50]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字64]",
+          "[界面文字65]",
+          "[界面文字66]",
+          "[界面文字67]",
+          "[界面文字68]",
+          "[界面文字69]",
+          "[界面文字70]",
+          "[界面文字71]",
+          "[界面文字72]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字75]",
+          "[界面文字76]",
+          "[界面文字78]"
+        ]
+      }
+    },
+    {
+      "step": 4,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字34]",
+          "[界面文字35]",
+          "[界面文字36]",
+          "[界面文字37]",
+          "[界面文字38]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字44]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字50]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字64]",
+          "[界面文字65]",
+          "[界面文字66]",
+          "[界面文字67]",
+          "[界面文字68]",
+          "[界面文字69]",
+          "[界面文字70]",
+          "[界面文字71]",
+          "[界面文字72]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字75]",
+          "[界面文字76]",
+          "[界面文字78]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "华为备忘录新建并核对笔记 · 4/6",
+        "searched": "",
+        "source": "skill",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 14,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "完成",
+        "resourceId": "com.huawei.notepad:id/toolbar_save_p",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/toolbar_custom_menu",
+        "parentText": "",
+        "bounds": "942,14,1110,182",
+        "siblingIndex": 2
+      },
+      "elapsedMs": 11643,
+      "stepText": "华为备忘录新建并核对笔记 · 4/6",
+      "injectionMethod": "accessibility_click",
+      "source": "skill",
+      "reason": "华为备忘录新建并核对笔记 · 4/6",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字79]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字80]",
+          "[界面文字81]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字82]",
+          "[界面文字83]",
+          "[界面文字50]",
+          "[界面文字84]",
+          "[界面文字85]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字86]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字87]",
+          "[界面文字88]",
+          "[界面文字89]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字90]",
+          "[界面文字91]",
+          "[界面文字92]",
+          "[界面文字93]",
+          "[界面文字76]",
+          "[界面文字78]"
+        ]
+      }
+    },
+    {
+      "step": 5,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字79]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字80]",
+          "[界面文字81]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字82]",
+          "[界面文字83]",
+          "[界面文字50]",
+          "[界面文字84]",
+          "[界面文字85]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字86]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字87]",
+          "[界面文字88]",
+          "[界面文字89]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字90]",
+          "[界面文字91]",
+          "[界面文字92]",
+          "[界面文字93]",
+          "[界面文字76]",
+          "[界面文字78]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "华为备忘录新建并核对笔记 · 5/6",
+        "searched": "",
+        "source": "skill",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 10,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "向上导航",
+        "resourceId": "",
+        "className": "android.widget.ImageButton",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/hwtoolbar_edit",
+        "parentText": "",
+        "bounds": "42,0,210,196",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 12925,
+      "stepText": "华为备忘录新建并核对笔记 · 5/6",
+      "injectionMethod": "accessibility_click",
+      "source": "skill",
+      "reason": "华为备忘录新建并核对笔记 · 5/6",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]",
+          "[界面文字16]",
+          "[界面文字17]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字23]",
+          "[界面文字24]",
+          "[界面文字25]",
+          "[界面文字26]",
+          "[界面文字27]",
+          "[界面文字28]",
+          "[界面文字29]",
+          "[界面文字30]",
+          "[界面文字31]",
+          "[界面文字32]"
+        ]
+      }
+    },
+    {
+      "step": 6,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]",
+          "[界面文字16]",
+          "[界面文字17]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字23]",
+          "[界面文字24]",
+          "[界面文字25]",
+          "[界面文字26]",
+          "[界面文字27]",
+          "[界面文字28]",
+          "[界面文字29]",
+          "[界面文字30]",
+          "[界面文字31]",
+          "[界面文字32]"
+        ]
+      },
+      "action": {
+        "action": "wait",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 300,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "救援只恢复界面，重新观察",
+        "searched": "",
+        "source": "rescue",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": null,
+      "elapsedMs": 20429,
+      "stepText": "救援只恢复界面，重新观察",
+      "injectionMethod": "unrecorded",
+      "source": "rescue",
+      "reason": "救援只恢复界面，重新观察",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]",
+          "[界面文字16]",
+          "[界面文字17]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字23]",
+          "[界面文字24]",
+          "[界面文字25]",
+          "[界面文字26]",
+          "[界面文字27]",
+          "[界面文字28]",
+          "[界面文字29]",
+          "[界面文字30]",
+          "[界面文字31]",
+          "[界面文字32]"
+        ]
+      }
+    },
+    {
+      "step": 7,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]",
+          "[界面文字16]",
+          "[界面文字17]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字23]",
+          "[界面文字24]",
+          "[界面文字25]",
+          "[界面文字26]",
+          "[界面文字27]",
+          "[界面文字28]",
+          "[界面文字29]",
+          "[界面文字30]",
+          "[界面文字31]",
+          "[界面文字32]"
+        ]
+      },
+      "action": {
+        "action": "wait",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 300,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "救援只恢复界面，重新观察",
+        "searched": "",
+        "source": "rescue",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": null,
+      "elapsedMs": 33441,
+      "stepText": "救援只恢复界面，重新观察",
+      "injectionMethod": "unrecorded",
+      "source": "rescue",
+      "reason": "救援只恢复界面，重新观察",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]",
+          "[界面文字16]",
+          "[界面文字17]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字23]",
+          "[界面文字24]",
+          "[界面文字25]",
+          "[界面文字26]",
+          "[界面文字27]",
+          "[界面文字28]",
+          "[界面文字29]",
+          "[界面文字30]",
+          "[界面文字31]",
+          "[界面文字32]"
+        ]
+      }
+    },
+    {
+      "step": 8,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]",
+          "[界面文字16]",
+          "[界面文字17]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字23]",
+          "[界面文字24]",
+          "[界面文字25]",
+          "[界面文字26]",
+          "[界面文字27]",
+          "[界面文字28]",
+          "[界面文字29]",
+          "[界面文字30]",
+          "[界面文字31]",
+          "[界面文字32]"
+        ]
+      },
+      "action": {
+        "action": "back",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "关闭搜索界面，恢复到备忘录主界面",
+        "searched": "",
+        "source": "rescue",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": null,
+      "elapsedMs": 36120,
+      "stepText": "关闭搜索界面，恢复到备忘录主界面",
+      "injectionMethod": "unrecorded",
+      "source": "rescue",
+      "reason": "关闭搜索界面，恢复到备忘录主界面",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]",
+          "[界面文字16]",
+          "[界面文字17]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字23]",
+          "[界面文字24]",
+          "[界面文字25]",
+          "[界面文字26]",
+          "[界面文字27]",
+          "[界面文字28]",
+          "[界面文字29]",
+          "[界面文字30]",
+          "[界面文字31]",
+          "[界面文字32]"
+        ]
+      }
+    },
+    {
+      "step": 9,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]",
+          "[界面文字15]",
+          "[界面文字16]",
+          "[界面文字17]",
+          "[界面文字18]",
+          "[界面文字19]",
+          "[界面文字20]",
+          "[界面文字21]",
+          "[界面文字22]",
+          "[界面文字23]",
+          "[界面文字24]",
+          "[界面文字25]",
+          "[界面文字26]",
+          "[界面文字27]",
+          "[界面文字28]",
+          "[界面文字29]",
+          "[界面文字30]",
+          "[界面文字31]",
+          "[界面文字32]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "打开列表首条笔记（苏州丽思卡尔顿酒店）以确认内容是否已正确保存",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 3,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "",
+        "resourceId": "com.huawei.notepad:id/swipelayout",
+        "className": "android.widget.FrameLayout",
+        "hint": "",
+        "parentResourceId": "com.huawei.notepad:id/notes_listview",
+        "parentText": "",
+        "bounds": "0,683,1152,977",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 40045,
+      "stepText": "打开列表首条笔记（苏州丽思卡尔顿酒店）以",
+      "injectionMethod": "display_touch",
+      "source": "model",
+      "reason": "打开列表首条笔记（苏州丽思卡尔顿酒店）以确认内容是否已正确保存",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字79]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字80]",
+          "[界面文字81]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字82]",
+          "[界面文字83]",
+          "[界面文字50]",
+          "[界面文字84]",
+          "[界面文字85]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字86]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字87]",
+          "[界面文字88]",
+          "[界面文字89]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字90]",
+          "[界面文字91]",
+          "[界面文字92]",
+          "[界面文字93]",
+          "[界面文字76]",
+          "[界面文字78]"
+        ]
+      }
+    },
+    {
+      "step": 10,
+      "fingerprint": {
+        "packageName": "com.huawei.notepad",
+        "title": "备忘录",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字33]",
+          "[界面文字39]",
+          "[界面文字40]",
+          "[界面文字41]",
+          "[界面文字79]",
+          "[界面文字42]",
+          "[界面文字43]",
+          "[界面文字45]",
+          "[界面文字46]",
+          "[界面文字80]",
+          "[界面文字81]",
+          "[界面文字47]",
+          "[界面文字48]",
+          "[界面文字49]",
+          "[界面文字82]",
+          "[界面文字83]",
+          "[界面文字50]",
+          "[界面文字84]",
+          "[界面文字85]",
+          "[界面文字51]",
+          "[界面文字52]",
+          "[界面文字53]",
+          "[界面文字54]",
+          "[界面文字55]",
+          "[界面文字56]",
+          "[界面文字57]",
+          "[界面文字58]",
+          "[界面文字59]",
+          "[界面文字24]",
+          "[界面文字86]",
+          "[界面文字60]",
+          "[界面文字61]",
+          "[界面文字62]",
+          "[界面文字63]",
+          "[界面文字87]",
+          "[界面文字88]",
+          "[界面文字89]",
+          "[界面文字73]",
+          "[界面文字74]",
+          "[界面文字90]",
+          "[界面文字91]",
+          "[界面文字92]",
+          "[界面文字93]",
+          "[界面文字76]",
+          "[界面文字78]"
+        ]
+      },
+      "action": {
+        "action": "done",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "备忘录编辑页显示标题为「苏州丽思卡尔顿酒店」，正文同样为「苏州丽思卡尔顿酒店」，时间标签显示「今天 18:33」，字数统计「共 9 字」",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "已新建笔记并确认标题与正文均正确保存为『苏州丽思卡尔顿酒店』",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": null,
+      "elapsedMs": 42749,
+      "stepText": "已新建笔记并确认标题与正文均正确保存为『",
+      "injectionMethod": "unrecorded",
+      "source": "model",
+      "reason": "已新建笔记并确认标题与正文均正确保存为『苏州丽思卡尔顿酒店』",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.notepad",
+        "title": "",
+        "stableTexts": []
+      }
+    }
+  ]
+}

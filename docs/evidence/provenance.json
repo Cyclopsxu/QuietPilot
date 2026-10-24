@@ -306,5 +306,49 @@
     "artifact": "demo-path/coffee-owner-confirmation.json",
     "sourceSha256": "9aabeeb4d9c90d9e41ebcc96e9971461806b2323f162087e4a40d609788e3723",
     "redactedSha256": "9aabeeb4d9c90d9e41ebcc96e9971461806b2323f162087e4a40d609788e3723"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/context-source-excerpt.json",
+    "artifact": "demo-path/context-source-excerpt.json",
+    "sourceSha256": "fa5fa476d5a459f454d2edf791f9b5cd96a02dbc189d5d4f74c389a2b2d4ee16",
+    "redactedSha256": "fa5fa476d5a459f454d2edf791f9b5cd96a02dbc189d5d4f74c389a2b2d4ee16"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/voice-6e751430-5c4b-4e08-a426-032febeced12-final.json",
+    "artifact": "demo-path/context-memo-task.json",
+    "sourceSha256": "41aedf200d34677bc7fed84c4612c41b92ed7f06bd6dc706d6b0fd40507c0f4c",
+    "redactedSha256": "03cdd64dd9b1f644f51f93ab7a2cb50f5547e18d1c0de7ebf051f7199d41dabd"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/context-memo-delivery.json",
+    "artifact": "demo-path/context-memo-delivery.json",
+    "sourceSha256": "e3f3d33008b55dc376abce22a20304543ea6dec55e7813f1c2f84dafba0a9264",
+    "redactedSha256": "0df738577b7ab79c59cfd4a3bde033736fc162f226147e5760476803e0838d3a"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/voice-33a64e7d-cba3-4996-82c6-8f4a3448001e-final.json",
+    "artifact": "demo-path/coffee-voice-checkout-final.json",
+    "sourceSha256": "b383f3a8180a1d2ef9e545cd0bcc63ca2e26ddeb3f497dc1a6cb7508a19f1bed",
+    "redactedSha256": "e60f51ee6f173d246ded825e210cb4aa81f6e6162c3b9865b7669495a1d9d6b6",
+    "note": "支付前等待快照之后任务取消；不反向修改先前快照，不归因取消来源"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/context-recording-metadata.json",
+    "artifact": "demo-path/context-recording-metadata.json",
+    "sourceSha256": "6f4d35c0487d0afaa0622409c1f57fe537f84f0fb4baadeb43f94b47a0a78469",
+    "redactedSha256": "6f4d35c0487d0afaa0622409c1f57fe537f84f0fb4baadeb43f94b47a0a78469"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/context-memo-recordings/main.mp4",
+    "artifact": "demo-path/context-name-preview.mp4",
+    "sourceSha256": "b87ce51bff66ddf7e77a332d87edc33eb31812093d10b6d10e246228a8e0e17c",
+    "redactedSha256": "89e86b87877eecfe0b09b5641f78b0073bcdebd4a6d8d78659ea69fe2fa03d45",
+    "additionalSources": [
+      {
+        "sourceRelative": "step6-2026-10-24/context-memo-recordings/voice-6e751430-5c4b-4e08-a426-032febeced12-vd.mp4",
+        "sourceSha256": "1da807c332ef7a0a545883f574ebfd07b0983a4b1f11e64745f8cf574e9027a8"
+      }
+    ],
+    "note": "固定裁剪加黑色留白，原视频按时间段保留；只作结果对照，按metadata近似对齐，非完整执行视频"
   }
 ]

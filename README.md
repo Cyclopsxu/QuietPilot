@@ -14,7 +14,7 @@ The [Chinese manual](README.zh-CN.md) contains the full operational reference, i
 
 Operate real Android apps on a background virtual display while the owner uses the main screen. This is a prototype with the measured scope below.
 
-**Demo:** [five-segment runbook and recording procedure](docs/DEMO.md). The full downstream demo has not been recorded; its real URL and timestamps remain pending. The upstream video is not downstream validation.
+**Demo:** [five-segment runbook and recording procedure](docs/DEMO.md). The full downstream demo has not been recorded; its real URL and timestamps remain pending. A [15-second public-name/memo result comparison](docs/evidence/demo-path/context-name-preview.mp4) is available as an excerpt. The upstream video is not downstream validation.
 
 **Design choices:** a virtual display keeps the task on the same phone and app/account environment, and allows handing the original page back to its owner. A cloud or second phone adds account/device cost; app clones depend on vendors and separate data; main-screen accessibility automation occupies the user's UI; iPhone does not expose the shell/display capabilities used here. Apache-2.0 ShadowAuto supplies the shell, UI/OCR, input and streaming foundation. Attribution and downstream scope are in [Derivative Changes](docs/DERIVATIVE_CHANGES.md).
 
@@ -35,6 +35,7 @@ Operate real Android apps on a background virtual display while the owner uses t
 | Memo page delivery | VERIFIED; same root task, unchanged body hash, virtual display released |
 | Memo skill exploration / reuse / injected deviation | All VERIFIED, 8 / 10 / 13 steps; reuse calls 10→8 but time 27.7→49.4s, with model fallback; [report](docs/evidence/skills/report.md) |
 | Meituan voice amendment and delivery | Large cup VERIFIED in 9 steps and delivered; another real voice task reached payment boundary in 20 steps and moved to main (WAITING_USER); continuous video missing; [evidence](docs/evidence/demo-path/README.md) |
+| Main-screen context → memo | Real speech resolved a public hotel name; VERIFIED in 10 steps and delivered; address absent; [report](docs/evidence/demo-path/context-memo-report.md) |
 | WeChat sending | App exited; no message sent |
 
 [Repository evidence](docs/evidence/README.md) includes failures. No-focus-change touches, key gating, accessibility text and clipboard restoration mitigate interference. This phone lacks confirmed native independent focus/local IME; compatibility mode is not certified isolation. Three new rounds sampled zero events and the owner reported normal input, but the first recording has a gap and the owner confirmed that matching text on the main screen was typed manually. This is not proof against cross-display text effects. Historical tests also included brief unfocused/inactive-IME samples; see [capability boundaries](docs/ISOLATION.md) and [acceptance status](docs/evidence/isolation/report.md).
@@ -43,7 +44,7 @@ Operate real Android apps on a background virtual display while the owner uses t
 
 **Coding Agent collaboration:** product/design documents → task specification → implementation → phone measurement → correction. Actual iterations: unstable UI after surface swaps → independent capture mirror; successful accessibility clicks without activation in Amap/Meituan → re-resolve targets and touch their bounds; whole-goal text entered into city fields → remove broad correction; repeated clearing after reaching 156 → repetition detection with independent verification. [Reports](docs/evidence/capture-stability/report.md) retain the limits of these observations.
 
-**Limits:** full isolation needs three human/video rounds; some apps and login/payment boundaries require the owner; memo skills still fall back to model planning; WeChat/voice paths lack complete phone evidence; loopback RPC is unauthenticated and can be called by other local apps (planned 32-byte token); other Android versions and long-running stability remain untested.
+**Limits:** full isolation needs three human/video rounds; some apps and login/payment boundaries require the owner; memo skills still fall back to model planning; WeChat sending remains unvalidated; voice/context alternatives have phone evidence but lack the full video; loopback RPC is unauthenticated and can be called by other local apps (planned 32-byte token); other Android versions and long-running stability remain untested.
 
 ## Contents
 

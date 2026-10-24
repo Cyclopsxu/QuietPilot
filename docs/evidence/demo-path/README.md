@@ -5,7 +5,7 @@
 | 检查项 | 实测结果 | 缺口 |
 | --- | --- | --- |
 | 微信虚拟屏与文件传输助手发测试1 | 第1步控件持续不可读，WAITING_USER，随后测试取消；未发出消息 | [等待归档](wechat-waiting.json)、[控件诊断](wechat-ui.json)显示rawWindowCount=0，13秒录制抽帧为黑屏。安装结束后第二次仍自行退出，虚拟屏rootTasks=0；[重试等待归档](wechat-retry-waiting.json)和[系统退出摘要](wechat-exit-summary.json)保留EXIT_SELF及iAware CrashClean。未取得具体堆栈，不认定所有设备永久不兼容 |
-| 大众点评边看边办 | 尚未验证 | 公开店铺页、语音任务理解和消息真实发出；微信路径未走通 |
+| 边看边办替代验证 | 美团公开酒店列表→真实语音→备忘录10步VERIFIED，原任务291交付主屏 | [完整记录](context-memo-report.md)；只有店名，未见地址；不冒充大众点评→微信发送通过 |
 | 私人订单/历史查询改公开信息 | 机主明确跳过私人订单，未读取淘宝订单；高德公开开放时间8步ANSWERED但uncertain=true、文本截断，不计合格；公开地址复测7步控件不可读，取消 | [开放时间归档](public-hours.json)、[地址复测归档](public-address.json)；两次模型对开放时间未达一致，不能把状态名当作可信答案 |
 | 瑞幸/美团追加大杯与支付前交接 | 机主完成图形验证码后，同页交回后台成功；全站搜索仍B3001_1401，最终25步FAILED。改走首页外卖入口，3步遇本人账号登录；机主在手机完成登录并交回后台后，真实语音追加生效，9步VERIFIED大杯规格，再同页交付主屏 | [搜索失败归档](meituan-coffee.json)、[错误页抽帧](meituan-search-error.png)、[外卖最终归档](meituan-waimai.json)、[大杯截图](meituan-large-cup-evidence.png)、[追加与交付日志](meituan-voice-and-delivery-log.json)；语音路由、最终大杯、同页交付有证据；另有机主自行语音发起的美式任务20步到达支付前并转主屏，见[支付前快照](coffee-voice-checkout.json)；没有自动付款，不计VERIFIED完成 |
 | 双路scrcpy | 主屏和虚拟屏录像已生成，参数为scrcpy5.0.1、no-control/no-audio、独立forward端口 | 三轮中两轮控件不可读并重启/等待人工，不能宣称双路连接无影响；首轮因UTF-8截断中止，已修复；销毁后scrcpy冻结改为显示屏存活轮询结束，CLI回归通过，真机显示屏130销毁后已由监控结束对应scrcpy，见 [退出核验](recorder-teardown-check.json) |
@@ -30,3 +30,5 @@
 该任务由机主在控制端自行发起、追加并“去处理”，采集时已在主屏，未由本次脚本重放。步骤归档和边界核验支持“最终大杯冰、到支付前并交接”；主屏交接后规格已由机主确认“是，大杯、冰”，见[本人反馈](coffee-owner-confirmation.json)。旧事件日志已超出缓冲，未补造AMEND/HANDOFF日志或原始录音；该段未由双路脚本覆盖，完整五段同步录像仍未完成。
 
 机主确认后，咖啡段具备两次真实语音、目标追加、购物车规格、独立支付边界与主屏人工核看的链条；任务正确保持WAITING_USER/payment而非自动付款。完整同步录像仍是独立缺口。
+
+公开店名的上下文替代验证和双屏结果片段已补齐，见[报告](context-memo-report.md)；原指定微信链路、完整地址和完整五段录像仍未通过。咖啡任务最终取消，支付前边界快照保留，未付款。

@@ -1,0 +1,46 @@
+{
+  "files": [
+    {
+      "file": "context-memo-recordings/main.mp4",
+      "duration": 291.614689,
+      "streams": [
+        {
+          "width": 1152,
+          "height": 2376
+        }
+      ],
+      "sha256": "b87ce51bff66ddf7e77a332d87edc33eb31812093d10b6d10e246228a8e0e17c"
+    },
+    {
+      "file": "context-memo-recordings/voice-6e751430-5c4b-4e08-a426-032febeced12-vd.mp4",
+      "duration": 101.215122,
+      "streams": [
+        {
+          "width": 1152,
+          "height": 2376
+        }
+      ],
+      "sha256": "1da807c332ef7a0a545883f574ebfd07b0983a4b1f11e64745f8cf574e9027a8"
+    }
+  ],
+  "alignment": "按录制请求时间近似对齐，非逐帧同步认证",
+  "preview": {
+    "file": "context-name-preview.mp4",
+    "durationSeconds": 15,
+    "mainStartSeconds": 178,
+    "virtualStartSeconds": 45,
+    "mainCrop": {
+      "x": 360,
+      "y": 1090,
+      "width": 792,
+      "height": 190
+    },
+    "outputWidth": 900,
+    "outputHeight": 928,
+    "fps": 15,
+    "description": "左侧仅公开酒店名局部，右侧为最终备忘录编辑器；15秒结果对照，不是完整执行录像或五段演示",
+    "privacy": "主屏位置距离与其他内容被裁掉；仅选用已重开测试笔记时段，避开旧笔记列表",
+    "qa": "起末抽帧目视核验；公开副本仅此结果段；原片不公开"
+  },
+  "timelineSha256": "f8ed5074ba524a86d030004e8b3cb25a15258e46b3559be432e6d5ac14158164"
+}
