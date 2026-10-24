@@ -1,0 +1,25 @@
+{
+  "displayId": 125,
+  "width": 1152,
+  "height": 2376,
+  "mode": "full",
+  "windowSource": "getWindowsOnAllDisplays",
+  "windowError": "",
+  "availableDisplays": [
+    0,
+    125
+  ],
+  "coordinateSpace": "display-local",
+  "connectionGeneration": 2,
+  "rawWindowCount": 0,
+  "nullRootCount": 0,
+  "rootReadMs": 0,
+  "rootsUnavailable": true,
+  "incompleteTraversal": false,
+  "readableNodeCount": 0,
+  "nullChildCount": 0,
+  "cacheRecoveryAttempted": true,
+  "windows": [],
+  "inputs": [],
+  "targets": []
+}

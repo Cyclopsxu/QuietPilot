@@ -1,0 +1,17 @@
+{
+  "implementation": "实际已安装控制端APK的ModelConnectionProbe；不是UI自动点击验证",
+  "results": [
+    {
+      "role": "executor",
+      "result": "请求：deepseek-flash\n服务端返回：deepseek-flash\n返回名可能仍是别名，不能据此证明权重快照。"
+    },
+    {
+      "role": "verifier",
+      "result": "请求：qwen3-vl-plus\n服务端返回：qwen3-vl-plus\n返回名可能仍是别名，不能据此证明权重快照。"
+    },
+    {
+      "role": "intake",
+      "result": "请求：qwen3.8-omni-flash\n服务端返回：qwen3.8-omni-flash\n返回名可能仍是别名，不能据此证明权重快照。"
+    }
+  ]
+}

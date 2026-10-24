@@ -1,0 +1,52 @@
+[
+  {
+    "file": "isolation-recordings-retry/step6-round2-1792814611-vd.mp4",
+    "duration": 533.624944,
+    "streams": [
+      {
+        "width": 1152,
+        "height": 2376
+      }
+    ]
+  },
+  {
+    "file": "isolation-recordings-retry/step6-round3-1792814867-vd.mp4",
+    "duration": 277.218411,
+    "streams": [
+      {
+        "width": 1152,
+        "height": 2376
+      }
+    ]
+  },
+  {
+    "file": "isolation-recordings-retry/main.mp4",
+    "duration": 644.548344,
+    "streams": [
+      {
+        "width": 1152,
+        "height": 2376
+      }
+    ]
+  },
+  {
+    "file": "isolation-recordings/step6-round1-1792814354-vd.mp4",
+    "duration": 48.008133,
+    "streams": [
+      {
+        "width": 1152,
+        "height": 2376
+      }
+    ]
+  },
+  {
+    "file": "isolation-recordings/main.mp4",
+    "duration": 67.860256,
+    "streams": [
+      {
+        "width": 1152,
+        "height": 2376
+      }
+    ]
+  }
+]

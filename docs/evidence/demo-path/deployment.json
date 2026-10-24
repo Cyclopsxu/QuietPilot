@@ -1,0 +1,8 @@
+{
+  "atMs": 1792815665772,
+  "shellSha256": "909513beab3c7fe9dc8d77e279c7b437ed6364ecc72fde8633d21d758d7b2e88",
+  "experimentalOverride": true,
+  "controllerInstalled": true,
+  "controllerLastUpdateLocal": "2026-10-24 11:48:25 Asia/Shanghai",
+  "scope": "最终节点归属保护版本；三轮采样来自较早版本，不冒充保护修正后重跑"
+}
