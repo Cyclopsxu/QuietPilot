@@ -1,0 +1,4717 @@
+{
+  "type": "query",
+  "answer": "",
+  "quote": "",
+  "uncertain": false,
+  "sourceApp": "com.huawei.calculator",
+  "searched": "",
+  "taskId": "step6-record-calculator-1792813960",
+  "status": "FAILED",
+  "originalGoal": "用华为计算器先清除再计算12×13，读取结果。",
+  "amendments": [],
+  "goal": "用华为计算器先清除再计算12×13，读取结果。",
+  "app": "com.huawei.calculator",
+  "appName": "计算器",
+  "stepText": "先点清除，将计算器输入清空",
+  "step": 16,
+  "displayId": -1,
+  "source": "model",
+  "message": "重复操作，停在 tap_target；当前界面无可核验答案",
+  "evidence": "",
+  "boundary": "",
+  "llmCalls": {
+    "executor": 18,
+    "verifier": 1,
+    "intake": 0
+  },
+  "finalized": true,
+  "disturbance": {
+    "focusSamples": [
+      {
+        "atMs": 1792813965176,
+        "elapsedMs": 823,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813965695,
+        "elapsedMs": 1342,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813966129,
+        "elapsedMs": 1777,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813966632,
+        "elapsedMs": 2279,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813967137,
+        "elapsedMs": 2784,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813967670,
+        "elapsedMs": 3317,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813968162,
+        "elapsedMs": 3809,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813968676,
+        "elapsedMs": 4323,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813969158,
+        "elapsedMs": 4805,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813969715,
+        "elapsedMs": 5362,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813970228,
+        "elapsedMs": 5875,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813970689,
+        "elapsedMs": 6337,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813971212,
+        "elapsedMs": 6859,
+        "step": 1,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813971698,
+        "elapsedMs": 7345,
+        "step": 1,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813972189,
+        "elapsedMs": 7836,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813972709,
+        "elapsedMs": 8356,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813973211,
+        "elapsedMs": 8858,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813973716,
+        "elapsedMs": 9363,
+        "step": 2,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813974211,
+        "elapsedMs": 9858,
+        "step": 2,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813974711,
+        "elapsedMs": 10358,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813975219,
+        "elapsedMs": 10866,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813975706,
+        "elapsedMs": 11353,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813976212,
+        "elapsedMs": 11859,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813976699,
+        "elapsedMs": 12346,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813977176,
+        "elapsedMs": 12823,
+        "step": 3,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813977708,
+        "elapsedMs": 13355,
+        "step": 3,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813978207,
+        "elapsedMs": 13854,
+        "step": 3,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813978713,
+        "elapsedMs": 14360,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813979214,
+        "elapsedMs": 14861,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813979714,
+        "elapsedMs": 15361,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813980144,
+        "elapsedMs": 15791,
+        "step": 4,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813980680,
+        "elapsedMs": 16327,
+        "step": 4,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813981218,
+        "elapsedMs": 16866,
+        "step": 4,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813981720,
+        "elapsedMs": 17367,
+        "step": 5,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813982214,
+        "elapsedMs": 17861,
+        "step": 5,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813982651,
+        "elapsedMs": 18298,
+        "step": 5,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813983195,
+        "elapsedMs": 18842,
+        "step": 5,
+        "action": "tap_target",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813983634,
+        "elapsedMs": 19281,
+        "step": 5,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813984176,
+        "elapsedMs": 19823,
+        "step": 5,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813984653,
+        "elapsedMs": 20300,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813985201,
+        "elapsedMs": 20848,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.android.launcher",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ca315a1 u0 com.huawei.android.launcher/com.huawei.android.launcher.unihome.UniHomeLauncher}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813985672,
+        "elapsedMs": 21319,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": false,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{de17769 uid=10113 pid=2847 displayId=0} mCurSeq=1091",
+          "mCurFocusedWindow=android.os.BinderProxy@d02fa08 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{de17769 uid=10113 pid=2847 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813986215,
+        "elapsedMs": 21862,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{21b0efd u0 com.huawei.notepad/com.example.android.notepad.NotePadActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1092",
+          "mCurFocusedWindow=android.os.BinderProxy@2bbcf54 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_NOTHING|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813986643,
+        "elapsedMs": 22290,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{21b0efd u0 com.huawei.notepad/com.example.android.notepad.NotePadActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1092",
+          "mCurFocusedWindow=android.os.BinderProxy@2bbcf54 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_NOTHING|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813987129,
+        "elapsedMs": 22776,
+        "step": 6,
+        "action": "tap_target",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{21b0efd u0 com.huawei.notepad/com.example.android.notepad.NotePadActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1092",
+          "mCurFocusedWindow=android.os.BinderProxy@2bbcf54 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_NOTHING|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813987641,
+        "elapsedMs": 23288,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{21b0efd u0 com.huawei.notepad/com.example.android.notepad.NotePadActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1092",
+          "mCurFocusedWindow=android.os.BinderProxy@2bbcf54 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_NOTHING|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813988135,
+        "elapsedMs": 23782,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{21b0efd u0 com.huawei.notepad/com.example.android.notepad.NotePadActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1092",
+          "mCurFocusedWindow=android.os.BinderProxy@2bbcf54 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_NOTHING|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813988652,
+        "elapsedMs": 24299,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{21b0efd u0 com.huawei.notepad/com.example.android.notepad.NotePadActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1092",
+          "mCurFocusedWindow=android.os.BinderProxy@2bbcf54 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_NOTHING|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813989135,
+        "elapsedMs": 24782,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": false,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1092",
+          "mCurFocusedWindow=android.os.BinderProxy@2bbcf54 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_NOTHING|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813989652,
+        "elapsedMs": 25299,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1093",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813990142,
+        "elapsedMs": 25789,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813990714,
+        "elapsedMs": 26361,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813991202,
+        "elapsedMs": 26849,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813991633,
+        "elapsedMs": 27280,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813992152,
+        "elapsedMs": 27799,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813992715,
+        "elapsedMs": 28362,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813993221,
+        "elapsedMs": 28868,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813993736,
+        "elapsedMs": 29383,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813994227,
+        "elapsedMs": 29874,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813994686,
+        "elapsedMs": 30334,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813995216,
+        "elapsedMs": 30863,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813995710,
+        "elapsedMs": 31357,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813996207,
+        "elapsedMs": 31854,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813996657,
+        "elapsedMs": 32304,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813997191,
+        "elapsedMs": 32838,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813997717,
+        "elapsedMs": 33364,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813998189,
+        "elapsedMs": 33837,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813998670,
+        "elapsedMs": 34317,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813999221,
+        "elapsedMs": 34868,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813999721,
+        "elapsedMs": 35368,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814000216,
+        "elapsedMs": 35863,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814000718,
+        "elapsedMs": 36365,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814001228,
+        "elapsedMs": 36876,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814001711,
+        "elapsedMs": 37358,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814002207,
+        "elapsedMs": 37854,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814002709,
+        "elapsedMs": 38356,
+        "step": 7,
+        "action": "focus_input",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814003225,
+        "elapsedMs": 38873,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814003723,
+        "elapsedMs": 39370,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814004207,
+        "elapsedMs": 39854,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814004708,
+        "elapsedMs": 40355,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814005213,
+        "elapsedMs": 40860,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814005714,
+        "elapsedMs": 41361,
+        "step": 8,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814006215,
+        "elapsedMs": 41862,
+        "step": 8,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814006671,
+        "elapsedMs": 42318,
+        "step": 8,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814007196,
+        "elapsedMs": 42843,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814007693,
+        "elapsedMs": 43340,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814008193,
+        "elapsedMs": 43840,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814008726,
+        "elapsedMs": 44373,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814009225,
+        "elapsedMs": 44872,
+        "step": 9,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814009713,
+        "elapsedMs": 45360,
+        "step": 9,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814010205,
+        "elapsedMs": 45853,
+        "step": 9,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814010691,
+        "elapsedMs": 46338,
+        "step": 9,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814011176,
+        "elapsedMs": 46823,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814011713,
+        "elapsedMs": 47360,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814012230,
+        "elapsedMs": 47878,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814012717,
+        "elapsedMs": 48364,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814013167,
+        "elapsedMs": 48815,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814013720,
+        "elapsedMs": 49367,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814014211,
+        "elapsedMs": 49858,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814014710,
+        "elapsedMs": 50357,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814015213,
+        "elapsedMs": 50860,
+        "step": 10,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814015695,
+        "elapsedMs": 51342,
+        "step": 10,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814016213,
+        "elapsedMs": 51860,
+        "step": 10,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814016696,
+        "elapsedMs": 52343,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814017206,
+        "elapsedMs": 52853,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814017717,
+        "elapsedMs": 53364,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814018174,
+        "elapsedMs": 53821,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814018701,
+        "elapsedMs": 54349,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814019177,
+        "elapsedMs": 54824,
+        "step": 11,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814019698,
+        "elapsedMs": 55345,
+        "step": 11,
+        "action": "tap_target",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814020234,
+        "elapsedMs": 55881,
+        "step": 11,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814020721,
+        "elapsedMs": 56368,
+        "step": 11,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814021210,
+        "elapsedMs": 56857,
+        "step": 12,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814021710,
+        "elapsedMs": 57357,
+        "step": 12,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814022170,
+        "elapsedMs": 57817,
+        "step": 12,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814022715,
+        "elapsedMs": 58362,
+        "step": 12,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814023197,
+        "elapsedMs": 58844,
+        "step": 13,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814023723,
+        "elapsedMs": 59370,
+        "step": 13,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814024221,
+        "elapsedMs": 59868,
+        "step": 13,
+        "action": "tap_target",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814024716,
+        "elapsedMs": 60363,
+        "step": 13,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814025179,
+        "elapsedMs": 60826,
+        "step": 13,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814025702,
+        "elapsedMs": 61350,
+        "step": 14,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814026207,
+        "elapsedMs": 61854,
+        "step": 14,
+        "action": "tap_target",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814026701,
+        "elapsedMs": 62348,
+        "step": 14,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814027201,
+        "elapsedMs": 62848,
+        "step": 14,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814027716,
+        "elapsedMs": 63363,
+        "step": 15,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814028209,
+        "elapsedMs": 63856,
+        "step": 15,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814028689,
+        "elapsedMs": 64337,
+        "step": 15,
+        "action": "tap_target",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814029202,
+        "elapsedMs": 64849,
+        "step": 15,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814029705,
+        "elapsedMs": 65352,
+        "step": 15,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814030215,
+        "elapsedMs": 65862,
+        "step": 16,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814030680,
+        "elapsedMs": 66328,
+        "step": 16,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814031212,
+        "elapsedMs": 66859,
+        "step": 16,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814031713,
+        "elapsedMs": 67361,
+        "step": 16,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814032197,
+        "elapsedMs": 67844,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814032718,
+        "elapsedMs": 68365,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814033219,
+        "elapsedMs": 68866,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814033715,
+        "elapsedMs": 69362,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814034179,
+        "elapsedMs": 69827,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814034708,
+        "elapsedMs": 70355,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814035199,
+        "elapsedMs": 70846,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814035712,
+        "elapsedMs": 71359,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814036191,
+        "elapsedMs": 71838,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814036728,
+        "elapsedMs": 72375,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792814037217,
+        "elapsedMs": 72865,
+        "step": 17,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.notepad",
+        "mainFocusAvailable": true,
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{ce37ef0 u0 com.huawei.notepad/com.example.android.notepad.NoteEditor}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{6092a42 uid=10209 pid=6820 displayId=0} mCurSeq=1094",
+          "mCurFocusedWindow=android.os.BinderProxy@f29e2a2 softInputMode=STATE_ALWAYS_HIDDEN|ADJUST_RESIZE|IS_FORWARD_NAVIGATION client=ClientState{6092a42 uid=10209 pid=6820 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      }
+    ],
+    "focusSamplesTruncated": false,
+    "metrics": [
+      {
+        "key": "foreground",
+        "label": "未归因前台切换",
+        "value": 1,
+        "available": true,
+        "pass": false,
+        "reason": "原始切换 1；显式交接关联 0；触摸关联 0；数据不足 0（关联不等于因果证明）"
+      },
+      {
+        "key": "focus",
+        "label": "焦点丢失次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "主焦点指向本任务虚拟屏的次数"
+      },
+      {
+        "key": "ime",
+        "label": "键盘被抢次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "活动输入法目标变为本任务虚拟屏"
+      },
+      {
+        "key": "clipboard",
+        "label": "剪贴板内容变化",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "仅比较摘要，不保存剪贴板内容"
+      },
+      {
+        "key": "jank",
+        "label": "指定 App 掉帧率",
+        "value": 0.056451612903225805,
+        "available": true,
+        "pass": false,
+        "reason": "新增卡顿帧 7 / 124，阈值 5%；仅任务开始时的 com.huawei.android.launcher，不代表其他 App 或持续信息流流畅度",
+        "measuredPackage": "com.huawei.android.launcher",
+        "scope": "task_start_foreground_package_process",
+        "foregroundSamples": 41,
+        "totalSamples": 147,
+        "coversOtherApps": false,
+        "frames": 124,
+        "jankyFrames": 7
+      }
+    ],
+    "events": [
+      {
+        "metric": "foreground",
+        "atMs": 1792813985679,
+        "elapsedMs": 21326,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "detail": "主屏变化：com.huawei.android.launcher → com.huawei.notepad",
+        "from": "com.huawei.android.launcher",
+        "to": "com.huawei.notepad",
+        "attribution": "unattributed"
+      },
+      {
+        "metric": "jank",
+        "atMs": 1792814038378,
+        "elapsedMs": 74025,
+        "step": 17,
+        "action": "清理虚拟屏",
+        "source": "model",
+        "detail": "主屏新增帧掉帧率超过 5%：7/124"
+      }
+    ],
+    "foregroundPackage": "com.huawei.android.launcher",
+    "samples": 147,
+    "backgroundSafetyIssue": "",
+    "backgroundSafetyTriggered": false,
+    "sampleIntervalMs": 500,
+    "avgSampleMs": 131.88291523129251,
+    "maxSampleMs": 179.763542,
+    "skippedTicks": 0,
+    "touchMethod": "dumpsys input / RecentQueue / displayId=0 MotionEvent / age",
+    "rawForegroundSwitches": 1,
+    "authorizedHandoffSwitches": 0,
+    "unattributedForegroundSwitches": 1,
+    "unknownForegroundSwitches": 0,
+    "userForegroundSwitches": 0,
+    "eventsTruncated": false,
+    "zeroDisturbanceVerified": false,
+    "assessmentScope": "采样观察与显式交接关联，非全程无打扰认证",
+    "samplingError": ""
+  },
+  "isolation": {
+    "selectedFlags": 331,
+    "selectedFlagsHex": "14b",
+    "candidateIndex": 2,
+    "ownFocusSupported": false,
+    "noStealSupported": false,
+    "ownFocusRequested": false,
+    "noStealRequested": false,
+    "localImeVerified": false,
+    "configurationAvailable": false,
+    "behaviorValidated": false,
+    "experimentalOverride": true,
+    "backgroundAllowed": true,
+    "status": "experimental_unverified",
+    "message": "兼容实验模式：隔离能力不足，不保证主屏输入和焦点不受影响",
+    "touchNoFocusChangeFlag": 64,
+    "touchNoFocusChangeAvailable": true,
+    "mitigations": {
+      "noFocusChangeTouch": true,
+      "dangerousKeyGate": true,
+      "accessibilityTextWrites": true,
+      "clipboardSnapshotRestore": true,
+      "localImePolicy": false
+    },
+    "capture": {
+      "mode": "layer_stack_mirror",
+      "fallback": "",
+      "requests": 2,
+      "misses": 0,
+      "surfaceSwitches": 0,
+      "frames": 965
+    },
+    "creationAttempts": [
+      {
+        "candidateIndex": 0,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 1,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 2,
+        "flags": 331,
+        "accepted": true
+      }
+    ],
+    "platformDisplayFlags": 8,
+    "localImeSetSucceeded": false,
+    "imePolicyBefore": 1,
+    "imePolicyReadback": 1,
+    "sdkInt": 31,
+    "manufacturer": "HUAWEI",
+    "model": "NOH-AN01",
+    "nativeBackgroundKeysAllowed": false
+  },
+  "skillId": "",
+  "sourceSteps": {
+    "model": 14,
+    "skill": 0,
+    "rescue": 0,
+    "query_recovery": 0
+  },
+  "comparison": "",
+  "evidenceScreenshot": "",
+  "createdAtMs": 1792813961378,
+  "finishedAtMs": 1792814037606,
+  "waitingSinceMs": 0,
+  "transcript": "",
+  "intakeElapsedMs": 0,
+  "pendingConfirmation": false,
+  "requiresConfirmation": false,
+  "confirmDeadlineMs": 0,
+  "protectedScreen": false,
+  "resultReady": false,
+  "transferState": "idle",
+  "elapsedMs": 76228,
+  "steps": [
+    {
+      "step": 1,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "清除当前算式，按要求先清除再计算",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 7,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "清除",
+        "resourceId": "com.huawei.calculator:id/op_clr",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1024,315,1284",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 9484,
+      "stepText": "清除当前算式，按要求先清除再计算",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "清除当前算式，按要求先清除再计算",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "输入12×13的第一个数字1",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 19,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "1",
+        "contentDesc": "1",
+        "resourceId": "com.huawei.calculator:id/digit_1",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1806,315,2067",
+        "siblingIndex": 10
+      },
+      "elapsedMs": 12138,
+      "stepText": "输入12×13的第一个数字1",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "输入12×13的第一个数字1",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "输入12×13的第二个数字2",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 20,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "2",
+        "contentDesc": "2",
+        "resourceId": "com.huawei.calculator:id/digit_2",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "315,1806,576,2067",
+        "siblingIndex": 11
+      },
+      "elapsedMs": 15749,
+      "stepText": "输入12×13的第二个数字2",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "输入12×13的第二个数字2",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字15]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      }
+    },
+    {
+      "step": 4,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字15]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Tapping multiply operator to build 12×13",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 9,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "乘",
+        "resourceId": "com.huawei.calculator:id/op_mul",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "576,1024,837,1284",
+        "siblingIndex": 2
+      },
+      "elapsedMs": 18739,
+      "stepText": "Tapping multiply ope",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Tapping multiply operator to build 12×13",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字16]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      }
+    },
+    {
+      "step": 5,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字16]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Entering 3 to complete 12×3...12×13",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 21,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "3",
+        "contentDesc": "3",
+        "resourceId": "com.huawei.calculator:id/digit_3",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "576,1806,837,2067",
+        "siblingIndex": 12
+      },
+      "elapsedMs": 21844,
+      "stepText": "Entering 3 to comple",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Entering 3 to complete 12×3...12×13",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字17]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字18]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      }
+    },
+    {
+      "step": 8,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字17]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字18]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Clear the calculator display before entering the required expression",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 7,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "清除",
+        "resourceId": "com.huawei.calculator:id/op_clr",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1024,315,1284",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 44580,
+      "stepText": "Clear the calculator",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Clear the calculator display before entering the required expression",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 9,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Enter first digit 1 of 12x13",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 19,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "1",
+        "contentDesc": "1",
+        "resourceId": "com.huawei.calculator:id/digit_1",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1806,315,2067",
+        "siblingIndex": 10
+      },
+      "elapsedMs": 48149,
+      "stepText": "Enter first digit 1 ",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Enter first digit 1 of 12x13",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 10,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Clear the calculator display before entering 12x13",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 7,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "清除",
+        "resourceId": "com.huawei.calculator:id/op_clr",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1024,315,1284",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 54057,
+      "stepText": "Clear the calculator",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Clear the calculator display before entering 12x13",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 11,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Enter digit 1",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 19,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "1",
+        "contentDesc": "1",
+        "resourceId": "com.huawei.calculator:id/digit_1",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1806,315,2067",
+        "siblingIndex": 10
+      },
+      "elapsedMs": 58378,
+      "stepText": "Enter digit 1",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Enter digit 1",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 12,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Enter digit 2 to make 12",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 20,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "2",
+        "contentDesc": "2",
+        "resourceId": "com.huawei.calculator:id/digit_2",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "315,1806,576,2067",
+        "siblingIndex": 11
+      },
+      "elapsedMs": 60617,
+      "stepText": "Enter digit 2 to mak",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Enter digit 2 to make 12",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字15]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      }
+    },
+    {
+      "step": 13,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字15]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "清除计算器当前内容",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 7,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "清除",
+        "resourceId": "com.huawei.calculator:id/op_clr",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1024,315,1284",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 62845,
+      "stepText": "清除计算器当前内容",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "清除计算器当前内容",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 14,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "先点击清除按钮清空计算器",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 7,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "清除",
+        "resourceId": "com.huawei.calculator:id/op_clr",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1024,315,1284",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 64869,
+      "stepText": "先点击清除按钮清空计算器",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "先点击清除按钮清空计算器",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 15,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "先清除计算器内容",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 7,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "清除",
+        "resourceId": "com.huawei.calculator:id/op_clr",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1024,315,1284",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 67317,
+      "stepText": "先清除计算器内容",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "先清除计算器内容",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 16,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "先点清除，将计算器输入清空",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 7,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "清除",
+        "resourceId": "com.huawei.calculator:id/op_clr",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1024,315,1284",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 69504,
+      "stepText": "先点清除，将计算器输入清空",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "先点清除，将计算器输入清空",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    }
+  ]
+}

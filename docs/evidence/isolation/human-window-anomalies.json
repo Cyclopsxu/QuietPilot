@@ -1,0 +1,98 @@
+[
+  {
+    "atMs": 1792752468045,
+    "uptimeMs": 355061980,
+    "kind": "sample",
+    "textLength": 0,
+    "compositionStart": -1,
+    "compositionEnd": -1,
+    "fieldFocused": false,
+    "windowFocused": false,
+    "imeActive": false,
+    "scrollY": 0
+  },
+  {
+    "atMs": 1792752468545,
+    "uptimeMs": 355062480,
+    "kind": "sample",
+    "textLength": 0,
+    "compositionStart": -1,
+    "compositionEnd": -1,
+    "fieldFocused": false,
+    "windowFocused": false,
+    "imeActive": false,
+    "scrollY": 0
+  },
+  {
+    "atMs": 1792752468562,
+    "uptimeMs": 355062497,
+    "kind": "window_focus",
+    "textLength": 0,
+    "compositionStart": -1,
+    "compositionEnd": -1,
+    "fieldFocused": false,
+    "windowFocused": true,
+    "imeActive": false,
+    "scrollY": 0
+  },
+  {
+    "atMs": 1792752469045,
+    "uptimeMs": 355062980,
+    "kind": "sample",
+    "textLength": 0,
+    "compositionStart": -1,
+    "compositionEnd": -1,
+    "fieldFocused": false,
+    "windowFocused": true,
+    "imeActive": false,
+    "scrollY": 0
+  },
+  {
+    "atMs": 1792752469309,
+    "uptimeMs": 355063244,
+    "kind": "sample",
+    "textLength": 0,
+    "compositionStart": -1,
+    "compositionEnd": -1,
+    "fieldFocused": false,
+    "windowFocused": false,
+    "imeActive": false,
+    "scrollY": 0
+  },
+  {
+    "atMs": 1792752469538,
+    "uptimeMs": 355063473,
+    "kind": "window_focus",
+    "textLength": 0,
+    "compositionStart": -1,
+    "compositionEnd": -1,
+    "fieldFocused": false,
+    "windowFocused": true,
+    "imeActive": false,
+    "scrollY": 0
+  },
+  {
+    "atMs": 1792752469809,
+    "uptimeMs": 355063744,
+    "kind": "sample",
+    "textLength": 0,
+    "compositionStart": -1,
+    "compositionEnd": -1,
+    "fieldFocused": false,
+    "windowFocused": true,
+    "imeActive": false,
+    "scrollY": 0
+  },
+  {
+    "atMs": 1792752470311,
+    "uptimeMs": 355064246,
+    "kind": "sample",
+    "textLength": 0,
+    "compositionStart": -1,
+    "compositionEnd": -1,
+    "fieldFocused": false,
+    "windowFocused": true,
+    "imeActive": false,
+    "scrollY": 0
+  }
+]

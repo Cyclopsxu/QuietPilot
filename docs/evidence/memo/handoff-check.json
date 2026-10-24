@@ -1,0 +1,129 @@
+{
+  "status": "VERIFIED",
+  "finalized": true,
+  "transferState": "moved",
+  "virtualDisplayReleased": true,
+  "sameRootTask": true,
+  "rootsBefore": [
+    {
+      "rootTaskId": 211,
+      "displayId": 94
+    }
+  ],
+  "rootsAfter": [
+    {
+      "rootTaskId": 211,
+      "displayId": 0
+    }
+  ],
+  "processUnchanged": true,
+  "bodyMatchesExactly": true,
+  "bodySha256": "ed2c591aeebf6c3e592ff7c0b716ba8e6a36ec7d7627a3fc420c4a6c4667b4d5",
+  "handoffEntry": "controller MainActivity handoffTaskId Intent with SINGLE_TOP|CLEAR_TOP (same path as Go-view notification)",
+  "disturbance": {
+    "metrics": [
+      {
+        "key": "foreground",
+        "label": "未归因前台切换",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "原始切换 2；显式交接关联 2；触摸关联 0；数据不足 0（关联不等于因果证明）"
+      },
+      {
+        "key": "focus",
+        "label": "焦点丢失次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "主焦点指向本任务虚拟屏的次数"
+      },
+      {
+        "key": "ime",
+        "label": "键盘被抢次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "活动输入法目标变为本任务虚拟屏"
+      },
+      {
+        "key": "clipboard",
+        "label": "剪贴板内容变化",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "仅比较摘要，不保存剪贴板内容"
+      },
+      {
+        "key": "jank",
+        "label": "指定 App 掉帧率",
+        "value": 0.20155038759689922,
+        "available": true,
+        "pass": false,
+        "reason": "新增卡顿帧 26 / 129，阈值 5%；仅任务开始时的 com.huawei.android.launcher，不代表其他 App 或持续信息流流畅度",
+        "measuredPackage": "com.huawei.android.launcher",
+        "scope": "task_start_foreground_package_process",
+        "foregroundSamples": 240,
+        "totalSamples": 308,
+        "coversOtherApps": false,
+        "frames": 129,
+        "jankyFrames": 26
+      }
+    ],
+    "events": [
+      {
+        "metric": "foreground",
+        "atMs": 1792757820739,
+        "elapsedMs": 120515,
+        "step": 4,
+        "action": "done 后观察",
+        "source": "model",
+        "detail": "主屏变化：com.huawei.android.launcher → com.silentauto.controller",
+        "from": "com.huawei.android.launcher",
+        "to": "com.silentauto.controller",
+        "attribution": "explicit_handoff",
+        "handoffReason": "user_opened_handoff"
+      },
+      {
+        "metric": "foreground",
+        "atMs": 1792757821284,
+        "elapsedMs": 121059,
+        "step": 4,
+        "action": "done 后观察",
+        "source": "model",
+        "detail": "主屏变化：com.silentauto.controller → com.huawei.notepad",
+        "from": "com.silentauto.controller",
+        "to": "com.huawei.notepad",
+        "attribution": "explicit_handoff",
+        "handoffReason": "user_take_on_main"
+      },
+      {
+        "metric": "jank",
+        "atMs": 1792757854224,
+        "elapsedMs": 154000,
+        "step": 4,
+        "action": "清理虚拟屏",
+        "source": "model",
+        "detail": "主屏新增帧掉帧率超过 5%：26/129"
+      }
+    ],
+    "foregroundPackage": "com.huawei.android.launcher",
+    "samples": 308,
+    "backgroundSafetyIssue": "",
+    "backgroundSafetyTriggered": false,
+    "sampleIntervalMs": 500,
+    "avgSampleMs": 166.67216412012988,
+    "maxSampleMs": 269.74375,
+    "skippedTicks": 0,
+    "touchMethod": "dumpsys input / RecentQueue / displayId=0 MotionEvent / age",
+    "rawForegroundSwitches": 2,
+    "authorizedHandoffSwitches": 2,
+    "unattributedForegroundSwitches": 0,
+    "unknownForegroundSwitches": 0,
+    "userForegroundSwitches": 0,
+    "eventsTruncated": false,
+    "zeroDisturbanceVerified": false,
+    "assessmentScope": "采样观察与显式交接关联，非全程无打扰认证",
+    "samplingError": ""
+  }
+}

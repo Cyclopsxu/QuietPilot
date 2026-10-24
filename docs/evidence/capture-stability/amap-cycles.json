@@ -1,0 +1,174 @@
+{
+  "id": 10,
+  "samples": [
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 393,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 622
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 44,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 232
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 39,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 223
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 41,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 222
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 41,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 222
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 47,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 233
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 33,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 214
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 36,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 220
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 29,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 210
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 31,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 166
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 30,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 211
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 35,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 216
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 33,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 213
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 32,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 218
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 28,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 204
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 29,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 207
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 34,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 215
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 29,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 207
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 30,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 212
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 29,
+      "readableNodeCount": 531,
+      "nullRootCount": 0,
+      "elapsedMs": 207
+    }
+  ],
+  "capture": {
+    "mode": "layer_stack_mirror",
+    "fallback": "",
+    "requests": 61,
+    "misses": 0,
+    "surfaceSwitches": 0,
+    "frames": 1156
+  },
+  "ok": true
+}

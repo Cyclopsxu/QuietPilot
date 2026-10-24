@@ -1,0 +1,1830 @@
+{
+  "type": "query",
+  "answer": "156",
+  "quote": "12乘13 156",
+  "uncertain": false,
+  "sourceApp": "com.huawei.calculator",
+  "searched": "",
+  "taskId": "step6-calculator-1792813665",
+  "status": "ANSWERED",
+  "originalGoal": "用华为计算器先清除再计算12×13，读取结果。",
+  "amendments": [],
+  "goal": "用华为计算器先清除再计算12×13，读取结果。",
+  "app": "com.huawei.calculator",
+  "appName": "计算器",
+  "stepText": "",
+  "step": 7,
+  "source": "model",
+  "message": "156",
+  "evidence": "12乘13 156",
+  "boundary": "",
+  "llmCalls": {
+    "executor": 10,
+    "verifier": 1,
+    "intake": 0
+  },
+  "finalized": true,
+  "disturbance": {
+    "focusSamples": [
+      {
+        "atMs": 1792813672494,
+        "elapsedMs": 759,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813673009,
+        "elapsedMs": 1275,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813673507,
+        "elapsedMs": 1772,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813674020,
+        "elapsedMs": 2286,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813674520,
+        "elapsedMs": 2785,
+        "step": 0,
+        "action": "准备",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813675003,
+        "elapsedMs": 3269,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813675525,
+        "elapsedMs": 3791,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813676040,
+        "elapsedMs": 4306,
+        "step": 1,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813676508,
+        "elapsedMs": 4773,
+        "step": 1,
+        "action": "tap_target",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813677027,
+        "elapsedMs": 5292,
+        "step": 1,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813677533,
+        "elapsedMs": 5798,
+        "step": 1,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813678079,
+        "elapsedMs": 6344,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813678557,
+        "elapsedMs": 6822,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813679083,
+        "elapsedMs": 7349,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813679577,
+        "elapsedMs": 7843,
+        "step": 2,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813680037,
+        "elapsedMs": 8303,
+        "step": 2,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813680538,
+        "elapsedMs": 8804,
+        "step": 2,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813681054,
+        "elapsedMs": 9320,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813681553,
+        "elapsedMs": 9818,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813682076,
+        "elapsedMs": 10341,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813682540,
+        "elapsedMs": 10806,
+        "step": 3,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813683034,
+        "elapsedMs": 11300,
+        "step": 3,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813683603,
+        "elapsedMs": 11868,
+        "step": 3,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813684106,
+        "elapsedMs": 12371,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813684607,
+        "elapsedMs": 12872,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813685104,
+        "elapsedMs": 13369,
+        "step": 4,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813685542,
+        "elapsedMs": 13807,
+        "step": 4,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813686040,
+        "elapsedMs": 14305,
+        "step": 4,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813686545,
+        "elapsedMs": 14811,
+        "step": 5,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813687046,
+        "elapsedMs": 15311,
+        "step": 5,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813687532,
+        "elapsedMs": 15798,
+        "step": 5,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813688051,
+        "elapsedMs": 16316,
+        "step": 5,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813688548,
+        "elapsedMs": 16813,
+        "step": 5,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813689038,
+        "elapsedMs": 17303,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813689549,
+        "elapsedMs": 17814,
+        "step": 6,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813690098,
+        "elapsedMs": 18364,
+        "step": 6,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813690538,
+        "elapsedMs": 18804,
+        "step": 6,
+        "action": "tap_target 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813691091,
+        "elapsedMs": 19356,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813691648,
+        "elapsedMs": 19913,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813692016,
+        "elapsedMs": 20281,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813692600,
+        "elapsedMs": 20866,
+        "step": 7,
+        "action": "观察/规划",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813693089,
+        "elapsedMs": 21354,
+        "step": 7,
+        "action": "report_answer 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813693605,
+        "elapsedMs": 21870,
+        "step": 7,
+        "action": "report_answer 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813694057,
+        "elapsedMs": 22322,
+        "step": 7,
+        "action": "report_answer 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813694560,
+        "elapsedMs": 22826,
+        "step": 7,
+        "action": "report_answer 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813695040,
+        "elapsedMs": 23305,
+        "step": 7,
+        "action": "report_answer 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813695579,
+        "elapsedMs": 23845,
+        "step": 7,
+        "action": "report_answer 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      },
+      {
+        "atMs": 1792813696077,
+        "elapsedMs": 24343,
+        "step": 7,
+        "action": "report_answer 后观察",
+        "source": "model",
+        "foreground": "com.huawei.coauthservice",
+        "focusedDisplay": 0,
+        "imeDisplay": 0,
+        "window": [
+          "mCurrentFocus=null",
+          "mCurrentFocus=null",
+          "mCurrentFocus=Window{a38c00a u0 com.huawei.coauthservice/com.huawei.unifiedauthwidget.dialog.UnifiedAuthenticationDialogActivity}",
+          "mTopFocusedDisplayId=0"
+        ],
+        "inputMethod": [
+          "mCurClient=ClientState{cdc716e uid=10134 pid=24736 displayId=0} mCurSeq=1088",
+          "mCurFocusedWindow=android.os.BinderProxy@5e9875 softInputMode=STATE_UNCHANGED|ADJUST_UNSPECIFIED client=ClientState{cdc716e uid=10134 pid=24736 displayId=0}",
+          "mCurTokenDisplayId=0"
+        ],
+        "clipboardPseudonym": "clip-1"
+      }
+    ],
+    "focusSamplesTruncated": false,
+    "metrics": [
+      {
+        "key": "foreground",
+        "label": "未归因前台切换",
+        "value": 1,
+        "available": true,
+        "pass": false,
+        "reason": "原始切换 1；显式交接关联 0；触摸关联 0；数据不足 0（关联不等于因果证明）"
+      },
+      {
+        "key": "focus",
+        "label": "焦点丢失次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "主焦点指向本任务虚拟屏的次数"
+      },
+      {
+        "key": "ime",
+        "label": "键盘被抢次数",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "活动输入法目标变为本任务虚拟屏"
+      },
+      {
+        "key": "clipboard",
+        "label": "剪贴板内容变化",
+        "value": 0,
+        "available": true,
+        "pass": true,
+        "reason": "仅比较摘要，不保存剪贴板内容"
+      },
+      {
+        "key": "jank",
+        "label": "指定 App 掉帧率",
+        "value": 0.0,
+        "available": false,
+        "pass": false,
+        "reason": "gfxinfo 不可用或计数重置；仅任务开始时的 com.huawei.coauthservice，不代表其他 App 或持续信息流流畅度",
+        "measuredPackage": "com.huawei.coauthservice",
+        "scope": "task_start_foreground_package_process",
+        "foregroundSamples": 65,
+        "totalSamples": 183,
+        "coversOtherApps": false,
+        "frames": 0,
+        "jankyFrames": 0
+      }
+    ],
+    "events": [
+      {
+        "metric": "foreground",
+        "atMs": 1792813705017,
+        "elapsedMs": 33282,
+        "step": 7,
+        "action": "清理虚拟屏",
+        "source": "model",
+        "detail": "主屏变化：com.huawei.coauthservice → com.huawei.appmarket",
+        "from": "com.huawei.coauthservice",
+        "to": "com.huawei.appmarket",
+        "attribution": "unattributed"
+      }
+    ],
+    "foregroundPackage": "com.huawei.coauthservice",
+    "samples": 183,
+    "backgroundSafetyIssue": "",
+    "backgroundSafetyTriggered": false,
+    "sampleIntervalMs": 500,
+    "avgSampleMs": 122.43160005464482,
+    "maxSampleMs": 235.007291,
+    "skippedTicks": 0,
+    "touchMethod": "dumpsys input / RecentQueue / displayId=0 MotionEvent / age",
+    "rawForegroundSwitches": 1,
+    "authorizedHandoffSwitches": 0,
+    "unattributedForegroundSwitches": 1,
+    "unknownForegroundSwitches": 0,
+    "userForegroundSwitches": 0,
+    "eventsTruncated": false,
+    "zeroDisturbanceVerified": false,
+    "assessmentScope": "采样观察与显式交接关联，非全程无打扰认证",
+    "samplingError": ""
+  },
+  "isolation": {
+    "selectedFlags": 331,
+    "selectedFlagsHex": "14b",
+    "candidateIndex": 2,
+    "ownFocusSupported": false,
+    "noStealSupported": false,
+    "ownFocusRequested": false,
+    "noStealRequested": false,
+    "localImeVerified": false,
+    "configurationAvailable": false,
+    "behaviorValidated": false,
+    "experimentalOverride": true,
+    "backgroundAllowed": true,
+    "status": "experimental_unverified",
+    "message": "兼容实验模式：隔离能力不足，不保证主屏输入和焦点不受影响",
+    "touchNoFocusChangeFlag": 64,
+    "touchNoFocusChangeAvailable": true,
+    "mitigations": {
+      "noFocusChangeTouch": true,
+      "dangerousKeyGate": true,
+      "accessibilityTextWrites": true,
+      "clipboardSnapshotRestore": true,
+      "localImePolicy": false
+    },
+    "capture": {
+      "mode": "layer_stack_mirror",
+      "fallback": "",
+      "requests": 1,
+      "misses": 0,
+      "surfaceSwitches": 0,
+      "frames": 169
+    },
+    "creationAttempts": [
+      {
+        "candidateIndex": 0,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 1,
+        "flags": 1355,
+        "accepted": false,
+        "error": "SecurityException"
+      },
+      {
+        "candidateIndex": 2,
+        "flags": 331,
+        "accepted": true
+      }
+    ],
+    "platformDisplayFlags": 8,
+    "localImeSetSucceeded": false,
+    "imePolicyBefore": 1,
+    "imePolicyReadback": 1,
+    "sdkInt": 31,
+    "manufacturer": "HUAWEI",
+    "model": "NOH-AN01",
+    "nativeBackgroundKeysAllowed": false
+  },
+  "skillId": "",
+  "sourceSteps": {
+    "model": 7,
+    "skill": 0,
+    "rescue": 0,
+    "query_recovery": 0
+  },
+  "comparison": "",
+  "evidenceScreenshot": "/data/local/tmp/shadowauto/evidence/step6-calculator-1792813665.png",
+  "createdAtMs": 1792813666114,
+  "finishedAtMs": 1792813696145,
+  "waitingSinceMs": 0,
+  "transcript": "",
+  "intakeElapsedMs": 0,
+  "pendingConfirmation": false,
+  "requiresConfirmation": false,
+  "confirmDeadlineMs": 0,
+  "protectedScreen": false,
+  "resultReady": false,
+  "transferState": "idle",
+  "elapsedMs": 30031,
+  "steps": [
+    {
+      "step": 1,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Clear the calculator display before computing 12×13",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 7,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "清除",
+        "resourceId": "com.huawei.calculator:id/op_clr",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1024,315,1284",
+        "siblingIndex": 0
+      },
+      "elapsedMs": 10397,
+      "stepText": "Clear the calculator",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Clear the calculator display before computing 12×13",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 2,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Enter first digit 1 of 12",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 19,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "1",
+        "contentDesc": "1",
+        "resourceId": "com.huawei.calculator:id/digit_1",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1806,315,2067",
+        "siblingIndex": 10
+      },
+      "elapsedMs": 13652,
+      "stepText": "Enter first digit 1 ",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Enter first digit 1 of 12",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      }
+    },
+    {
+      "step": 3,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]",
+          "[界面文字14]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "Enter second digit 2 of 12",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 20,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "2",
+        "contentDesc": "2",
+        "resourceId": "com.huawei.calculator:id/digit_2",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "315,1806,576,2067",
+        "siblingIndex": 11
+      },
+      "elapsedMs": 16525,
+      "stepText": "Enter second digit 2",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "Enter second digit 2 of 12",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字15]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      }
+    },
+    {
+      "step": 4,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字15]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "输入乘号，构建12×13",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 9,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "",
+        "contentDesc": "乘",
+        "resourceId": "com.huawei.calculator:id/op_mul",
+        "className": "android.widget.ImageView",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "576,1024,837,1284",
+        "siblingIndex": 2
+      },
+      "elapsedMs": 19090,
+      "stepText": "输入乘号，构建12×13",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "输入乘号，构建12×13",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字16]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      }
+    },
+    {
+      "step": 5,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字16]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]",
+          "[界面文字13]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "输入被乘数13的第一位1",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 19,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "1",
+        "contentDesc": "1",
+        "resourceId": "com.huawei.calculator:id/digit_1",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "54,1806,315,2067",
+        "siblingIndex": 10
+      },
+      "elapsedMs": 21333,
+      "stepText": "输入被乘数13的第一位1",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "输入被乘数13的第一位1",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字15]",
+          "[界面文字17]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      }
+    },
+    {
+      "step": 6,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字15]",
+          "[界面文字17]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      },
+      "action": {
+        "action": "tap_target",
+        "answer": "",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "",
+        "reason": "输入被乘数13的第二位3",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 21,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": {
+        "text": "3",
+        "contentDesc": "3",
+        "resourceId": "com.huawei.calculator:id/digit_3",
+        "className": "android.widget.Button",
+        "hint": "",
+        "parentResourceId": "com.huawei.calculator:id/pad_numeric",
+        "parentText": "",
+        "bounds": "576,1806,837,2067",
+        "siblingIndex": 12
+      },
+      "elapsedMs": 23564,
+      "stepText": "输入被乘数13的第二位3",
+      "injectionMethod": "accessibility_click",
+      "source": "model",
+      "reason": "输入被乘数13的第二位3",
+      "uiChanged": true,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      }
+    },
+    {
+      "step": 7,
+      "fingerprint": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      },
+      "action": {
+        "action": "report_answer",
+        "answer": "156",
+        "boundary": "",
+        "direction": "",
+        "distance": 0,
+        "durationMs": 0,
+        "endX": 0,
+        "endY": 0,
+        "expectedEvidence": "",
+        "inputIndex": 0,
+        "key": "",
+        "kind": "",
+        "message": "",
+        "ms": 1000,
+        "packageName": "",
+        "query": "",
+        "quote": "12乘13 156",
+        "reason": "",
+        "searched": "",
+        "source": "model",
+        "startX": 0,
+        "startY": 0,
+        "targetIndex": 0,
+        "text": "",
+        "x": 0,
+        "y": 0
+      },
+      "target": null,
+      "elapsedMs": 26793,
+      "stepText": "",
+      "injectionMethod": "unrecorded",
+      "source": "model",
+      "reason": "",
+      "uiChanged": false,
+      "fingerprintAfter": {
+        "packageName": "com.huawei.calculator",
+        "title": "标准计算器",
+        "stableTexts": [
+          "[界面文字1]",
+          "[界面文字2]",
+          "[界面文字3]",
+          "[界面文字4]",
+          "[界面文字5]",
+          "[界面文字6]",
+          "[界面文字7]",
+          "[界面文字8]",
+          "[界面文字9]",
+          "[界面文字10]",
+          "[界面文字11]",
+          "[界面文字12]"
+        ]
+      }
+    }
+  ]
+}

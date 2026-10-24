@@ -1,0 +1,23 @@
+[
+  {
+    "round": "round1",
+    "taskId": "step6-round1-1792814354",
+    "source": "机主在本对话明确反馈",
+    "observation": "输入和滚动正常，候选词未异常消失",
+    "duration": "机主按开始/暂停提示参与；未逐帧完成候选词核验"
+  },
+  {
+    "round": "round2",
+    "taskId": "step6-round2-1792814611",
+    "source": "机主在本对话明确反馈",
+    "observation": "输入和滚动正常，候选词未异常消失",
+    "duration": "按开始/暂停提示参与超过60秒；后台后续恢复不算持续人工输入证据"
+  },
+  {
+    "round": "round3",
+    "taskId": "step6-round3-1792814867",
+    "source": "机主在本对话明确反馈",
+    "observation": "输入和滚动正常，候选词未异常消失",
+    "duration": "按开始/暂停提示参与超过60秒，未逐帧完成核验"
+  }
+]

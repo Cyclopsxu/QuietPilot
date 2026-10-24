@@ -1,0 +1,158 @@
+[
+  {
+    "sourceRelative": "capture-stability-2026-10-24/calculator-simple-final.json",
+    "artifact": "query/calculator-simple-final.json",
+    "sourceSha256": "f06c10ed1c73b8c0008263862b112c94d836290522b177c8a3f517bf27761d78",
+    "redactedSha256": "c3be4f1194ee9ff6ddc35acb89317011f098c1c048e8379074b599ec8eb3132f"
+  },
+  {
+    "sourceRelative": "capture-stability-2026-10-24/calculator-short-final.json",
+    "artifact": "query/calculator-short-final.json",
+    "sourceSha256": "f363174f15f9d5aebe95180ad25cf21eb5a392cdfb9fcdb40eea63ccc0f05450",
+    "redactedSha256": "9868a8b7fdc570269a400c31526153e21cf9dfc1f2486767760f123c6cfa1a7f"
+  },
+  {
+    "sourceRelative": "capture-stability-2026-10-24/amap-short-final.json",
+    "artifact": "query/amap-short-final.json",
+    "sourceSha256": "0f5703928b7dbb7e33acfca55016c49936d4977678f83838b44b59108cec064c",
+    "redactedSha256": "a8815a1e5d23672d4163e69d77d5a4912ef3b623ab917206fcce03519937c6b4"
+  },
+  {
+    "sourceRelative": "capture-stability-2026-10-24/calculator-cycles.json",
+    "artifact": "capture-stability/calculator-cycles.json",
+    "sourceSha256": "003e834a617fca54525ea8ba497c1df51fd46de6fe857e9b7020ad49bd5329dc",
+    "redactedSha256": "003e834a617fca54525ea8ba497c1df51fd46de6fe857e9b7020ad49bd5329dc"
+  },
+  {
+    "sourceRelative": "capture-stability-2026-10-24/meituan-cycles.json",
+    "artifact": "capture-stability/meituan-cycles.json",
+    "sourceSha256": "6cb384d07ac3b4414e93f979384ad9b4986a86c2340afb3cc6167473ea6b0334",
+    "redactedSha256": "6cb384d07ac3b4414e93f979384ad9b4986a86c2340afb3cc6167473ea6b0334"
+  },
+  {
+    "sourceRelative": "capture-stability-2026-10-24/amap-cycles.json",
+    "artifact": "capture-stability/amap-cycles.json",
+    "sourceSha256": "763828335c07b9c3564a6ad1724a468205e7d334f6fec26fd27c8a06ba86a971",
+    "redactedSha256": "763828335c07b9c3564a6ad1724a468205e7d334f6fec26fd27c8a06ba86a971"
+  },
+  {
+    "sourceRelative": "capture-stability-2026-10-24/report.md",
+    "artifact": "capture-stability/report.md",
+    "sourceSha256": "560515f618f07dcf222a90705300968eb62fc9701251b0488479ad46d350cffd",
+    "redactedSha256": "30a27755f1cf54b4106bfea9af2a3b001be34788202c70fdd1fea3ea77ac9238"
+  },
+  {
+    "sourceRelative": "focus-isolation-2026-10-23/report.md",
+    "artifact": "isolation/previous-test.md",
+    "sourceSha256": "18fd4dcf82f43c97f3e7e1a4d6f3c37b9898485bcf2f324c24434dc78cf2d43b",
+    "redactedSha256": "18fd4dcf82f43c97f3e7e1a4d6f3c37b9898485bcf2f324c24434dc78cf2d43b"
+  },
+  {
+    "sourceRelative": "focus-isolation-2026-10-23/preventive-touch-amap-result.json",
+    "artifact": "isolation/preventive-touch-amap-result.json",
+    "sourceSha256": "2cd7f807bb285946c0e56f53f1626d447e72e8a81533ab334cb55f9b2ae67962",
+    "redactedSha256": "45b7afc4e052c99745512391c3f8b5c79be77ee3affd26bdc77d28c4901a7636"
+  },
+  {
+    "sourceRelative": "focus-isolation-2026-10-23/preventive-touch-amap-repeat-result.json",
+    "artifact": "isolation/preventive-touch-amap-repeat-result.json",
+    "sourceSha256": "022f550943c279788b6ba24f4432c62eb4b007d1f72eab80f9a7c76adc027dc9",
+    "redactedSha256": "8f6f271d6578f5341f241487c400b06b73b246286c0e618e1a3b3cad2c5e655b"
+  },
+  {
+    "sourceRelative": "focus-isolation-2026-10-23/preventive-touch-amap-ime-result.json",
+    "artifact": "isolation/preventive-touch-amap-ime-result.json",
+    "sourceSha256": "dabe7500dec1351814c25d336fa16b677109221fa08cfc838cb36f927662fa8a",
+    "redactedSha256": "1fb32a264bc53ac963cb893fed2878e55ff621da89f8e66cf24f6e42e045e484"
+  },
+  {
+    "sourceRelative": "focus-isolation-2026-10-23/human-window-anomalies.json",
+    "artifact": "isolation/human-window-anomalies.json",
+    "sourceSha256": "42e07e97733bb55a85d8eef1f31f82633d3e1c1f690496f979320113ed0603a6",
+    "redactedSha256": "a537c545c05a8ae3959320e656d9872dc1ea5e1ea4e431daadda831894cf7b90"
+  },
+  {
+    "sourceRelative": "west-sichuan-rerun-2026-10-23/memo-handoff-check.json",
+    "artifact": "memo/handoff-check.json",
+    "sourceSha256": "a796afb2e757d52ae5f82e8841135ec84dfa457e3a91fe083fb97b81814439fe",
+    "redactedSha256": "9aa6aae41f48d43f8c0bc981e9572f5bd1ba5b293ab06c3f981ad0605032080e"
+  },
+  {
+    "sourceRelative": "ui-recovery-2026-10-23/note-verify-final.json",
+    "artifact": "memo/document-proof-task.json",
+    "sourceSha256": "9d94b2ba25a2eb017335d68ef66b5e1b6637f1bd8cccdac3c66286bd1e85b241",
+    "redactedSha256": "f93619b13a4cf4aae58e49e211b97336eb251826de05ef39fcb21fa92537713a"
+  },
+  {
+    "sourceRelative": "ui-recovery-2026-10-23/note-update-result.json",
+    "artifact": "memo/document-proof-failed.json",
+    "sourceSha256": "a36f0e3baff3f6e5dfa2fc639685bc5e2b89ed9f1674f7af76946b12ff03040e",
+    "redactedSha256": "437830b16b82a71321e8f2ac1d938490c74a3adb2c1a3fad7d10ff12a15fe426"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-calculator-1792813665-final.json",
+    "artifact": "query/step6-calculator.json",
+    "sourceSha256": "63a8b10f80c84fc369c3ca7cfb5f0d8175bbe0301381c60d6f711c0480ed50fc",
+    "redactedSha256": "b1e5c8473ca608a04febe802b35d382490063025852144b1103cfcd7b9aff883"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-record-calculator-1792813960-final.json",
+    "artifact": "query/step6-calculator-repeat-failed.json",
+    "sourceSha256": "ddded0dd86a0d4fe6423ff1187d4194603514ec78e38c7d4e9c79a95bea6c24b",
+    "redactedSha256": "54d72a0a5bec80b94210e8218a9ca9d4958f0f1997dbbf888726db98ec436dbb"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-round1-1792814354-final.json",
+    "artifact": "isolation/round1.json",
+    "sourceSha256": "f2e386b2342f512f37617fe92476fb4ac8508ada5b9d00369ba270f3496b104e",
+    "redactedSha256": "7519ab8a53ce347c88e3dac9e584a358d534dcfc25b717d884325e569ca275b9"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/wechat-waiting.json",
+    "artifact": "demo-path/wechat-waiting.json",
+    "sourceSha256": "b48642e038727fafd56699091a561d9a06b66a97f53c4391716e0c4d4e40d903",
+    "redactedSha256": "e15f767cf39e8050c6c201ef2a4950c725a3237e2e22c5247ce38ad7842567c2"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/wechat-ui.json",
+    "artifact": "demo-path/wechat-ui.json",
+    "sourceSha256": "d7373add12be378324edf03d2a298207a1d7eba8c2615a1183fe223dbb6e23f6",
+    "redactedSha256": "2b5c52e45c6091ec4e06e9407539778afd4d7e1db9de4a9203df893635a2b7b4"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/human-observations.json",
+    "artifact": "isolation/human-observations.json",
+    "sourceSha256": "d035856fcaa8bede53556925cfd9b295e7df60b64590cf67c34b4f275564771c",
+    "redactedSha256": "40514716f96cc343bdcbf43a7fe0e2a767afed752f2e43723415e6b894058ca1"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-round2-1792814611-final.json",
+    "artifact": "isolation/round2.json",
+    "sourceSha256": "044dbedfc235370ad5f00e4c1c0f3a11d943c79db9b230f89f5906690fed2326",
+    "redactedSha256": "d798f4c497b1f2503316da5dc735bad80b49dc271d6d59bb1cf50934c7f9e073"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/step6-round3-1792814867-final.json",
+    "artifact": "isolation/round3.json",
+    "sourceSha256": "c8f766d61e75c171ba2c0533d5ba501b90955db4afedf06511875b65c3f06a67",
+    "redactedSha256": "88dbb6be8eb1eb99854511eb21581658e832d87abe84b1237fe6348a3d9170ed"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/model-probe.json",
+    "artifact": "demo-path/model-probe.json",
+    "sourceSha256": "537ab9cab6d93fa819df6c54fba0ea2425cdcf0198d93045c94ed753f3c4f4d0",
+    "redactedSha256": "85833318acb578472481c646dcc026eab15e71e652b9f28711cec042696bf2da"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/recording-inventory.json",
+    "artifact": "demo-path/recording-inventory.json",
+    "sourceSha256": "18053996dce07d06b43bcd65dd2f230806fc6bee878365c19a57c49e51dd9d14",
+    "redactedSha256": "8785592201ca1d6408236a1d0d5a6c458305d1da18de11e420b1166db1d775ab"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/deployment.json",
+    "artifact": "demo-path/deployment.json",
+    "sourceSha256": "3c23ec009ab40c1e5ee1a94da3bcc24f7a306b576d809719af74e2cf0b014736",
+    "redactedSha256": "b802b58aec39d037805a63c037d827033a955790902e3fb91c47e442f6d89df6"
+  }
+]

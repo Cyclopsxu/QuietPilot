@@ -1,0 +1,174 @@
+{
+  "id": 8,
+  "samples": [
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 15,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 176
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 9,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 168
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 9,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 165
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 11,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 167
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 10,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 166
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 8,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 167
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 12,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 168
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 8,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 171
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 11,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 171
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 8,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 165
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 7,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 164
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 12,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 171
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 8,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 168
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 9,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 165
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 11,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 167
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 9,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 163
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 10,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 168
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 10,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 167
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 9,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 165
+    },
+    {
+      "image": true,
+      "rootsUnavailable": false,
+      "rootReadMs": 8,
+      "readableNodeCount": 38,
+      "nullRootCount": 0,
+      "elapsedMs": 164
+    }
+  ],
+  "capture": {
+    "mode": "layer_stack_mirror",
+    "fallback": "",
+    "requests": 41,
+    "misses": 0,
+    "surfaceSwitches": 0,
+    "frames": 450
+  },
+  "ok": true
+}
