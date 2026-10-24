@@ -17,10 +17,11 @@ final class AiConfigScreen {
         void onConfigCancelled();
     }
     private final Activity activity;
+    private final ExecutorService io;
     private final AiConfigStore store;
     private final Listener listener;
     AiConfigScreen(Activity activity, Handler main, ExecutorService io, AiConfigStore store, Listener listener) {
-        this.activity = activity; this.store = store; this.listener = listener;
+        this.io=io; this.activity = activity; this.store = store; this.listener = listener;
     }
     void show(AiConfig config, boolean fromSettings) {
         activity.setContentView(R.layout.activity_config);
@@ -42,6 +43,22 @@ final class AiConfigScreen {
             inputs[i][0] = field(card, "API Base", values[i].apiBase, false);
             inputs[i][1] = field(card, "API Key", values[i].apiKey, true);
             inputs[i][2] = field(card, "Model ID", values[i].model, false);
+            final int role=i;
+            Button probe=new Button(activity);probe.setText("测试连接与服务端模型名");card.addView(probe);
+            TextView probeStatus=new TextView(activity);card.addView(probeStatus);
+            probe.setOnClickListener(v -> {
+                try {
+                    AiConfig.Model selected=new AiConfig.Model(inputs[role][1].getText().toString(),inputs[role][0].getText().toString(),inputs[role][2].getText().toString());
+                    selected.validate();probe.setEnabled(false);probeStatus.setText("测试中…");
+                    io.execute(() -> {
+                        String message;
+                        try {message=com.silentauto.controller.ext.config.ModelConnectionProbe.test(selected.apiBase,selected.apiKey,selected.model);}
+                        catch(Exception failed){message="连接测试失败："+failed.getClass().getSimpleName();}
+                        final String result=message;
+                        activity.runOnUiThread(() -> {probe.setEnabled(true);probeStatus.setText(result);});
+                    });
+                } catch(Exception invalid){probeStatus.setText(invalid.getMessage());}
+            });
         }
         android.widget.CheckBox privacy = new android.widget.CheckBox(activity);
         privacy.setText("不读取屏幕");
