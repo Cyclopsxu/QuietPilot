@@ -15,7 +15,8 @@ public final class TaskProgress {
     private long ended, waitingSinceMs;
     private final long createdAtMs = System.currentTimeMillis();
     private long finishedAtMs;
-    private int step;
+    private int step, displayId=-1;
+    public synchronized void displayId(int value){displayId=value;publish();}
     private String skillId = "", comparison = "", evidenceScreenshot = "";
     private JsonObject sourceSteps = new JsonObject();
     private JsonObject disturbance = new JsonObject();
@@ -94,7 +95,7 @@ public final class TaskProgress {
         o.addProperty("type",type);o.addProperty("answer",answer);o.addProperty("quote",quote);o.addProperty("uncertain",uncertain);o.addProperty("sourceApp",app);o.addProperty("searched",searched);
         o.addProperty("taskId", taskId); o.addProperty("status", status.name());
         o.addProperty("originalGoal",originalGoal);o.add("amendments",amendments.deepCopy());o.addProperty("goal", goal); o.addProperty("app", app); o.addProperty("appName", appName); o.addProperty("stepText", stepText);
-        o.addProperty("step",step);
+        o.addProperty("step",step);o.addProperty("displayId",displayId);
         o.addProperty("source", source); o.addProperty("message", message); o.addProperty("evidence", evidence); o.addProperty("boundary", boundary);
         JsonObject counts = new JsonObject();
         for (Map.Entry<String,Integer> entry : calls.entrySet()) counts.addProperty(entry.getKey(), entry.getValue());

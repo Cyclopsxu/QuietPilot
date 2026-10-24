@@ -37,6 +37,7 @@ final class AutomationTaskView {
     private final FrameLayout screenBox;
     private final TextureView screen;
     private final TextView log;
+    private final TextView displayLabel;
     private final ScrollView logScroll;
     private final Button run;
     private final Button stop;
@@ -63,6 +64,8 @@ final class AutomationTaskView {
         screenBox = view.findViewById(R.id.screenBox);
         screen = view.findViewById(R.id.screenTexture);
         screen.setOpaque(true);
+        displayLabel=new TextView(activity);displayLabel.setText("虚拟屏：等待创建");
+        ((android.widget.LinearLayout)view).addView(displayLabel,2);
         log = view.findViewById(R.id.logText);
         logScroll = view.findViewById(R.id.logScroll);
         run = view.findViewById(R.id.runButton);
@@ -185,6 +188,8 @@ final class AutomationTaskView {
 
     void updateStatus(JSONObject status) {
         activity.runOnUiThread(() -> {
+            int displayId=status.optInt("displayId",-1);
+            displayLabel.setText(displayId>0?"虚拟屏 displayId="+displayId:"虚拟屏：未创建或已释放");
             taskEnded=java.util.Arrays.asList("VERIFIED","ANSWERED","NOT_FOUND","FAILED","CANCELLED","HANDOFF_TIMEOUT").contains(status.optString("status"));
             if ("WAITING_USER".equals(status.optString("status"))) {
                 handoffStatus = status;

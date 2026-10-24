@@ -581,6 +581,8 @@ public final class AutomationEngine {
             task.progress.isolation(isolation);logs.task(task.taskId,"display isolation: "+isolation);
             if(!isolation.get("backgroundAllowed").getAsBoolean())throw new IllegalStateException(isolation.get("message").getAsString());
             task.videoStreamer.start();
+            task.progress.displayId(task.display.displayId);
+            logs.task(task.taskId,"VIRTUAL_DISPLAY_READY taskId="+task.taskId+" displayId="+task.display.displayId);
             logs.task(task.taskId, "virtual display created: " + task.display.displayId + " " + task.display.width + "x" + task.display.height + " dpi=" + task.display.dpi);
             logs.task(task.taskId, "virtual display local IME " + (task.display.localImeEnabled() ? "enabled" : "unavailable"));
             ctx = new ExecutionContext(task.taskId, task.display.displayId, task.display.width, task.display.height,
@@ -1493,6 +1495,7 @@ public final class AutomationEngine {
             isolation.add("capture",task.display.captureStats());
             task.progress.isolation(isolation);
             task.display.release();
+            task.progress.displayId(-1);
             task.display = null;
         }
         }
