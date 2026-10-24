@@ -120,7 +120,7 @@ public final class AutomationEngine {
         }else recorder.snapshotOutcome(taskId, task.progress.outcome());
         archive(task);
         if(unstarted)task.settled.countDown();
-        logs.task(taskId, "task metrics " + task.progress.json());
+        logs.task(taskId, "task metrics " + task.progress.summary());
         logs.task(taskId, "automation stopped");
     }
 
@@ -300,7 +300,7 @@ public final class AutomationEngine {
     synchronized JsonArray listTasks() {
         JsonArray array = new JsonArray();
         for (TaskState task : tasks.values()) {
-            JsonObject item = task.progress.json();
+            JsonObject item = task.progress.summary();
             item.addProperty("displayId", task.display == null ? -1 : task.display.displayId);
             array.add(item);
         }
@@ -330,7 +330,7 @@ public final class AutomationEngine {
         object.addProperty("displayId", running ? displayId : -1);
         JsonArray array = new JsonArray();
         for (TaskState task : tasks.values()) {
-            JsonObject item = task.progress.json();
+            JsonObject item = task.progress.summary();
             item.addProperty("state", task.state);
             item.addProperty("status", task.progress.status().name());
             item.addProperty("displayId", task.display == null ? -1 : task.display.displayId);
@@ -895,7 +895,7 @@ public final class AutomationEngine {
             task.progress.disturbance(disturbance.finish(task.taskId));
             finishMetrics(task, recorded);
             archive(task);
-            logs.task(task.taskId, "task metrics " + task.progress.json());
+            logs.task(task.taskId, "task metrics " + task.progress.summary());
             if (doneMessage != null) {
                 logs.task(task.taskId, doneMessage);
             }

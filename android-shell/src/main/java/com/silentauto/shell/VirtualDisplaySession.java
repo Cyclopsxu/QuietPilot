@@ -56,6 +56,7 @@ final class VirtualDisplaySession {
     }
 
     static VirtualDisplaySession create(int width, int height, int dpi, Surface outputSurface) {
+        android.util.Log.i("ShadowAutoShell","VIRTUAL_DISPLAY_CREATE sdkInt="+android.os.Build.VERSION.SDK_INT);
         DisplayManager manager = displayManager();
         ImageReader captureReader = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 3);
         int baseFlags = DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC
@@ -85,6 +86,7 @@ final class VirtualDisplaySession {
                     VirtualDisplaySession session=new VirtualDisplaySession(width,height,dpi,captureReader,outputSurface,display);
                     session.selectedFlags=flags;session.candidateIndex=index;session.ownFocusFlag=focusFlag;session.noStealFlag=noStealFlag;
                     attempt.addProperty("accepted",true);session.creationAttempts=attempts.deepCopy();
+                    android.util.Log.i("ShadowAutoShell","VIRTUAL_DISPLAY_FLAGS selected="+flags+" attempts="+attempts+" imeSet="+session.localImeEnabled+" imeReadback="+session.windowManager.getDisplayImePolicy(session.displayId));
                     return session;
                 }
                 attempt.addProperty("accepted",false);
@@ -92,6 +94,7 @@ final class VirtualDisplaySession {
             } catch (Throwable e) {
                 attempt.addProperty("accepted",false);attempt.addProperty("error",e.getClass().getSimpleName());
                 if(display!=null)try{display.release();}catch(Throwable ignored){}
+                android.util.Log.w("ShadowAutoShell","VIRTUAL_DISPLAY_CANDIDATE flags="+flags+" failed",e);
                 lastError = e;
             }
         }
@@ -103,6 +106,13 @@ final class VirtualDisplaySession {
         com.google.gson.JsonObject report=com.silentauto.shell.ext.guard.DisplayIsolation.assess(selectedFlags,candidateIndex,ownFocusFlag,noStealFlag,localImeVerified,experimental);
         report.addProperty("touchNoFocusChangeFlag",InputBridge.noFocusChangeFlag());
         report.addProperty("touchNoFocusChangeAvailable",InputBridge.noFocusChangeFlag()!=0);
+        com.google.gson.JsonObject mitigations=new com.google.gson.JsonObject();
+        mitigations.addProperty("noFocusChangeTouch",InputBridge.noFocusChangeFlag()!=0);
+        mitigations.addProperty("dangerousKeyGate",true);
+        mitigations.addProperty("accessibilityTextWrites",true);
+        mitigations.addProperty("clipboardSnapshotRestore",true);
+        mitigations.addProperty("localImePolicy",localImeVerified);
+        report.add("mitigations",mitigations);
         report.add("capture",captureStats());
         report.add("creationAttempts",creationAttempts.deepCopy());report.addProperty("platformDisplayFlags",display.getDisplay().getFlags());
         report.addProperty("localImeSetSucceeded",localImeEnabled);report.addProperty("imePolicyBefore",previousImePolicy);report.addProperty("imePolicyReadback",windowManager.getDisplayImePolicy(displayId));

@@ -124,5 +124,8 @@ public final class TaskProgress {
         message = "已学会：" + name;
         publish();
     }
-    public synchronized void publish() { logs.status(json()); }
+    public synchronized JsonObject summary() {
+        JsonObject value=json();value.getAsJsonObject("disturbance").remove("focusSamples");return value;
+    }
+    public synchronized void publish() { logs.status(summary()); }
 }

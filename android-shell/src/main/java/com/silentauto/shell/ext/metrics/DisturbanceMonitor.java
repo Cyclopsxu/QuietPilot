@@ -21,6 +21,8 @@ public final class DisturbanceMonitor implements StepListener {
         volatile DisturbanceCounters counts;String mainPackage="",clipBefore;long[] framesBefore;
         volatile int display=-1,step;volatile String action="准备",source="model";
         volatile boolean backgroundRunning;
+        final JsonArray focusSamples=new JsonArray();
+        boolean focusSamplesTruncated;
         final com.silentauto.shell.ext.guard.BackgroundFocusGuard safety=new com.silentauto.shell.ext.guard.BackgroundFocusGuard();
         ScheduledFuture<?> polling;long sampleNanos,maxNanos,nextEligible;int skipped;String error="";
         Session(String id,ClipboardBridge clipboard){this.id=id;this.clipboard=clipboard;}
@@ -31,7 +33,22 @@ public final class DisturbanceMonitor implements StepListener {
             try{clipBefore=clip(clipboard);}catch(Exception unavailable){clipBefore=null;}
             if(mainPackage.matches("[A-Za-z0-9_.]+"))framesBefore=DisturbanceReadings.frames(read("dumpsys","gfxinfo",mainPackage));
         }catch(Exception failure){error=failure.getClass().getSimpleName();if(counts==null)counts=new DisturbanceCounters("");}}
-        DisturbanceReadings reading()throws Exception{return DisturbanceReadings.parse(read("dumpsys","window"),read("dumpsys","input"),read("dumpsys","input_method"));}
+        DisturbanceReadings reading()throws Exception{
+            String windows=read("dumpsys","window"),input=read("dumpsys","input"),ime=read("dumpsys","input_method");
+            DisturbanceReadings result=DisturbanceReadings.parse(windows,input,ime);
+            if(backgroundRunning){
+                JsonObject row=new JsonObject();row.addProperty("atMs",System.currentTimeMillis());row.addProperty("elapsedMs",elapsed());
+                row.addProperty("step",step);row.addProperty("action",action);row.addProperty("source",source);
+                row.addProperty("foreground",result.foreground);row.addProperty("mainFocusAvailable",!result.mainFocus.isEmpty()&&!result.mainFocus.endsWith("=null"));row.addProperty("focusedDisplay",result.focusedDisplay);row.addProperty("imeDisplay",result.imeDisplay);
+                JsonArray windowLines=new JsonArray(),imeLines=new JsonArray();
+                for(String line:windows.split("\n"))if(line.contains("mCurrentFocus=")||line.contains("mTopFocusedDisplay"))windowLines.add(line.trim());
+                for(String line:ime.split("\n"))if(line.contains("mCurClient=")||line.contains("mCurFocusedWindow=")||line.contains("mCurTokenDisplayId=")||line.contains("mDisplayIdToShowIme="))imeLines.add(line.trim());
+                row.add("window",windowLines);row.add("inputMethod",imeLines);
+                try{row.addProperty("clipboardDigest",clip(clipboard));}catch(Exception unavailable){row.addProperty("clipboardUnavailable",true);}
+                if(focusSamples.size()<7200)focusSamples.add(row);else focusSamplesTruncated=true;
+            }
+            return result;
+        }
         void sample(){
             long begin=System.nanoTime();if(begin<nextEligible){skipped++;return;}
             try{
@@ -57,7 +74,7 @@ public final class DisturbanceMonitor implements StepListener {
             metrics.add(DisturbanceCounters.metric("ime","键盘被抢次数",counts.imeSteals,counts.imeAvailable,counts.imeSteals==0,"活动输入法目标变为本任务虚拟屏"));
             metrics.add(DisturbanceCounters.metric("clipboard","剪贴板内容变化",changed?1:0,clipboardAvailable,!changed,clipboardAvailable?"仅比较摘要，不保存剪贴板内容":"剪贴板读取不可用"));
             JsonObject frame=DisturbanceCounters.metric("jank","指定 App 掉帧率",rate,frameAvailable&&frames>0,rate<=.05,frameAvailable?(frames==0?"本次主屏无新增帧，无法评估掉帧率":"新增卡顿帧 "+janky+" / "+frames+"，阈值 5%") : "gfxinfo 不可用或计数重置");frame.addProperty("measuredPackage",mainPackage);frame.addProperty("scope","task_start_foreground_package_process");frame.addProperty("foregroundSamples",counts.foregroundSamples.getOrDefault(mainPackage,0));frame.addProperty("totalSamples",counts.samples);frame.addProperty("coversOtherApps",false);frame.addProperty("frames",frames);frame.addProperty("jankyFrames",janky);frame.addProperty("reason",frame.get("reason").getAsString()+"；仅任务开始时的 "+mainPackage+"，不代表其他 App 或持续信息流流畅度");metrics.add(frame);
-            JsonObject report=new JsonObject();report.add("metrics",metrics);report.add("events",counts.events);report.addProperty("foregroundPackage",mainPackage);report.addProperty("samples",counts.samples);
+            JsonObject report=new JsonObject();report.add("focusSamples",focusSamples);report.addProperty("focusSamplesTruncated",focusSamplesTruncated);report.add("metrics",metrics);report.add("events",counts.events);report.addProperty("foregroundPackage",mainPackage);report.addProperty("samples",counts.samples);
             report.addProperty("backgroundSafetyIssue",safety.issue());
             report.addProperty("backgroundSafetyTriggered",safety.triggered());
             report.addProperty("sampleIntervalMs",500);report.addProperty("avgSampleMs",counts.samples==0?0:sampleNanos/1_000_000.0/counts.samples);report.addProperty("maxSampleMs",maxNanos/1_000_000.0);report.addProperty("skippedTicks",skipped);

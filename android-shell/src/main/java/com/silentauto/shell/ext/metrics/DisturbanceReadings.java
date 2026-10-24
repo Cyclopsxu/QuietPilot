@@ -8,7 +8,7 @@ public final class DisturbanceReadings {
     private static final Pattern PACKAGE=Pattern.compile("u\\d+ ([A-Za-z0-9_.]+)/");
     private static final Pattern MAIN_TOUCH=Pattern.compile("displayId=0[,)]");
     private static final Pattern AGE=Pattern.compile("age=([0-9.]+)ms");
-    public String foreground="";
+    public String foreground="",mainFocus="";
     public int focusedDisplay=-1,imeDisplay=-1;
     public long touchAgeMs=-1;
     public boolean touchHistoryAvailable;
@@ -16,6 +16,7 @@ public final class DisturbanceReadings {
         DisturbanceReadings result=new DisturbanceReadings();int display=-1;
         for(String line:windows.split("\n")){
             Matcher section=DISPLAY.matcher(line);if(section.find())display=Integer.parseInt(section.group(1));
+            if(display==0&&line.contains("mCurrentFocus="))result.mainFocus=line.trim();
             if(display==0&&line.contains("mFocusedApp=")){Matcher pkg=PACKAGE.matcher(line);if(pkg.find())result.foreground=pkg.group(1);}
         }
         result.focusedDisplay=number(windows,"mTopFocusedDisplay(?:Id)?[=:]\\s*(\\d+)");

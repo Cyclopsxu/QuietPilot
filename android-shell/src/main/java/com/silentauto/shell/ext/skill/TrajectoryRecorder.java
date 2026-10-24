@@ -47,6 +47,7 @@ public final class TrajectoryRecorder implements StepListener {
             record.addProperty("elapsedMs",(System.nanoTime()-s.started)/1_000_000);
             String stepText=action.reason==null?"":action.reason.replaceAll("\\s+"," ").trim();
             record.addProperty("stepText",stepText.codePointCount(0,stepText.length())<=20?stepText:stepText.substring(0,stepText.offsetByCodePoints(0,20)));
+            record.addProperty("injectionMethod",result==null?"unrecorded":result.injectionMethod);
             record.addProperty("source",action.source);record.addProperty("reason",action.reason);record.addProperty("uiChanged",false);
             s.steps.add(record);s.pending=record;
         }

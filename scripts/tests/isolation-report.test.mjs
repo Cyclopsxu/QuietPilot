@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import {summarize} from '../isolation-report.mjs';
+const row=(t,f=0,i=0,c='a',p='main')=>({atMs:t,elapsedMs:t,focusedDisplay:f,imeDisplay:i,clipboardDigest:c,foreground:p});
+assert.match(summarize({}).assessment,/未通过/);
+const data={disturbance:{focusSamples:[row(0),row(500,3,3,'b','other'),row(1000,3,3,'b','other'),row(1500),row(2000,3,3)]}};
+assert.deepEqual(summarize(data).counts,{foreground:2,focus:2,ime:2,clipboard:2});
+assert.equal(summarize({disturbance:{focusSamples:[row(0,-1,-1)]}}).unknown.focus,1);
+const good={disturbance:{focusSamples:Array.from({length:121},(_,i)=>row(i*500))}};
+assert.match(summarize(good).assessment,/采样四项为0/);
+good.disturbance.focusSamples[50].atMs+=1200;
+assert.match(summarize(good).assessment,/未通过/);
+assert.equal(summarize({disturbance:{focusSamples:[{...row(0),mainFocusAvailable:false}]}}).unknown.focus,1);
+assert.equal(summarize({disturbance:{focusSamples:[{...row(0),window:['mCurrentFocus=null','mCurrentFocus=Window{main}'],mainFocusAvailable:true}]}}).unknown.focus,0);
+const aligned={createdAtMs:10000,steps:[{elapsedMs:100,action:{action:'first'}},{elapsedMs:600,action:{action:'second'}}],disturbance:{focusSamples:[row(10000),row(10600,1)]}};
+assert.equal(summarize(aligned).events[0].nearestAction,'second');
+console.log('isolation-report tests passed');

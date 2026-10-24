@@ -36,9 +36,10 @@ public final class ActionExecutor {
             if(!"com.autonavi.minimap".equals(task.packageName)&&!"com.sankuai.meituan".equals(task.packageName))
                 return new StepResult(tapTarget(ctx.taskId,ctx.ui,ctx.input,ctx.displayId,ctx.width,ctx.height,target.get("targetIndex").getAsInt()),null);
             ctx.input.tap(ctx.displayId,tap.x,tap.y);
-            return new StepResult(null,null);
+            StepResult touched=new StepResult(null,null);touched.injectionMethod="display_touch";return touched;
         }
         if(task.type==com.silentauto.shell.ext.query.TaskType.QUERY)ReadOnlyGuard.check(action,ctx.ui.dump(ctx.displayId,ctx.width,ctx.height,UiBridge.MODE_FULL));
+        String injectionMethod="unrecorded";
         UiBridge.ClickResult clickResult = null;
         UiBridge.FocusResult focusResult = null;
         if ("tap_target".equals(action.action)) {
@@ -64,7 +65,7 @@ public final class ActionExecutor {
                 focusResult = focusInput(ctx.taskId, ctx.ui, ctx.input, ctx.displayId, ctx.width, ctx.height, action.inputIndex, "");
                 if (focusResult == null) throw new IllegalStateException("Skill input target disappeared");
             }
-            inputText(ctx.taskId, ctx.ui, ctx.input, ctx.clipboard, ctx.displayId, action.text);
+            injectionMethod=inputText(ctx.taskId, ctx.ui, ctx.input, ctx.clipboard, ctx.displayId, action.text);
         } else if ("set_clipboard".equals(action.action)) {
             task.agentClipboard = action.text;
             logs.task(ctx.taskId, "clipboard set");
@@ -99,7 +100,7 @@ public final class ActionExecutor {
             }
         } else if ("clear_text".equals(action.action)) {
             if(action.inputIndex>0){focusResult=focusInput(ctx.taskId,ctx.ui,ctx.input,ctx.displayId,ctx.width,ctx.height,action.inputIndex,"");if(focusResult==null)throw new IllegalStateException("Skill clear target disappeared");}
-            clearText(ctx.taskId, ctx.ui, ctx.input, ctx.displayId);
+            injectionMethod=clearText(ctx.taskId, ctx.ui, ctx.input, ctx.displayId);
         } else if ("back".equals(action.action)) {
             ctx.input.key(ctx.displayId, KeyEvent.KEYCODE_BACK);
         } else if ("key".equals(action.action)) {
@@ -112,7 +113,11 @@ public final class ActionExecutor {
         } else {
             sleep(task, Math.max(300, action.ms));
         }
-        return new StepResult(clickResult, focusResult);
+        StepResult result=new StepResult(clickResult, focusResult);
+        if(!"unrecorded".equals(injectionMethod))result.injectionMethod=injectionMethod;
+        else if(java.util.Arrays.asList("tap","long_press","drag","scroll").contains(action.action))result.injectionMethod="display_touch";
+        else if("back".equals(action.action))result.injectionMethod="display_key";
+        return result;
     }
 
     private UiBridge.ClickResult tapTarget(String taskId, UiBridge bridge, InputBridge input, int displayId, int width, int height, int targetIndex) throws Exception {
@@ -154,20 +159,21 @@ public final class ActionExecutor {
         return result;
     }
 
-    private void inputText(String taskId, UiBridge bridge, InputBridge input, ClipboardBridge clipboard, int displayId, String text) throws Exception {
+    private String inputText(String taskId, UiBridge bridge, InputBridge input, ClipboardBridge clipboard, int displayId, String text) throws Exception {
         if (bridge.setText(displayId, text)) {
             logs.task(taskId, "text set by accessibility");
-            return;
+            return "accessibility_set_text";
         }
         boolean pasted = ClipboardGuard.withTemporaryClip(clipboard, text,
                 () -> pasteClipboard(bridge, input, displayId));
         logs.task(taskId, "clipboard restored");
         if (pasted) {
             logs.task(taskId, "text pasted from clipboard");
-            return;
+            return "clipboard_paste";
         }
         input.text(displayId, text);
         logs.task(taskId, "text sent as key events");
+        return "display_key_text";
     }
 
     private boolean pasteClipboard(UiBridge bridge, InputBridge input, int displayId) throws Exception {
@@ -178,19 +184,20 @@ public final class ActionExecutor {
         return true;
     }
 
-    private void clearText(String taskId, UiBridge bridge, InputBridge input, int displayId) throws Exception {
+    private String clearText(String taskId, UiBridge bridge, InputBridge input, int displayId) throws Exception {
         if (bridge.setText(displayId, "")) {
             logs.task(taskId, "text cleared by accessibility");
-            return;
+            return "accessibility_set_text";
         }
         if (bridge.selectAll(displayId)) {
             bridge.deleteSelection(displayId);
             logs.task(taskId, "text cleared by selection");
-            return;
+            return "accessibility_selection_delete";
         }
         input.selectAll(displayId);
         input.delete(displayId);
         logs.task(taskId, "clear text sent by key events");
+        return "display_key_clear";
     }
 
     private void longPress(String taskId, InputBridge input, int displayId, int width, int height, int x, int y, int durationMs) throws Exception {
