@@ -1,0 +1,6 @@
+[
+  "[info] [step6-meituan-waimai-1792835674] AMEND_QUEUED {\"seq\":1,\"time\":1792835891669,\"kind\":\"modify\",\"text\":\"改成大杯的\"}",
+  "[info] [step6-meituan-waimai-1792835674] AMEND_APPLIED [{\"seq\":1,\"time\":1792835891669,\"kind\":\"modify\",\"text\":\"改成大杯的\"}]",
+  "[info] [step6-meituan-waimai-1792835674] HANDOFF_RPC takeResultOnMain atMs=1792836074129",
+  "[info] [step6-meituan-waimai-1792835674] result transfer outcome=moved restored=false root=284 task=284"
+]

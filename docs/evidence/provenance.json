@@ -242,6 +242,21 @@
     "redactedSha256": "ad0a488c2ad944613c5f1c32d2d822b7a485ed4c09902d52f0985ea833de24b2"
   },
   {
+    "sourceRelative": "step6-2026-10-24/meituan-search-error.png",
+    "artifact": "demo-path/meituan-search-error.png",
+    "sourceSha256": "748fc0c3dca0a496baadfcdf2a700b8be046cfcc13f96eb6b5dd5c94f7ebdb4f",
+    "redactedSha256": "748fc0c3dca0a496baadfcdf2a700b8be046cfcc13f96eb6b5dd5c94f7ebdb4f",
+    "derivedFrom": "step6-2026-10-24/coffee-resume-recordings/meituan-resume-vd.mp4",
+    "videoSha256": "2c83ecfb5324e850277844b601cb7005565a7ce1accb602fd3286726ccca1e8d",
+    "note": "录像末尾前约8秒抽取一帧，已目视核验仅含测试搜索词及错误码，不含账号或配送地址"
+  },
+  {
+    "sourceRelative": "step6-2026-10-24/coffee-recording-inventory.json",
+    "artifact": "demo-path/coffee-recording-inventory.json",
+    "sourceSha256": "151c889c4524b9729385c7a0332c5210f10f143d60acedf897736580b572c868",
+    "redactedSha256": "151c889c4524b9729385c7a0332c5210f10f143d60acedf897736580b572c868"
+  },
+  {
     "sourceRelative": "step6-2026-10-24/step6-public-query-1792834655-final.json",
     "artifact": "demo-path/public-hours.json",
     "sourceSha256": "f6cdbf34d39f6b1ff3c95121a0f5f2162958f6ad6464bccf460907ac81dc8639",
@@ -260,24 +275,23 @@
     "redactedSha256": "9d18dc458c0874c6dc2bd3cffeb9aeaf8b2b6d1ace11980d6b366f34d70260e2"
   },
   {
-    "sourceRelative": "step6-2026-10-24/step6-meituan-waimai-1792835674-current.json",
+    "sourceRelative": "step6-2026-10-24/step6-meituan-waimai-1792835674-final.json",
     "artifact": "demo-path/meituan-waimai.json",
-    "sourceSha256": "c6f73cd30a60d8ebe2556498ab1a01b7cd1b966cb7d253f2def28f981dbbb265",
-    "redactedSha256": "1ff8c7ddf088253a89b84a5d2e5f65669754347c7ca9f76559982e679fea8502"
+    "sourceSha256": "f6e7d9c54342195aa56c00f31aa3612baf9afa97cfaa9c71e6ba88f37e64fe69",
+    "redactedSha256": "184648ed249dae96904c47b44a4e9327909fd0d92fd625faf3c8a72723d87f47"
   },
   {
-    "sourceRelative": "step6-2026-10-24/meituan-search-error.png",
-    "artifact": "demo-path/meituan-search-error.png",
-    "sourceSha256": "748fc0c3dca0a496baadfcdf2a700b8be046cfcc13f96eb6b5dd5c94f7ebdb4f",
-    "redactedSha256": "748fc0c3dca0a496baadfcdf2a700b8be046cfcc13f96eb6b5dd5c94f7ebdb4f",
-    "derivedFrom": "step6-2026-10-24/coffee-resume-recordings/meituan-resume-vd.mp4",
-    "videoSha256": "2c83ecfb5324e850277844b601cb7005565a7ce1accb602fd3286726ccca1e8d",
-    "note": "录像末尾前约8秒抽取一帧，已目视核验仅含测试搜索词及错误码，不含账号或配送地址"
+    "sourceRelative": "step6-2026-10-24/meituan-voice-and-delivery-log.json",
+    "artifact": "demo-path/meituan-voice-and-delivery-log.json",
+    "sourceSha256": "9645ec02cf3b28b77cd09c3b91dbf4036d26eded5faf4d12a27280045b6cd81e",
+    "redactedSha256": "cd03a96f9121d77216794e0d559a234e4195d2d415d06899b8e7826e1971cbcc",
+    "note": "限定当前任务的追加与交付日志摘录"
   },
   {
-    "sourceRelative": "step6-2026-10-24/coffee-recording-inventory.json",
-    "artifact": "demo-path/coffee-recording-inventory.json",
-    "sourceSha256": "151c889c4524b9729385c7a0332c5210f10f143d60acedf897736580b572c868",
-    "redactedSha256": "151c889c4524b9729385c7a0332c5210f10f143d60acedf897736580b572c868"
+    "sourceRelative": "step6-2026-10-24/meituan-large-cup-evidence.png",
+    "artifact": "demo-path/meituan-large-cup-evidence.png",
+    "sourceSha256": "32470ee3c7c0a0032af833f79843a89fc6e220862ae92a07fc083a6e69271be3",
+    "redactedSha256": "32470ee3c7c0a0032af833f79843a89fc6e220862ae92a07fc083a6e69271be3",
+    "note": "截图已目视核看，仅有咖啡商品规格与商品列表，不含账号或配送地址"
   }
 ]

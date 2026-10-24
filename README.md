@@ -34,7 +34,8 @@ Operate real Android apps on a background virtual display while the owner uses t
 | Clear-then-calculate task | Original 25-step failure; a 7-step ANSWERED 156 retest and a separate 16-step repetition failure are both retained |
 | Memo page delivery | VERIFIED; same root task, unchanged body hash, virtual display released |
 | Memo skill exploration / reuse / injected deviation | All VERIFIED, 8 / 10 / 13 steps; reuse calls 10→8 but time 27.7→49.4s, with model fallback; [report](docs/evidence/skills/report.md) |
-| WeChat sending and voice amendment at payment boundary | Not validated to the Step 6 acceptance criteria |
+| Meituan voice amendment and delivery | Real speech routed, large cup VERIFIED in 9 steps, same task moved to main; checkout/payment boundary and continuous video unvalidated; [evidence](docs/evidence/demo-path/README.md) |
+| WeChat sending | App exited; no message sent |
 
 [Repository evidence](docs/evidence/README.md) includes failures. No-focus-change touches, key gating, accessibility text and clipboard restoration mitigate interference. This phone lacks confirmed native independent focus/local IME; compatibility mode is not certified isolation. Three new rounds sampled zero events and the owner reported normal input, but the first recording has a gap and the owner confirmed that matching text on the main screen was typed manually. This is not proof against cross-display text effects. Historical tests also included brief unfocused/inactive-IME samples; see [capability boundaries](docs/ISOLATION.md) and [acceptance status](docs/evidence/isolation/report.md).
 
