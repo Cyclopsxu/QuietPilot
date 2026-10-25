@@ -34,7 +34,7 @@
     { name: 'OPPO', url: 'https://jingyan.baidu.com/article/cb5d6105b0936a005d2fe052.html' },
     { name: 'VIVO', url: 'https://jingyan.baidu.com/article/335530da406f4358cb41c3b4.html' }
   ];
-  const repositoryUrl = 'https://github.com/android-notes/ShadowAuto';
+  const repositoryUrl = 'https://github.com/Cyclopsxu/QuietPilot';
 
   const copies: Record<Locale, Copy> = {
     zh: {
@@ -44,7 +44,7 @@
       deviceBusy: '设备已被其他程序占用，请关闭 Android Studio 并杀死 adb 后再次重试。',
       unsupported: '当前浏览器不支持 WebUSB ADB，请使用 Chrome 或 Edge，并通过 HTTPS 或 localhost 打开。',
       ready: '现在隐航 App 已打开。你需要先配置 API KEY 才能使用手机自动化；配置完成后输入自动化任务并点击执行。',
-      repository: '上游 ShadowAuto 仓库',
+      repository: 'QuietPilot 项目仓库',
       setupTitle: '连接前准备',
       setupNotes: [
         '请先打开手机开发者选项，并开启 USB 调试。',
@@ -63,7 +63,7 @@
       deviceBusy: 'The device is already in use. Please close Android Studio and kill adb, then retry.',
       unsupported: 'This browser does not support WebUSB ADB. Please use Chrome or Edge over HTTPS or localhost.',
       ready: 'The QuietPilot app is now open. Configure an API key before using phone automation, then enter a task and tap Run.',
-      repository: 'Upstream ShadowAuto repository',
+      repository: 'QuietPilot repository',
       setupTitle: 'Before Connecting',
       setupNotes: [
         'Enable Developer options and USB debugging on the phone first.',

@@ -2,6 +2,8 @@
 
 English | [中文](README.zh-CN.md) | [User guide](docs/USER_GUIDE.en.md) | [Development document (中文)](docs/DEVELOPMENT.md)
 
+[GitHub: Cyclopsxu/QuietPilot](https://github.com/Cyclopsxu/QuietPilot)
+
 Run real Android apps on virtual displays, let models plan and execute actions, and use an Android controller to submit tasks, preview progress and receive results.
 
 This is an independent derivative prototype of [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto), extending result verification, human handoffs, learned skills, voice and screen context. Deployment currently uses ADB / `app_process`. Most device testing uses a Huawei Mate 40 Pro; compatibility with every Android device or third-party app is not established.

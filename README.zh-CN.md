@@ -2,6 +2,8 @@
 
 [English](README.md) | 中文 | [使用手册](docs/USER_GUIDE.zh-CN.md) | [开发文档](docs/DEVELOPMENT.md)
 
+[GitHub: Cyclopsxu/QuietPilot](https://github.com/Cyclopsxu/QuietPilot)
+
 在 Android 虚拟显示屏中运行真实 App，由模型规划并执行操作，通过手机控制端提交任务、查看预览和接收结果。
 
 本项目是基于 [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto) 的独立二次开发原型，增加结果验收、人工交接、技能学习、语音与屏幕上下文等能力。当前通过 ADB / `app_process` 运行，主要实测设备为华为 Mate 40 Pro；不保证所有 Android 设备或第三方 App 兼容。
