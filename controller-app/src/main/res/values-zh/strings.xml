@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">隐控</string>
+    <string name="app_name">隐航</string>
     <string name="config_title">大模型配置</string>
     <string name="model_service">模型服务</string>
     <string name="ai_badge">AI</string>
@@ -19,7 +19,7 @@
     <string name="test_failed">测试失败: %1$s</string>
     <string name="back">返回</string>
     <string name="close">关闭</string>
-    <string name="main_title">隐控</string>
+    <string name="main_title">隐航</string>
     <string name="stop_all_content_description">停止全部任务</string>
     <string name="settings_content_description">设置</string>
     <string name="help_content_description">使用帮助</string>
@@ -30,15 +30,15 @@
     <string name="yes">是</string>
     <string name="stop_all_sent">已发送停止全部任务</string>
     <string name="rpc_error">RPC 错误: %1$s</string>
-    <string name="rpc_shell_unavailable">Shell 服务未运行，请先通过浏览器启动器或 ADB 启动 ShadowAuto shell 后重试。</string>
+    <string name="rpc_shell_unavailable">Shell 服务未运行，请先通过浏览器启动器或 ADB 启动 QuietPilot shell 后重试。</string>
     <string name="task_goal_hint">用美团外卖给我买杯星巴克香草拿铁，大杯</string>
     <string name="run">执行</string>
     <string name="running">执行中</string>
     <string name="stop">停止</string>
     <string name="starting">启动中</string>
     <string name="screen_preview_title">虚拟投屏</string>
-    <string name="keep_alive_channel">隐控保活</string>
-    <string name="keep_alive_title">隐控已就绪</string>
+    <string name="keep_alive_channel">隐航保活</string>
+    <string name="keep_alive_title">隐航已就绪</string>
     <string name="keep_alive_text">正在保持控制端可用于自动化任务</string>
     <string name="help_title">使用帮助</string>
     <string name="help_usage_title">如何使用</string>

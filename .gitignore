@@ -14,3 +14,26 @@ paddler-ocr/OpenCV/
 paddler-ocr/PaddleOcrAssets/
 paddler-ocr/cache/
 paddler-ocr/.cxx/
+
+# Local IDE state (existing tracked settings are retained separately).
+.idea/
+*.iml
+
+# Credentials, local environments and signing material.
+.env
+.env.*
+!.env.example
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+
+# Generated browser deployment assets; regenerate via Gradle.
+web-launcher/static/controller-app.apk
+web-launcher/static/silent-shell.apk
+web-launcher/static/ocr/
+web-launcher/dist/
+__pycache__/
+*.pyc

@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-26",
+  "project": "QuietPilot",
+  "baseCommit": "cf017b7",
+  "checks": {
+    "androidAssemble": "passed",
+    "androidLint": "passed",
+    "javaRegressionGroups": 8,
+    "javaRegressions": "passed",
+    "isolationReport": "passed",
+    "recordDemo": "passed",
+    "webBuild": "passed"
+  },
+  "historyCredentialScan": {
+    "textBlobs": 746,
+    "patternFlags": 0,
+    "scope": "reachable HEAD text blobs excluding selected binary extensions; heuristic only"
+  },
+  "deviceReinstalled": false,
+  "remotePushed": false,
+  "logSHA256": {
+    "androidBuild": "c80e22adb39b5484d4b7f8dc15e751c94bc6c7142abe961abc0f3bb531401c3a",
+    "regressions": "7f109315cef2958fd670c14f5fbeaafa17115e4f6ed6c0ca5feafd7b78eae0af"
+  },
+  "changedFileSHA256": {
+    ".github/ISSUE_TEMPLATE/bug_report.md": "6f267dea9fe24bcd5f6bdd0750bb69f026468f2fcc364b53e11af2c604a5bab3",
+    ".github/pull_request_template.md": "75069e23ac1fc2108fbafbf2cdec07aeaa4755b53eb6167c88662d47a50229be",
+    ".gitignore": "47a92684b92fe3d40e735c54886cbfdd094a66c328eecc9691d4c4a6c09b6199",
+    "CONTRIBUTING.md": "a1069383e3991baefb7982e6475837fbf206291ae06f65e3af98bef726de422c",
+    "NOTICE": "507309701cf6918e9799b93847394090d7c6b6f54edbf1b230d187cd7de63fba",
+    "README.md": "a79d72357d27a962e5d610c53411953c42f19adf3a71c75b6f98e46afc4a88d8",
+    "README.zh-CN.md": "39c65ebeac30888b09388d56ad31d659947ce2be0901ecf77e92a038db2c3ca9",
+    "SECURITY.md": "d441390f7bde422fcd24fe9838eb812a19379cb8199bed988e4dae73113b06a1",
+    "android-shell/src/main/java/com/silentauto/shell/AutomationEngine.java": "0ffa6722f1b4d2d5aed2d4ef71228ba56342b8c5eec1f0f295cae62496aae3dc",
+    "android-shell/src/main/java/com/silentauto/shell/DeviceLockState.java": "6324576dbaf74d512e0b9c05a82d8ef3fd7a3e67bf819b0379fa0a65f6d30d10",
+    "android-shell/src/main/java/com/silentauto/shell/ext/guard/MainAppConflictGuard.java": "21c32ea999357d4094d3669cd513663de0dcbb4fa806af4489b5282a17ca4711",
+    "controller-app/src/main/java/com/silentauto/controller/ext/overlay/OverlayPermissionActivity.java": "d05b5f4bd386e2ff2d31638feacb49d33f69da85ea6e151789622916b41eb904",
+    "controller-app/src/main/res/values-zh/strings.xml": "7ce361d90b61d3eb72e09b75301f5c0c748a129841051d9fe853ef6e45357bd1",
+    "controller-app/src/main/res/values/strings.xml": "7a325e162959ee23675a4646172c2f3d55fe98a7291aa1981950d64ae1506248",
+    "docs/DERIVATIVE_CHANGES.md": "faafe602c4c0b8e5b2542566413bda713d51bc0f14e94fbf26bc2280d40bb7b6",
+    "docs/DEVELOPMENT.md": "f1bf659d805b2c03ad30176968e777321322ba088b930f6038516e0c1ecb2df6",
+    "docs/PUBLISHING.md": "407cfe1c613cba5e2c6d5510156a2614727e7deba31359a029bc8399e3df9c94",
+    "docs/USER_GUIDE.en.md": "7222354eb120a716bfb222a59c54307700d2787aea410e208e6890fd970ee165",
+    "docs/USER_GUIDE.zh-CN.md": "e827469f7f0e80e099f8d5eed57596fec52b4bc9ed25c42855ba5fe9fad47617",
+    "docs/evidence/repository-preparation.md": "b9cfd784d3e17001dfa19cdc24cc6ecdd4feb817b46d3a137566cf8907b39997",
+    "docs/evidence/screen-lock/report.md": "e5dbe6413700766453e0eb1d64171b18a6673d253ae3e20e5ed0ab6c12cec456",
+    "scripts/test-interaction-regressions.sh": "56ba48905d36f7d6877942476dd668360715cc28b1a684663115ff0a0d33aa70",
+    "scripts/tests/ScreenLockRegression.java": "58a671804fcaba0a5361f8d8df150d68cc48e8f866569138dc153e44757f6677",
+    "settings.gradle": "372b2c6c063e79de24b0bbc68f086d7d1d6520ab82fdebf42a494fa482ac90a2",
+    "web-launcher/index.html": "b0fbca59d007b6f09c2c6fcfcdc8d03bf6a295ecf1c0a37a239f617caa16b576",
+    "web-launcher/package-lock.json": "cd4028662de9d81841388d5780413ec5d478806754bc894c4fa1eaab5bc0ecc0",
+    "web-launcher/package.json": "82439dc18a449b3e42938ddc91bae9d8a7210fe72a365495cfda109ede5f7afd",
+    "web-launcher/src/App.svelte": "8c6d421b6e5a6abb34eb505ffc345e664ec4ffe3601be546db1b4c600d314233"
+  },
+  "markdownFileLinksChecked": 288
+}

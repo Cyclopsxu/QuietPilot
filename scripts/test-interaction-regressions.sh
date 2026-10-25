@@ -16,6 +16,8 @@ java -cp "$work:$classes:$gson" com.silentauto.shell.ext.tests.TransferProbe
 java -cp "$work:$classes:$gson" com.silentauto.shell.ext.tests.QueryProbe
 java -cp "$work:$classes:$gson" com.silentauto.shell.RpcOutputRegression
 
+javac -d "$work" -cp "$classes:$gson" "$repo/scripts/tests/ScreenLockRegression.java"
+java -cp "$work:$classes:$gson" ScreenLockRegression
 java -cp "$work:$classes:$gson" LoopDetectorRegression
 
 node "$repo/scripts/tests/isolation-report.test.mjs"

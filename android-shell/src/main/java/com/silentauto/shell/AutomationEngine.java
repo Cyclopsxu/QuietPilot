@@ -48,6 +48,7 @@ public final class AutomationEngine {
     private final List<ActionSource> sources = new ArrayList<>();
     private final com.silentauto.shell.ext.guard.TaskScheduler scheduler = new com.silentauto.shell.ext.guard.TaskScheduler();
     private final com.silentauto.shell.ext.guard.ForegroundWatcher foreground = new com.silentauto.shell.ext.guard.ForegroundWatcher();
+    private final DeviceLockState deviceLock = new DeviceLockState();
     private final com.silentauto.shell.ext.skill.TrajectoryRecorder recorder = new com.silentauto.shell.ext.skill.TrajectoryRecorder();
     private final com.silentauto.shell.ext.skill.SkillStore skills = new com.silentauto.shell.ext.skill.SkillStore();
     private com.silentauto.shell.ext.context.ScreenContextReader contexts;
@@ -566,7 +567,8 @@ public final class AutomationEngine {
                         if(state==TaskStatus.PAUSED&&task.progress.status()!=TaskStatus.RUNNING)return;
                         if(state==TaskStatus.RUNNING&&task.progress.status()!=TaskStatus.PAUSED)return;
                         transition(task,state,detail,"","");
-                    }},()->{if(task.ai!=null)task.ai.cancel();if(task.verifierAi!=null)task.verifierAi.cancel();});
+                    }},()->{if(task.ai!=null)task.ai.cancel();if(task.verifierAi!=null)task.verifierAi.cancel();},
+                    600_000,()->System.nanoTime()/1_000_000,true,deviceLock::blocked);
             input.inputAllowed(()->task.conflict.inputAllowed()&&!task.stop.get()&&!task.progress.status().terminal()
                     &&disturbance.backgroundIssue(task.taskId).isEmpty());
             task.conflict.awaitClear();
@@ -590,7 +592,13 @@ public final class AutomationEngine {
                     bridge, input, clipboard, logs);
             for (StepListener listener : listeners) listener.onTaskStart(ctx, task.amendments.goal(), app.packageName);
             task.conflict.awaitClear();
-            appCatalog.launchPackage(task.taskId, app.packageName, task.display.displayId);
+            while(!task.stop.get()) {
+                try { appCatalog.launchPackage(task.taskId, app.packageName, task.display.displayId);break; }
+                catch(Exception unavailable) {
+                    if(task.stop.get()||Thread.currentThread().isInterrupted()||!deviceLock.blocked())throw unavailable;
+                    task.conflict.awaitClear();
+                }
+            }
             logs.task(task.taskId, "launched " + app.packageName);
             sleep(task, 1800);
 
@@ -604,8 +612,10 @@ public final class AutomationEngine {
             long loopGoalVersion=task.amendments.version();
             int loggedLoopTriggers=0;
             for (int step = 1; step <= MAX_STEPS && !task.stop.get(); step++) {
-                if(awaitBackgroundSafety(task)){step--;continue;}
+                long lockEpoch=task.conflict.epoch();
+                try {
                 if (task.conflict.awaitClear()) recoverAfterConflict(task);
+                if(awaitBackgroundSafety(task)){step--;continue;}
                 applyAmendments(task);
                 long goalVersion=task.amendments.version();
                 if(loopGoalVersion!=goalVersion){loopDetector.reset();loopGoalVersion=goalVersion;loggedLoopTriggers=0;}
@@ -862,10 +872,18 @@ public final class AutomationEngine {
                 if(interruptedInput){
                     if(task.skillRunner!=null){task.skillRunner.retryUnexecuted(action);task.skillRunner.forceRescue();}
                     if(!disturbance.backgroundIssue(task.taskId).isEmpty()){step--;continue;}
-                    task.conflict.awaitClear();recoverAfterConflict(task);continue;
+                    task.conflict.awaitClear();recoverAfterConflict(task);step--;continue;
                 }
                 rememberAction(task, action, result.clickResult, result.focusResult);
                 sleep(task, 900);
+                } catch(Exception unavailable) {
+                    // A request or UI read may fail while the phone locks mid-step.
+                    // Preserve the task, discard that observation and retry after unlock.
+                    if(task.stop.get()||Thread.currentThread().isInterrupted())throw unavailable;
+                    if(!deviceLock.blocked()&&task.conflict.epoch()==lockEpoch)throw unavailable;
+                    task.conflict.awaitClear();
+                    recoverAfterConflict(task);step--;
+                }
             }
 
             if (task.stop.get()) {
@@ -1020,8 +1038,12 @@ public final class AutomationEngine {
             boolean conflict = false;
             String reason;
             try {
+                if(deviceLock.blocked()) {
+                    reason="手机已锁屏，解锁后自动开始，任务已保留";
+                } else {
                 if (!force) conflict = task.packageName.equals(foreground.foregroundPackage());
                 reason = scheduler.tryAcquire(task, task.packageName, conflict, force);
+                }
             } catch (Exception e) {
                 reason = "暂时无法确认主屏 App，等待安全启动";
             }

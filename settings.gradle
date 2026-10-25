@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ShadowAutoSuite"
+rootProject.name = "QuietPilotSuite"
 include ":android-stubs"
 include ":paddler-ocr"
 include ":android-shell"
