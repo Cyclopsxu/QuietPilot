@@ -37,3 +37,6 @@ web-launcher/static/ocr/
 web-launcher/dist/
 __pycache__/
 *.pyc
+
+# Local release archives and signing outputs.
+/dist/

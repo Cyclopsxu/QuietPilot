@@ -29,6 +29,10 @@ The video covers parallel input, skills, context, queries and coffee voice amend
 
 Archived samples include calculator queries, three memo skill runs, a public hotel name copied to a memo, coffee specification amendments and a pre-payment handoff, and a calculator task completed after locking and unlocking. WeChat sending has not passed. Full shop-address transfer and continuous dual-screen footage of the successful coffee flow remain missing. See the [evidence index](docs/evidence/README.md), [Step6 status](docs/STEP6-STATUS.md) and [screen-lock report](docs/evidence/screen-lock/report.md).
 
+## Install a preview build
+
+Download the controller APK or first-deployment ZIP from [GitHub Releases](https://github.com/Cyclopsxu/QuietPilot/releases) and follow the [installation guide (中文)](docs/INSTALL.md). The APK still requires a computer with ADB to start the shell backend. Preview builds use a development signing certificate.
+
 ## Quick start
 
 ### Requirements

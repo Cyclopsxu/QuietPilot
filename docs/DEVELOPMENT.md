@@ -204,3 +204,5 @@ Step6 的 Android 构建、两模块 Lint 和当时回归通过，见 [build-che
 | 2026-10-26 | README 改为标准项目首页，详细操作手册迁至 `USER_GUIDE.zh-CN.md` / `USER_GUIDE.en.md`，开发文档继续维护技术方案与验证状态 |
 
 | 2026-10-26 | 项目工作名改为隐航 QuietPilot；保留包名、RPC 与设备数据兼容；生成部署资源不再纳入当前源码树，补齐贡献/安全/发布说明 |
+
+| 2026-10-26 | 准备 v0.1.0-alpha.1（versionCode 2）release 构建，以开发证书签名，提供 APK、ARM64 后台/OCR ZIP、安装与限制说明；打包方法见 `scripts/package-release.py` |

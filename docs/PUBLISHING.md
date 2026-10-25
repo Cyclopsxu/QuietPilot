@@ -1,6 +1,6 @@
 # GitHub 发布准备
 
-项目名称：**隐航 / QuietPilot**（原称隐控），建议新仓库名 `quietpilot`（项目名称已由机主确认）。名称占用及商标状态未核查。目标仓库为 [Cyclopsxu/QuietPilot](https://github.com/Cyclopsxu/QuietPilot)，SSH 地址 `git@github.com:Cyclopsxu/QuietPilot.git`。本次发布源码，不创建 Release 或上传安装包。
+项目名称：**隐航 / QuietPilot**（原称隐控），建议新仓库名 `quietpilot`（项目名称已由机主确认）。名称占用及商标状态未核查。目标仓库为 [Cyclopsxu/QuietPilot](https://github.com/Cyclopsxu/QuietPilot)，SSH 地址 `git@github.com:Cyclopsxu/QuietPilot.git`。源码已发布；首个安装包预览版本为 `v0.1.0-alpha.1`，说明见[安装指南](INSTALL.md)与[Release 文案](releases/v0.1.0-alpha.1.md)。
 
 ## 仓库边界
 
@@ -43,4 +43,4 @@ git push -u origin main
 
 之后使用 `git push origin main` 更新本项目。推送前确认 `git remote -v`，不向 `upstream` 推送本分支。启动器项目链接已更新为 QuietPilot，上游出处继续保留在 README、NOTICE 和二次开发说明。
 
-本次准备不创建 GitHub Release，也不自动开启 GitHub Pages。`web-launcher` 的本地启动流程与静态 Pages 部署是不同交付；后者需额外核对资源、base path 与 WebUSB 安全上下文。
+Release 的可安装控制端与 ARM64 部署 ZIP 由 `scripts/package-release.py` 生成，使用本机已有开发证书，密钥不进入源码或附件。打包前执行两模块 `assembleRelease`、`lintRelease` 以及 `:android-shell:copyPaddleLiteOcrRuntime`，再运行 `python3 scripts/package-release.py`。此流程不自动开启 GitHub Pages。`web-launcher` 的本地启动流程与静态 Pages 部署是不同交付；后者需额外核对资源、base path 与 WebUSB 安全上下文。

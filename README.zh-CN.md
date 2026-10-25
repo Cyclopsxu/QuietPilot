@@ -29,6 +29,10 @@ QuietPilot 中文名「隐航」（原称「隐控」），寓意后台任务自
 
 已归档样本包括计算器查询、备忘录技能三段、公开酒店名转备忘录、咖啡修改规格及支付前交接、锁屏暂停后解锁完成计算。微信发送未通过；完整店铺地址传递和咖啡成功流程连续双屏录像仍缺。详见[证据索引](docs/evidence/README.md)、[Step6 状态](docs/STEP6-STATUS.md)与[锁屏验证](docs/evidence/screen-lock/report.md)。
 
+## 安装预览版
+
+前往 [GitHub Releases](https://github.com/Cyclopsxu/QuietPilot/releases) 下载控制端 APK 或首次部署 ZIP，按[安装说明](docs/INSTALL.md)操作。APK 之外仍需电脑 ADB 启动 shell 后台；当前为开发证书签名的预览版。
+
 ## 快速开始
 
 ### 环境要求
