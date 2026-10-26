@@ -313,6 +313,8 @@ One formal File Transfer Assistant send in the local working-tree build reached 
 
 See the [same-phone input investigation](DEVELOPMENT.md#12-微信视觉兼容与焦点边界) and [formal-send report](DEVELOPMENT.md#12-微信视觉兼容与焦点边界). This investigation changed no production input code or global keyboard/system configuration; the temporary fixture was uninstalled.
 
+The compatibility focus-lease path now waits for a readable main app, hidden keyboard, no focused editable field, and two seconds without recent main-screen input. Missing readings block borrowing. Paste and copy verification recheck before borrowing; new main-screen activity aborts at a checkpoint and restores focus. Waiting does not spend automation steps. This is a conservative idle estimate, not independent focus; the deployed gate has now been tested with a real File Transfer Assistant send: editing waited, then playback in a local silent VideoView continued through three restored leases. The message was copied back exactly. The original task ended FAILED because its short no-retention preference triggered result-anchor delivery; that parser is fixed and redeployed, without resending. Third-party players, audio continuity and human mid-lease interruption remain unverified.
+
 ## Verification and handoffs
 
 A model's completion declaration is checked by `ResultVerifier` against the goal and page evidence. Failure leads to further observation, correction, or human handling.

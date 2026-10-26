@@ -1,6 +1,6 @@
 # GitHub 发布准备
 
-项目名称：**隐航 / QuietPilot**（原称隐控），建议新仓库名 `quietpilot`（项目名称已由机主确认）。名称占用及商标状态未核查。目标仓库为 [Cyclopsxu/QuietPilot](https://github.com/Cyclopsxu/QuietPilot)，SSH 地址 `git@github.com:Cyclopsxu/QuietPilot.git`。源码已发布；首个安装包预览版本为 `v0.1.0-alpha.1`，说明见[安装指南](INSTALL.md)与[Release 文案](releases/v0.1.0-alpha.1.md)。
+项目名称：**隐航 / QuietPilot**（原称隐控），建议新仓库名 `quietpilot`（项目名称已由机主确认）。名称占用及商标状态未核查。目标仓库为 [Cyclopsxu/QuietPilot](https://github.com/Cyclopsxu/QuietPilot)，SSH 地址 `git@github.com:Cyclopsxu/QuietPilot.git`。源码已发布；当前安装包预览版本为 `v0.1.0-alpha.2`，说明见[安装指南](INSTALL.md)与[Release 文案](releases/v0.1.0-alpha.2.md)。首个 `v0.1.0-alpha.1` 保留为历史版本。
 
 ## 仓库边界
 

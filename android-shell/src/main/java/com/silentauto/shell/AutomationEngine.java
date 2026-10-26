@@ -932,6 +932,7 @@ public final class AutomationEngine {
                         ?visualInput(task,ctx,action):actionExecutor.execute(ctx, task, action,dump); }
                 catch(com.silentauto.shell.ext.guard.ReadOnlyGuard.Blocked blocked){task.lastAction="READONLY_BLOCKED";task.lastReason=blocked.getMessage();logs.task(task.taskId,task.lastReason);continue;}
                 catch(com.silentauto.shell.ext.guard.BackgroundKeyPolicy.Blocked blocked){task.lastAction="INPUT_BLOCKED";task.lastReason=blocked.getMessage();logs.task(task.taskId,task.lastReason);continue;}
+                catch(com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy busy){interruptedInput=true;throw busy;}
                 catch (com.silentauto.shell.ext.guard.MainAppConflictGuard.PausedInputException paused) { interruptedInput=true; }
                 finally {
                     for (StepListener listener : listeners) listener.afterAction(ctx, step, action, result, dump);
@@ -944,6 +945,13 @@ public final class AutomationEngine {
                 }
                 rememberAction(task, action, result.clickResult, result.focusResult);
                 sleep(task, 900);
+                } catch(com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy busy) {
+                    if(busy.resetQuiet)task.mainInputIdle=new com.silentauto.shell.ext.guard.MainInputIdleGuard();
+                    task.progress.mainInputWait(true,busy.getMessage());
+                    logs.task(task.taskId,"MAIN_INPUT_BUSY: "+busy.getMessage());
+                    step--;
+                    Thread.sleep(250);
+                    task.lastReason="主屏已空闲，丢弃旧坐标并重新观察；已发送的消息不得重发";
                 } catch(Exception unavailable) {
                     // A request or UI read may fail while the phone locks mid-step.
                     // Preserve the task, discard that observation and retry after unlock.
@@ -1292,14 +1300,49 @@ public final class AutomationEngine {
         if(task<0)throw new IllegalStateException("Main task unavailable");return task;
     }
 
+    private boolean mainInputIdle(TaskState task)throws Exception {
+        String ui=getUi().dump(0,0,0,UiBridge.MODE_FULL);
+        String ime=com.silentauto.shell.ext.handoff.TaskDisplayTransfer.command("dumpsys","input_method");
+        String input=com.silentauto.shell.ext.handoff.TaskDisplayTransfer.command("dumpsys","input");
+        return task.mainInputIdle.observe(ui,ime,input,System.nanoTime()/1_000_000);
+    }
+
+    private void awaitMainInputIdle(TaskState task)throws Exception {
+        long version=task.amendments.version();
+        boolean waited=false;
+        while(true) {
+            if(task.stop.get()||Thread.currentThread().isInterrupted())throw new InterruptedException("Task stopped while waiting for main input");
+            if(task.amendments.version()!=version)throw new com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy("目标已追加，重新观察");
+            if(task.conflict.awaitClear())throw new com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy("主屏冲突已解除，重新观察");
+            boolean ready;
+            try {ready=mainInputIdle(task);}
+            catch(InterruptedException stopped){throw stopped;}
+            catch(Exception unavailable){ready=false;task.mainInputIdle=new com.silentauto.shell.ext.guard.MainInputIdleGuard();}
+            if(ready){
+                task.progress.mainInputWait(false,"");
+                if(waited)throw new com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy("主屏已空闲，重新观察后台页面",false);
+                return;
+            }
+            task.progress.mainInputWait(true,task.mainInputIdle.reason());
+            waited=true;
+            Thread.sleep(250);
+        }
+    }
+
     private com.silentauto.shell.ext.guard.InputFocusTransaction.Host visualFocusHost(TaskState task,ExecutionContext ctx,int x,int y,boolean longPress) {
-        long[] deadline={0};int[] originalMain={-1};
+        long[] deadline={0},started={0};int[] originalMain={-1};
         return new com.silentauto.shell.ext.guard.InputFocusTransaction.Host(){
             public int mainTask()throws Exception{return currentMainTask();}
             public int focusedDisplay()throws Exception{return AutomationEngine.this.focusedDisplay();}
             public void begin()throws Exception {
                 ctx.input.checkAllowed();
+                try {
+                    if(!mainInputIdle(task))throw new com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy(task.mainInputIdle.reason());
+                } catch(com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy busy){throw busy;}
+                catch(InterruptedException stopped){throw stopped;}
+                catch(Exception unavailable){throw new com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy("主屏输入状态不可读");}
                 if(!foreground.appOnDisplay(ctx.displayId,task.packageName))throw new IllegalStateException("Visual input target left virtual display");
+                started[0]=System.nanoTime()/1_000_000;
                 originalMain[0]=currentMainTask();deadline[0]=System.nanoTime()+10_000_000_000L;
                 disturbance.inputFocus(task.taskId,true,false);
                 logs.task(task.taskId,"INPUT_FOCUS_BEGIN display="+ctx.displayId+" restoreTask="+originalMain[0]);
@@ -1307,6 +1350,12 @@ public final class AutomationEngine {
             public void enter()throws Exception{if(!(longPress?ctx.input.longPressForInput(ctx.displayId,x,y):ctx.input.tapForInput(ctx.displayId,x,y)))throw new IllegalStateException("Input focus touch rejected");sleep(task,200);}
             public void check()throws Exception {
                 ctx.input.checkAllowed();
+                try {
+                    String input=com.silentauto.shell.ext.handoff.TaskDisplayTransfer.command("dumpsys","input");
+                    com.silentauto.shell.ext.guard.MainInputIdleGuard.checkLease(input,started[0],System.nanoTime()/1_000_000);
+                } catch(com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy busy){throw busy;}
+                catch(InterruptedException stopped){throw stopped;}
+                catch(Exception unavailable){throw new com.silentauto.shell.ext.guard.MainInputIdleGuard.Busy("主屏输入记录不可读，归还焦点");}
                 if(System.nanoTime()>deadline[0]||currentMainTask()!=originalMain[0]||focusedDisplay()!=ctx.displayId
                         ||!foreground.appOnDisplay(ctx.displayId,task.packageName))throw new IllegalStateException("Visual input focus lease changed or expired");
             }
@@ -1316,6 +1365,7 @@ public final class AutomationEngine {
     }
 
     private void verifyVisualDraftCopy(TaskState task,ExecutionContext ctx)throws Exception {
+        awaitMainInputIdle(task);
         JsonArray rows=JsonParser.parseString(screenOcrJson(task)).getAsJsonObject().getAsJsonArray("results");
         if(!com.silentauto.shell.ext.guard.VisualActionPolicy.hasTitle(rows,task.exactRecipient,ctx.height))
             throw new IllegalStateException("Cannot verify draft without recipient title");
@@ -1338,6 +1388,7 @@ public final class AutomationEngine {
     }
 
     private void verifyVisualMessageCopy(TaskState task,ExecutionContext ctx)throws Exception {
+        awaitMainInputIdle(task);
         JsonArray rows=JsonParser.parseString(screenOcrJson(task)).getAsJsonObject().getAsJsonArray("results");
         if(!com.silentauto.shell.ext.guard.VisualActionPolicy.hasTitle(rows,task.exactRecipient,ctx.height))
             throw new IllegalStateException("Cannot copy message without verified recipient title");
@@ -1398,6 +1449,7 @@ public final class AutomationEngine {
     }
 
     private StepResult visualInput(TaskState task,ExecutionContext ctx,ActionDecision action)throws Exception {
+        awaitMainInputIdle(task);
         var host=visualFocusHost(task,ctx,action.x,action.y,false);
         com.silentauto.shell.ext.guard.ClipboardGuard.withTemporaryClip(ctx.clipboard,action.text,()->
                 com.silentauto.shell.ext.guard.InputFocusTransaction.run(host,ctx.displayId,()->{
@@ -1894,6 +1946,7 @@ public final class AutomationEngine {
         public volatile String state = "queued";
         public final TaskProgress progress;
         public com.silentauto.shell.ext.guard.MainAppConflictGuard conflict;
+        com.silentauto.shell.ext.guard.MainInputIdleGuard mainInputIdle=new com.silentauto.shell.ext.guard.MainInputIdleGuard();
         public com.silentauto.shell.ext.skill.SkillRunner skillRunner;
         public String packageName = "";
         public String appName = "";

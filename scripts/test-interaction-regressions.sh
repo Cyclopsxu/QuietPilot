@@ -20,6 +20,8 @@ javac -d "$work" -cp "$classes:$gson" "$repo/scripts/tests/ScreenLockRegression.
 java -cp "$work:$classes:$gson" ScreenLockRegression
 javac -d "$work" -cp "$classes:$gson" "$repo/scripts/tests/android/os/SystemClock.java" "$repo/scripts/tests/VisualInputRegression.java"
 java -cp "$work:$classes:$gson" VisualInputRegression
+javac -d "$work" -cp "$classes:$gson" "$repo/scripts/tests/MainInputIdleRegression.java"
+java -cp "$work:$classes:$gson" MainInputIdleRegression
 javac -d "$work" -cp "$classes:$gson" "$repo/scripts/tests/StepBudgetHandoffRegression.java"
 java -cp "$work:$classes:$gson" StepBudgetHandoffRegression
 java -cp "$work:$classes:$gson" LoopDetectorRegression

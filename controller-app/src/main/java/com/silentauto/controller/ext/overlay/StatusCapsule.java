@@ -59,7 +59,7 @@ public final class StatusCapsule implements StatusSurface {
         if(attached)windows.updateViewLayout(surface,layout);else{windows.addView(surface,layout);attached=true;}surface.invalidate();
     }
     private String word(){if(task.optBoolean("routingRequired"))return "请选择追加任务";if(java.util.Arrays.asList("moving","returning","cancelling").contains(task.optString("transferState")))return "正在交接…";String state=task.optString("status");if("manual_main".equals(task.optString("transferState")))return "主屏处理 · 点此继续";if(task.optBoolean("pendingConfirmation"))return task.optBoolean("requiresConfirmation")?"待确认":"即将开始";
-        switch(state){case "RUNNING":return "执行中";case "WAITING_USER":return task.optBoolean("resultReady")?"已完成 · 去查看":"待处理";case "QUEUED":return "排队中";case "PAUSED":return "已暂停";case "ANSWERED":return "查到了";case "NOT_FOUND":return "没查到";case "VERIFIED":return "已完成";case "FAILED":return "失败";case "CANCELLED":return "已取消";default:return "处理超时";}}
+        switch(state){case "RUNNING":return task.optBoolean("waitingForMainInput")?"等待输入空闲":"执行中";case "WAITING_USER":return task.optBoolean("resultReady")?"已完成 · 去查看":"待处理";case "QUEUED":return "排队中";case "PAUSED":return "已暂停";case "ANSWERED":return "查到了";case "NOT_FOUND":return "没查到";case "VERIFIED":return "已完成";case "FAILED":return "失败";case "CANCELLED":return "已取消";default:return "处理超时";}}
     @Override public void close(){closed=true;main.removeCallbacksAndMessages(null);if(attached){windows.removeView(surface);attached=false;}}
     private final class Surface extends View {
         private final Paint paint=new Paint(Paint.ANTI_ALIAS_FLAG);private final TextPaint text=new TextPaint(Paint.ANTI_ALIAS_FLAG);

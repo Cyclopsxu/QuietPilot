@@ -34,6 +34,7 @@ public final class TransferProbe {
   require(ResultRetention.requested("发送成功后结束","complete"),"completed action retained unless explicitly opted out");
   require(ResultRetention.requested("完成后停在详情页面","complete"),"explicit retain wins");
   require(!ResultRetention.requested("不要停留页面","view"),"explicit opt out wins");
+  require(!ResultRetention.requested("发送完成后不保留页面","view"),"short explicit no-retention preference wins");
   require(ResultRetention.requested("查询餐厅", ""),"old verifier metadata is conservative");
   System.out.println("PASS entity identity, generic-text false positive, rollback, vanished/replaced task, failed rollback, cancellation, missing anchors, Unicode and semantic delivery");
  }

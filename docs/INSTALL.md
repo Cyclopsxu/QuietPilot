@@ -1,13 +1,13 @@
 # 安装隐航 QuietPilot 预览版
 
-当前版本：`v0.1.0-alpha.1`。下载：[GitHub Releases](https://github.com/Cyclopsxu/QuietPilot/releases)。这是开发预览版，非生产稳定版。
+当前版本：`v0.1.0-alpha.2`。下载：[GitHub Releases](https://github.com/Cyclopsxu/QuietPilot/releases)。这是开发预览版，非生产稳定版。
 
 ## 选择下载文件
 
 | 文件 | 用途 |
 | --- | --- |
-| `QuietPilot-v0.1.0-alpha.1-controller.apk` | 可直接安装的控制端 |
-| `QuietPilot-v0.1.0-alpha.1-android-arm64.zip` | 控制端、shell 执行包、ARM64 OCR、启动脚本和说明；首次部署推荐下载 |
+| `QuietPilot-v0.1.0-alpha.2-controller.apk` | 可直接安装的控制端 |
+| `QuietPilot-v0.1.0-alpha.2-android-arm64.zip` | 控制端、shell 执行包、ARM64 OCR、启动脚本和说明；首次部署推荐下载 |
 | `SHA256SUMS.txt` | 校验 APK 与 ZIP 的完整性 |
 
 控制端要求 Android 10 / API 29 或以上；配套 OCR 仅提供 `arm64-v8a`。主要实测设备是 Mate 40 Pro（HarmonyOS 4.2 / API 31），不是所有 Android 10+ 手机都兼容。安装 APK 只安装控制端，完整自动化还需要电脑上的 ADB 启动 shell 后台，不是纯手机免电脑安装方案。
@@ -18,7 +18,7 @@
 
 ```sh
 adb devices -l
-adb install -r QuietPilot-v0.1.0-alpha.1-controller.apk
+adb install -r QuietPilot-v0.1.0-alpha.2-controller.apk
 ```
 
 启用开发者选项和 USB 调试，并授权电脑。`adb devices -l` 需显示 `device`；`unauthorized` 需要手机确认。多个设备时为每条 ADB 命令添加 `-s <序列号>`。
@@ -27,7 +27,7 @@ adb install -r QuietPilot-v0.1.0-alpha.1-controller.apk
 
 ## 2. 首次部署后台与 OCR
 
-下载并解压 ARM64 ZIP，打开终端，进入解压后的 `QuietPilot-v0.1.0-alpha.1-android-arm64` 目录。先在手机完成或取消旧后台任务；下面操作需要旧后台停止后进行，避免替换仍在运行的执行代码。
+下载并解压 ARM64 ZIP，打开终端，进入解压后的 `QuietPilot-v0.1.0-alpha.2-android-arm64` 目录。先在手机完成或取消旧后台任务；下面操作需要旧后台停止后进行，避免替换仍在运行的执行代码。
 
 如果已有旧后台且确定不再保留实时页面，停止它：
 
@@ -38,7 +38,7 @@ adb shell 'if [ -f /data/local/tmp/silent-auto.pid ]; then kill "$(cat /data/loc
 然后上传资源并启动：
 
 ```sh
-adb install -r QuietPilot-v0.1.0-alpha.1-controller.apk
+adb install -r QuietPilot-v0.1.0-alpha.2-controller.apk
 adb push silent-shell.apk /data/local/tmp/silent-shell.apk
 adb shell mkdir -p /data/local/tmp/shadowauto/ocr
 adb push ocr/. /data/local/tmp/shadowauto/ocr/

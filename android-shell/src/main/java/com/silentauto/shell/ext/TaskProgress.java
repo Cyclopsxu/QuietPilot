@@ -24,6 +24,13 @@ public final class TaskProgress {
     public synchronized void isolation(JsonObject value){isolation=value.deepCopy();publish();}
     private boolean protectedScreen, finalized, resultReady, uncertain, budgetExhausted;
     public synchronized void budgetExhausted() { budgetExhausted = true; }
+    private boolean waitingForMainInput;
+    public synchronized void mainInputWait(boolean waiting,String reason) {
+        if(status.terminal())return;
+        String detail=waiting?"等待主屏输入空闲："+reason:"主屏输入空闲，继续后台任务";
+        if(waitingForMainInput==waiting&&(!waiting||detail.equals(message)))return;
+        waitingForMainInput=waiting;message=detail;publish();
+    }
     private boolean messageCopyVerified,draftCopyVerified;
     public synchronized void draftCopyVerified(){draftCopyVerified=true;publish();}
     public synchronized void messageCopyVerified(){messageCopyVerified=true;publish();}
@@ -81,6 +88,7 @@ public final class TaskProgress {
         if (!allowed(status, next)) throw new IllegalStateException("Invalid status transition: " + status + " -> " + next);
         if (next == TaskStatus.WAITING_USER && status != next) waitingSinceMs = System.currentTimeMillis();
         status = next;
+        if(next!=TaskStatus.RUNNING&&next!=TaskStatus.PAUSED)waitingForMainInput=false;
         message = detail == null ? "" : detail;
         evidence = proof == null ? "" : proof;
         boundary = targetBoundary == null ? "" : targetBoundary;
@@ -115,6 +123,7 @@ public final class TaskProgress {
         o.addProperty("confirmDeadlineMs", confirmDeadlineMs);
         o.addProperty("protectedScreen", protectedScreen);
         o.addProperty("budgetExhausted", budgetExhausted);
+        o.addProperty("waitingForMainInput", waitingForMainInput && !status.terminal());
         o.addProperty("resultReady", resultReady && !status.terminal());
         o.addProperty("transferState",transferState);
         o.addProperty("elapsedMs", (ended == 0 ? SystemClock.elapsedRealtime() : ended) - started);
