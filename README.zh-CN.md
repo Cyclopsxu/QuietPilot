@@ -23,11 +23,17 @@ QuietPilot 中文名「隐航」（原称「隐控」），寓意后台任务自
 
 ## 演示与验证
 
+[![语音追加与咖啡交接：53 秒双屏实录](docs/evidence/coffee-dual-screen/preview.jpg)](docs/evidence/coffee-dual-screen/coffee-handoff-53s.mp4)
+
+[播放 / 下载 53 秒视频](docs/evidence/coffee-dual-screen/coffee-handoff-53s.mp4) · [录制说明](docs/DEVELOPMENT.md#6-完成验收查询与人工交接)
+
+主屏备忘录输入，同时通过语音启动美团并追加“大杯冰生椰拿铁”。第 25 步耗尽后保留订单页，等待人工补充收货信息及付款，由机主将原页接管到主屏。视频为 5 倍速，按录屏启动时间近似对齐，剪去 83 秒合成版的前 30 秒；无音轨，收货信息已遮挡。展示的是人工交接，未付款或完成下单。
+
 [五段演示视频（02:57）](docs/evidence/demo-path/step6-five-segments.mp4) · [时间索引与限制](docs/evidence/demo-path/VIDEO.md)
 
 视频覆盖并行输入、技能复用、上下文、查询和咖啡语音追加，明确标注实录、静态证据和失败部分，不是一次连续全成功录像。
 
-已归档样本包括计算器查询、备忘录技能三段、公开酒店名转备忘录、咖啡修改规格及支付前交接、锁屏暂停后解锁完成计算。本地工作区构建已在虚拟屏向微信文件传输助手完成一次正式发送验收，但仍短时借用主屏焦点，不代表无打扰输入通过；完整店铺地址传递和咖啡成功流程连续双屏录像仍缺。详见[证据索引](docs/evidence/README.md)、[Step6 状态](docs/STEP6-STATUS.md)与[锁屏验证](docs/evidence/screen-lock/report.md)。
+已归档样本包括计算器查询、备忘录技能三段、公开酒店名转备忘录、咖啡修改规格及支付前交接、锁屏暂停后解锁完成计算。本地工作区构建已在虚拟屏向微信文件传输助手完成一次正式发送验收，但仍短时借用主屏焦点，不代表无打扰输入通过；完整店铺地址传递仍未验证；新增双屏片段记录咖啡人工交接，不认证主屏全程连续打字或独立输入焦点。详见[证据索引](docs/evidence/README.md)、[Step6 状态](docs/STEP6-STATUS.md)与[锁屏验证](docs/evidence/screen-lock/report.md)。
 
 ## 安装预览版
 

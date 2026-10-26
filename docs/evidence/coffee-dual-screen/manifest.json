@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-26",
+  "device": "Huawei Mate 40 Pro / API 31",
+  "video": "coffee-handoff-53s.mp4",
+  "sha256": "66150cc26af3eb4d1998461fa7f451b76fe013f296ddb0c87877b070d08070e4",
+  "previewSha256": "68c1b40189acb3931079804e4cadffa25fedb80efb4740e2ea55e8d5d4e4370d",
+  "media": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1120,
+        "height": 1280,
+        "r_frame_rate": "30/1",
+        "nb_frames": "1590"
+      }
+    ],
+    "format": {
+      "duration": "53.000000",
+      "size": "2907508"
+    }
+  },
+  "speed": 5,
+  "mainSourceRangeSeconds": [
+    150,
+    414.979367
+  ],
+  "backgroundLaunchOffsetSeconds": 212.45968,
+  "backgroundInOutputSeconds": [
+    12.491936,
+    49.2331516
+  ],
+  "sync": "Approximate alignment using host-monotonic recorder launch timestamps; capture startup latency is not measured.",
+  "edits": [
+    "Side-by-side composition at 5x; preserve main-screen timeline",
+    "Remove first 30 seconds of the 83-second composite",
+    "Label unavailable background footage; no extended/repeated background frames",
+    "Mask delivery address and phone; additionally mask truncated delivery location in search results during output seconds 12–23"
+  ],
+  "audio": false,
+  "outcome": {
+    "status": "WAITING_USER",
+    "step": 25,
+    "budgetExhausted": true,
+    "transferState": "manual_main",
+    "paid": false
+  },
+  "limitations": [
+    "Not a verified completed order",
+    "Does not certify continuous main-screen typing or independent input focus",
+    "No voice audio; task state and intake/amendment records retained locally"
+  ],
+  "localSourceHashes": {
+    "main.mp4": "7eb40dfd72fd3d828e5721b847a0a018b5c9c126a83c7172339cea415ed3c016",
+    "voice-8d1cff8f-b1f2-461c-a485-a8b4ae042937-vd.mp4": "fdd45dd6ce1d4c1d893dbd8d002f9883ce790e66745583326d6109b829712a07",
+    "user-voice-take2-dual-53s.mp4": "af68af219e4433e3f412cc257ba64e4d62563184a52b8ce07bb15c5327d8f831"
+  }
+}

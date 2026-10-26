@@ -23,11 +23,17 @@ QuietPilot (隐航, formerly 隐控) keeps background tasks on course while fore
 
 ## Demo and validation
 
+[![Voice amendment and coffee handoff — 53-second dual-screen recording](docs/evidence/coffee-dual-screen/preview.jpg)](docs/evidence/coffee-dual-screen/coffee-handoff-53s.mp4)
+
+[Play / download the 53-second video](docs/evidence/coffee-dual-screen/coffee-handoff-53s.mp4) · [Recording details](docs/DEVELOPMENT.md#6-完成验收查询与人工交接)
+
+Main-screen memo input alongside a voice-started Meituan task and a change to a large iced coconut latte. At step 25, automation retains the order page for manual address/payment handling and the owner transfers the original page to the main display. This clip runs at 5×, uses recorder-start timestamps for approximate synchronization, and removes the first 30 seconds of the 83-second edit. No audio; delivery details are masked. It shows a human handoff, with no payment or completed order.
+
 [Five-segment demo (02:57)](docs/evidence/demo-path/step6-five-segments.mp4) · [Timestamps and limitations](docs/evidence/demo-path/VIDEO.md)
 
 The video covers parallel input, skills, context, queries and coffee voice amendments. Live footage, still evidence and failures are labeled. It is not one continuous successful run.
 
-Archived samples include calculator queries, three memo skill runs, a public hotel name copied to a memo, coffee specification amendments and a pre-payment handoff, and a calculator task completed after locking and unlocking. A local working-tree build completed one verified File Transfer Assistant send on a virtual display using temporary focus leases; this is not no-focus-stealing input validation. Full shop-address transfer and continuous dual-screen footage of the successful coffee flow remain missing. See the [evidence index](docs/evidence/README.md), [Step6 status](docs/STEP6-STATUS.md) and [screen-lock report](docs/evidence/screen-lock/report.md).
+Archived samples include calculator queries, three memo skill runs, a public hotel name copied to a memo, coffee specification amendments and a pre-payment handoff, and a calculator task completed after locking and unlocking. A local working-tree build completed one verified File Transfer Assistant send on a virtual display using temporary focus leases; this is not no-focus-stealing input validation. Full shop-address transfer remains unverified; the new dual-screen clip documents the coffee handoff, without certifying uninterrupted foreground typing or independent input focus. See the [evidence index](docs/evidence/README.md), [Step6 status](docs/STEP6-STATUS.md) and [screen-lock report](docs/evidence/screen-lock/report.md).
 
 ## Install a preview build
 

@@ -86,7 +86,7 @@ Mate 40 Pro（API 31）锁屏会用 SystemUI 时钟覆盖虚拟屏，目标 Acti
 | --- | --- |
 | `QUEUED` | 准入后进入 `RUNNING` |
 | `RUNNING` | 可进入 `PAUSED`、`WAITING_USER`，或 `VERIFIED` / `ANSWERED` / `NOT_FOUND` |
-| `PAUSED` | 解除保护后回到 `RUNNING` |
+| `PAUSED` | 解除保护后回到 `RUNNING`；自动步数用尽后可转 `WAITING_USER` 保留现场 |
 | `WAITING_USER` | 本人完成后回 `RUNNING`，或 `HANDOFF_TIMEOUT` |
 | 取消/失败 | 非终态允许进入 `CANCELLED` / `FAILED`；终态不再普通转换 |
 
@@ -126,6 +126,12 @@ executor 负责规划；[ResultVerifier](../android-shell/src/main/java/com/sile
 查询使用 [ReadOnlyGuard](../android-shell/src/main/java/com/silentauto/shell/ext/guard/ReadOnlyGuard.java) 限制交易、发送等写动作；候选答案与连续原文引文由 [AnswerVerifier](../android-shell/src/main/java/com/silentauto/shell/ext/query/AnswerVerifier.java) 及独立证据提取核对。答案上限 60 个 Unicode 码点。`NOT_FOUND` 只表示本次搜索范围；只读门禁不是对任意页面的形式化安全证明。
 
 [HandoffManager](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/HandoffManager.java) 处理登录、验证码、支付等本人边界；[ManualTaskTransfer](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/ManualTaskTransfer.java) 与 [TaskDisplayTransfer](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/TaskDisplayTransfer.java) 移动原任务；[PageIdentity](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/PageIdentity.java) 校验页面身份；[ResultRetention](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/ResultRetention.java) 保留可交付结果。
+
+自动循环上限仍为 25 步。预算用尽且尚未完成时，[StepBudgetHandoff](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/StepBudgetHandoff.java) 仅做一次只读边界检查，然后以 `budgetExhausted=true`、`WAITING_USER` 保留原页面。检查失败、页面受保护或证据不足也转人工，不推定完成，不增加自动输入预算；该等待不自动超时、恢复或回收。追加要求会清空旧边界证据，但不会补充步数。用户可到主屏接管或取消；点击“结束接管”后按人工交接结束归档，不标为 `VERIFIED`，已转到主屏的页面不再搬回后台。进程退出、设备重启或 App 自身失效仍不能保证活页面保留。
+
+2026-10-26 本机验证：真实模型驱动的美团大杯冰生椰拿铁任务在第 13 步进入 `WAITING_USER`，原订单确认任务成功转到主屏，测试结束后仍为同一个 Android task；未付款。另用计算器的 25 次无输入等待及验收服务 503 故障注入，验证正式引擎在预算耗尽后保留页面、追加不补步数、显式结束才释放。该计算器样本仅验证控制流。随后机主再次通过麦克风发起美团任务并追加“大杯冰生椰拿铁”，真实任务在第 25 步耗尽后进入 `WAITING_USER`、`budgetExhausted=true`，原页面成功转到主屏（`manual_main`），未付款。
+
+[53 秒双屏实录](evidence/coffee-dual-screen/coffee-handoff-53s.mp4)覆盖上述第二次语音任务：两路按主机单调时钟记录的启动时间差 212.45968 秒近似对齐，以 5 倍速合成 83 秒，再按机主要求剪去合成版前 30 秒，剩余 53 秒。成片前约 12.49 秒尚无后台录像，后约 3.77 秒后台原片无后续帧，均用说明画面标注；无音轨，不延长后台画面。收货地址、电话及列表中的配送位置已遮挡，原片不公开。视频不能证明帧精确同步、主屏全程连续打字、独立焦点、付款或订单完成；第 25 步交接状态另由本地任务记录核对。[媒体来源与哈希](evidence/coffee-dual-screen/manifest.json)、[逐帧模式筛查](evidence/coffee-dual-screen/media-qa.json)仅覆盖本次成片。
 
 维护时要检查转移后的实际 display/root task、原页面身份及回退结果，再决定是否释放虚拟屏。响应中的 `moved` 与 `previewAvailable` 表示不同事实；不能提前关闭仍供预览/重试的资源。进程强杀后无法恢复相同活页面。
 

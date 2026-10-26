@@ -412,14 +412,14 @@ public final class MainActivity extends Activity implements AutomationTaskView.L
         boolean transferring=java.util.Arrays.asList("moving","returning","cancelling").contains(params.optString("transferState"));
         Notification.Builder builder = new Notification.Builder(this, HANDOFF_CHANNEL)
                 .setSmallIcon(R.drawable.ic_notification)
-                .setContentTitle(java.util.Arrays.asList("moving","returning","cancelling").contains(params.optString("transferState")) ? "正在交接…" : "manual_main".equals(params.optString("transferState")) ? "主屏处理中，交回后台继续" : params.optBoolean("resultReady") ? "任务已完成，去查看" : "任务等待处理")
+                .setContentTitle(java.util.Arrays.asList("moving","returning","cancelling").contains(params.optString("transferState")) ? "正在交接…" : "manual_main".equals(params.optString("transferState")) ? (params.optBoolean("budgetExhausted")?"主屏接管中，结束后保留主屏页面":"主屏处理中，交回后台继续") : params.optBoolean("resultReady") ? "任务已完成，去查看" : "任务等待处理")
                 .setContentText(params.optString("message"))
                 .setStyle(new Notification.BigTextStyle().bigText(params.optString("message")))
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 .setContentIntent(transferring?null:show)
                 .addAction(new Notification.Action.Builder(null, "取消任务", dismiss).build())
                 .setAutoCancel(!transferring);
-        if(!transferring)builder.addAction(new Notification.Action.Builder(null,"manual_main".equals(params.optString("transferState"))?"交回后台继续":params.optBoolean("resultReady")?"去查看":"到主屏处理",show).build());
+        if(!transferring)builder.addAction(new Notification.Action.Builder(null,"manual_main".equals(params.optString("transferState"))?(params.optBoolean("budgetExhausted")?"结束接管":"交回后台继续"):params.optBoolean("resultReady")?"去查看":"到主屏处理",show).build());
         try {
             manager.notify(taskId, 23, builder.build());
         } catch (SecurityException e) {

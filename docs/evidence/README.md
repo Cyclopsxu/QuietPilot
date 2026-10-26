@@ -6,6 +6,7 @@
 
 | 日期 | 设备 | 任务 | 结果 | 证据 |
 | --- | --- | --- | --- | --- |
+| 2026-10-26 | Mate 40 Pro / API31 | 主屏备忘录、语音美团及大杯冰生椰拿铁追加 | 第25步耗尽转人工并保留原页，交接主屏；未付款，非全程隔离认证 | [53秒双屏视频](coffee-dual-screen/coffee-handoff-53s.mp4)、[说明](../DEVELOPMENT.md#6-完成验收查询与人工交接)、[来源哈希](coffee-dual-screen/manifest.json)、[媒体检查](coffee-dual-screen/media-qa.json) |
 | 2026-10-26 | Mate 40 Pro / API31 | 不换手机的无抢焦点输入替代 | 标准EditText直接SET_TEXT通过；微信无编辑节点，定向按键/粘贴仍抢焦点 | [报告](../DEVELOPMENT.md#12-微信视觉兼容与焦点边界)、[摘要](wechat-2026-10-26/nofocus-input-result.json)、[事件日志](wechat-2026-10-26/nofocus-input-probe.txt)、[无障碍日志](wechat-2026-10-26/accessibility-nofocus-probe.txt) |
 | 2026-10-26 | Mate 40 Pro / API31 / 微信8.0.79 | 正式引擎虚拟屏185向文件传输助手发送编号1792986804 | 4步VERIFIED，草稿/已发气泡复制全文一致；焦点借用3次并恢复，非零打扰 | [报告](../DEVELOPMENT.md#12-微信视觉兼容与焦点边界)、[结果](wechat-2026-10-26/background-engine-result.json)、[完整原图](wechat-2026-10-26/background-engine-full.png) |
 | 2026-10-24 | Mate 40 Pro / SDK31 | 三类页面反复抓图/读控件 | 60/60成功；无原屏切换 | [摘要](capture-stability/report.md)、[计算器](capture-stability/calculator-cycles.json)、[高德](capture-stability/amap-cycles.json)、[美团当前页](capture-stability/meituan-cycles.json) |
@@ -24,6 +25,6 @@
 
 主机验证见 [构建与回归摘要](build-checks.json)，日志哈希对应机主本地记录；不替代真机验收。
 
-模型服务说明仅对应文档核查日，不替代实际响应模型字段。录制原片留在仓库外，确认时间轴、逐帧脱敏后才发布链接。完整完成状态见 [Step6清单](../STEP6-STATUS.md)。
+模型服务说明仅对应文档核查日，不替代实际响应模型字段。录制原片留在仓库外，仅发布已核对时间轴、遮挡个人信息并完成媒体检查的成片。完整完成状态见 [Step6清单](../STEP6-STATUS.md)。
 
 公开的匿名化指纹保留相等关系与数量用于检查轨迹，但不能直接导入为生产技能；真实学习与参数校验基于机主本地原件。已清理本轮自行创建的本地证据提交中的旧笔记链接，未向远端推送。

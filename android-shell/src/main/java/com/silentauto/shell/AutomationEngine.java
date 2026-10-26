@@ -142,11 +142,18 @@ public final class AutomationEngine {
         disturbance.handoffEntry(id);
     }
 
-    synchronized void openTaskOnMain(String taskId) {
-        TaskState task = tasks.get(taskId);
-        if (task == null || task.handoff == null || !task.progress.protectedScreen())
-            throw new IllegalStateException("task is not waiting on a protected page");
-        task.handoff.resume("open_main");
+    void openTaskOnMain(String taskId) throws Exception {
+        synchronized(this) {
+            TaskState task = tasks.get(taskId);
+            if (task == null || task.handoff == null || !task.progress.protectedScreen())
+                throw new IllegalStateException("task is not waiting on a protected page");
+            if(!task.progress.json().get("budgetExhausted").getAsBoolean()) {
+                task.handoff.resume("open_main");
+                return;
+            }
+        }
+        // Exhaustion keeps the original page alive until an explicit end or cancellation.
+        takeManualOnMain(taskId);
     }
 
     JsonObject takeResultOnMain(String taskId) {
@@ -255,7 +262,8 @@ public final class AutomationEngine {
             synchronized(this) {
                 if(task.stop.get())throw new InterruptedException("Task stopped");
                 task.manualTransfer=transfer;
-                task.progress.transfer("manual_main","请在主屏完成操作，完成后点“交回后台继续”");
+                task.progress.transfer("manual_main",task.progress.json().get("budgetExhausted").getAsBoolean()
+                        ?"当前页面已交给你；自动步数已用尽，完成后点“结束接管”":"请在主屏完成操作，完成后点“交回后台继续”");
             }
             return transferReply("moved","当前页面已交给你在主屏处理",false);
         } catch(Exception failure) {
@@ -283,6 +291,14 @@ public final class AutomationEngine {
             if(task.transferInProgress)throw new IllegalStateException("正在交接，请稍候再操作");
             if("cancel".equals(outcome)){stopTask(taskId);return;}
             handoff=task.handoff;
+            if(task.progress.json().get("budgetExhausted").getAsBoolean()&&"open_main".equals(outcome))
+                throw new IllegalArgumentException("请使用到主屏处理接管原页面");
+            if(task.progress.json().get("budgetExhausted").getAsBoolean()&&"done".equals(outcome)) {
+                // The user owns the transferred page; do not move it back just to release it.
+                if(task.manualTransfer!=null){task.resultTransferred=true;task.manualTransfer=null;}
+                handoff.resume("done");
+                return;
+            }
             if(task.manualTransfer==null){handoff.resume(outcome);if(task.verifierAi!=null)task.verifierAi.cancel();if(task.visualAi!=null)task.visualAi.cancel();return;}
             if(!"done".equals(outcome))throw new IllegalArgumentException("请完成主屏处理后继续");
             task.transferInProgress=true;
@@ -946,8 +962,11 @@ public final class AutomationEngine {
                 doneMessage = "automation unverified: " + task.lastReason;
             } else if (task.completed) {
                 doneMessage = "automation finished";
+            } else if (task.progress.status().terminal()) {
+                doneMessage = "automation ended: " + task.progress.status();
             } else {
-                throw new IllegalStateException("max automation steps reached before finish");
+                awaitStepBudgetHandoff(task, ctx, verifier);
+                doneMessage = "automation handoff: step budget exhausted";
             }
         } catch (Throwable e) {
             if (task.stop.get()) {
@@ -995,6 +1014,43 @@ public final class AutomationEngine {
                 logs.task(task.taskId, doneMessage);
             }
         }
+    }
+
+    private void awaitStepBudgetHandoff(TaskState task, ExecutionContext ctx, ResultVerifier verifier) throws Exception {
+        // No more automatic input: the conflict watcher must not time out a retained page.
+        task.conflict.close();
+        task.progress.budgetExhausted();
+        task.resultStatus="handoff";
+        logs.task(task.taskId,"STEP_BUDGET_EXHAUSTED limit="+MAX_STEPS+"; read-only inspection and retained handoff");
+        String outcome=com.silentauto.shell.ext.handoff.StepBudgetHandoff.await(new com.silentauto.shell.ext.handoff.StepBudgetHandoff.Host() {
+            public String inspect() throws Exception {
+                if(task.stop.get()||Thread.currentThread().isInterrupted())throw new InterruptedException("Task stopped");
+                AutomationEngine.this.applyAmendments(task);
+                if(deviceLock.blocked()){task.progress.protectedScreen(true);return "";}
+                long version=task.amendments.version(),epoch=task.conflict.epoch();
+                ResultVerifier.Result boundary=verifier.verifyBoundary(ctx,
+                        "当前页面可见需要人工处理的订单确认/付款、收货信息、登录、验证码、密码或系统授权边界。只根据实际界面判断并引用可见原文，不得推测目标已经完成。用户目标："+task.amendments.goal());
+                if(task.stop.get()||Thread.currentThread().isInterrupted())throw new InterruptedException("Task stopped");
+                if(version!=task.amendments.version()||epoch!=task.conflict.epoch()||deviceLock.blocked())return "";
+                task.progress.protectedScreen(boundary.frame!=null&&boundary.frame.protectedScreen);
+                if(boundary.frame!=null&&!boundary.frame.protectedScreen)task.progress.evidenceScreenshot(verifier.saveEvidence(ctx,boundary));
+                logs.task(task.taskId,"STEP_BUDGET_BOUNDARY verified="+boundary.verified+": "+(boundary.verified?boundary.evidence:boundary.missing));
+                return boundary.verified?boundary.evidence:"";
+            }
+            public void waiting(HandoffManager handoff,String evidence,String message) {
+                task.handoff=handoff;
+                recorder.handedOff(task.taskId);
+                transition(task,TaskStatus.WAITING_USER,message,evidence,"步数已用尽，人工接管当前页面");
+                logs.handoff(task.taskId,"confirm",message,evidence.isEmpty()?"步数已用尽，保留现场":evidence);
+                if(task.stop.get())handoff.tryResume("cancel");
+                else if(task.amendments.pending()&&task.manualTransfer==null)handoff.tryResume("amend");
+            }
+            public void applyAmendments(){AutomationEngine.this.applyAmendments(task);}
+        });
+        task.handoff=null;
+        task.lastReason="done".equals(outcome)?"人工接管已结束；未将任务标为自动完成":"人工接管已关闭";
+        transition(task,TaskStatus.CANCELLED,task.lastReason,"","");
+        logs.result(task.taskId,"handoff",task.lastReason);
     }
 
     private boolean awaitBackgroundSafety(TaskState task) throws InterruptedException {

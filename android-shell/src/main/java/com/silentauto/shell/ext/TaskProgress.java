@@ -22,7 +22,8 @@ public final class TaskProgress {
     private JsonObject disturbance = new JsonObject();
     private JsonObject isolation=new JsonObject();
     public synchronized void isolation(JsonObject value){isolation=value.deepCopy();publish();}
-    private boolean protectedScreen, finalized, resultReady, uncertain;
+    private boolean protectedScreen, finalized, resultReady, uncertain, budgetExhausted;
+    public synchronized void budgetExhausted() { budgetExhausted = true; }
     private boolean messageCopyVerified,draftCopyVerified;
     public synchronized void draftCopyVerified(){draftCopyVerified=true;publish();}
     public synchronized void messageCopyVerified(){messageCopyVerified=true;publish();}
@@ -91,7 +92,7 @@ public final class TaskProgress {
         if (from == TaskStatus.QUEUED) return to == TaskStatus.RUNNING;
         if (from == TaskStatus.RUNNING) return to == TaskStatus.WAITING_USER || to == TaskStatus.PAUSED || to == TaskStatus.VERIFIED || to == TaskStatus.ANSWERED || to == TaskStatus.NOT_FOUND;
         if (from == TaskStatus.WAITING_USER) return to == TaskStatus.RUNNING || to == TaskStatus.HANDOFF_TIMEOUT;
-        return from == TaskStatus.PAUSED && to == TaskStatus.RUNNING;
+        return from == TaskStatus.PAUSED && (to == TaskStatus.RUNNING || to == TaskStatus.WAITING_USER);
     }
     public synchronized JsonObject json() {
         JsonObject o = new JsonObject();
@@ -113,6 +114,7 @@ public final class TaskProgress {
         o.addProperty("pendingConfirmation", pendingConfirmation && !status.terminal()); o.addProperty("requiresConfirmation", requiresConfirmation);
         o.addProperty("confirmDeadlineMs", confirmDeadlineMs);
         o.addProperty("protectedScreen", protectedScreen);
+        o.addProperty("budgetExhausted", budgetExhausted);
         o.addProperty("resultReady", resultReady && !status.terminal());
         o.addProperty("transferState",transferState);
         o.addProperty("elapsedMs", (ended == 0 ? SystemClock.elapsedRealtime() : ended) - started);

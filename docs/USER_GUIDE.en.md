@@ -36,7 +36,7 @@ Operate real Android apps on a background virtual display while the owner uses t
 | Clear-then-calculate task | Original 25-step failure; a 7-step ANSWERED 156 retest and a separate 16-step repetition failure are both retained |
 | Memo page delivery | VERIFIED; same root task, unchanged body hash, virtual display released |
 | Memo skill exploration / reuse / injected deviation | All VERIFIED, 8 / 10 / 13 steps; reuse calls 10→8 but time 27.7→49.4s, with model fallback; [report](../docs/evidence/skills/report.md) |
-| Meituan voice amendment and delivery | Large cup VERIFIED in 9 steps and delivered; another real voice task reached payment boundary in 20 steps and moved to main (WAITING_USER); continuous video missing; [evidence](../docs/evidence/demo-path/README.md) |
+| Meituan voice amendment and delivery | Large cup VERIFIED in 9 steps and delivered; another real voice task reached payment boundary in 20 steps and moved to main (WAITING_USER); new [53-second dual-screen recording](evidence/coffee-dual-screen/coffee-handoff-53s.mp4) shows step-budget retention and manual handoff; [earlier evidence](../docs/evidence/demo-path/README.md) |
 | Main-screen context → memo | Real speech resolved a public hotel name; VERIFIED in 10 steps and delivered; address absent; [report](../docs/evidence/demo-path/context-memo-report.md) |
 | WeChat sending | App exited; no message sent |
 
@@ -330,6 +330,8 @@ The exact complete body, including final lines and source links.
 Visual checking is still limited by available evidence and model judgment; it is not a transaction proof for every app database.
 
 Human boundaries pause the task. An explicit user action moves the original app task to the main display for login/verification, then returns it to the virtual display for fresh observation. Default handoff timeout management uses a ten-minute budget, distinguishing main-screen manual processing from subsequent waiting.
+
+After the 25-step automation limit, a single read-only boundary check leads to a retained manual handoff (`budgetExhausted=true`). An unavailable or inconclusive check still preserves the page; this wait has no automatic timeout and amendments do not refill the budget. Move the original page to the main screen to take over. “End takeover” ends the task without claiming verified completion or moving a transferred page back to the virtual display.
 
 For retained results, “Go view” moves the original task, checks package/page/entity identity, and releases the virtual display only after success. Transfer failure and rollback are checked separately. A usable preview remains available for retry or ending the view. Launching a replacement home page is not successful original-page delivery.
 

@@ -182,7 +182,7 @@ final class AutomationTaskView {
         boolean waiting=handoffStatus!=null;
         boolean moving=opening||(waiting&&java.util.Arrays.asList("moving","returning","cancelling").contains(handoffStatus.optString("transferState")));
         resultAction.setVisibility(waiting||opening?View.VISIBLE:View.GONE);
-        resultAction.setText(moving?"正在交接…":waiting&&"manual_main".equals(handoffStatus.optString("transferState"))?"交回后台继续":waiting&&handoffStatus.optBoolean("resultReady")?"去查看":"到主屏处理");
+        resultAction.setText(moving?"正在交接…":waiting&&"manual_main".equals(handoffStatus.optString("transferState"))?(handoffStatus.optBoolean("budgetExhausted")?"结束接管":"交回后台继续"):waiting&&handoffStatus.optBoolean("resultReady")?"去查看":"到主屏处理");
         resultAction.setEnabled(!moving);screenBox.setEnabled(!moving&&!taskEnded);
     }
 
@@ -210,7 +210,7 @@ final class AutomationTaskView {
     }
     private String handoffMessage(JSONObject status) {
         String prefix = otherWaiting > 0 ? "还有 " + otherWaiting + " 个任务等你处理\n" : "";
-        return prefix + (status.optBoolean("resultReady") ? "任务已完成。" + status.optString("message") + "\n可在预览中操作，点“重试切到主屏”重试，或结束查看。\n" + status.optString("evidence") : status.optBoolean("protectedScreen")
+        return prefix + (status.optBoolean("budgetExhausted") ? status.optString("message") + "\n" + status.optString("evidence") + "\n可到主屏接管，结束接管后不会继续自动操作。" : status.optBoolean("resultReady") ? "任务已完成。" + status.optString("message") + "\n可在预览中操作，点“重试切到主屏”重试，或结束查看。\n" + status.optString("evidence") : status.optBoolean("protectedScreen")
                 ? "该页面受系统保护，请在 " + status.optString("appName", status.optString("app")) + " 中完成"
                 : "建议点“到主屏处理”，在原生页面操作，完成后点“交回后台继续”。\n" + status.optString("message"));
     }
@@ -260,7 +260,7 @@ final class AutomationTaskView {
                 Button retry=new Button(activity);retry.setText("重试切到主屏");content.addView(retry);
                 retry.setOnClickListener(v -> {if(screenDialog!=null)screenDialog.dismiss();listener.onOpenHandoff(taskId);});
             }
-            Button done = new Button(activity); done.setText(status.optBoolean("resultReady") ? "结束查看" : "我处理好了"); content.addView(done);
+            Button done = new Button(activity); done.setText(status.optBoolean("budgetExhausted") ? "结束接管" : status.optBoolean("resultReady") ? "结束查看" : "我处理好了"); content.addView(done);
             done.setOnClickListener(v -> listener.onHandoffAction(taskId, "resumeTask", "done"));
             Button cancel = new Button(activity); cancel.setText("取消任务"); cancel.setVisibility(status.optBoolean("resultReady") ? View.GONE : View.VISIBLE); content.addView(cancel);
             cancel.setOnClickListener(v -> listener.onTaskStop(taskId));

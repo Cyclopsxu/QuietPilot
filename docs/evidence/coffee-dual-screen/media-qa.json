@@ -1,0 +1,18 @@
+{
+  "method": "Apple Vision fast English OCR on every decoded frame; URL, credential-prefix and mainland-mobile patterns",
+  "ocrFailures": 0,
+  "processedFrames": 1590,
+  "scope": "Heuristic OCR plus separately recorded visual crop review; OCR does not detect all private information",
+  "sensitivePatternFrameTimes": [],
+  "videoSha256": "66150cc26af3eb4d1998461fa7f451b76fe013f296ddb0c87877b070d08070e4",
+  "fullDecodePassed": true,
+  "additionalLocationSampleCheck": {
+    "recognition": "Apple Vision accurate Chinese/English OCR",
+    "sampleEveryNthFrame": 15,
+    "sampledFrames": 106,
+    "ocrFailures": 0,
+    "flaggedFrameTimes": [],
+    "scope": "Heuristic checks for observed private-location text and sensitive patterns; does not establish absence of all private information."
+  },
+  "visualReview": "Reviewed side-by-side alignment, source-availability labels, delivery-address/phone masks and the additional search-results delivery-location mask."
+}
