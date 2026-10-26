@@ -97,7 +97,7 @@ public final class UiBridge {
         out.put("coordinateSpace", "display-local");
 
         ArrayList<Object> windows = new ArrayList<>();
-        int nullRoots=0;long began=android.os.SystemClock.uptimeMillis();
+        int nullRoots=0,placeholderRoots=0,applicationRoots=0;long began=android.os.SystemClock.uptimeMillis();
         try {
             int windowIndex = 0;
             for (AccessibilityWindowInfo window : orderedWindows(snapshot.windows, true)) {
@@ -107,6 +107,12 @@ public final class UiBridge {
                     windowIndex++;
                     continue;
                 }
+                Rect rootBounds=new Rect();root.getBoundsInScreen(rootBounds);
+                if(com.silentauto.shell.ext.guard.UiRecoveryBudget.placeholderRoot(
+                        root.isVisibleToUser(),rootBounds.isEmpty(),root.getChildCount(),hasUsefulContent(root))) {
+                    placeholderRoots++;windowIndex++;continue;
+                }
+                if(window.getType()==AccessibilityWindowInfo.TYPE_APPLICATION)applicationRoots++;
                 windows.add(windowMap(window, root, context, windowIndex));
                 windowIndex++;
             }
@@ -118,15 +124,17 @@ public final class UiBridge {
         boolean incomplete = com.silentauto.shell.ext.guard.UiRecoveryBudget.incompleteTraversal(
                 windows.size(), context.readableNodes, context.nullChildren,
                 !context.targets.isEmpty() || !context.inputs.isEmpty());
-        if((windows.isEmpty() || incomplete)&&retry&&clearAccessibilityCache()) {
+        boolean unavailable=windows.isEmpty()||incomplete||(placeholderRoots>0&&applicationRoots==0);
+        if(unavailable&&retry&&clearAccessibilityCache()) {
             android.os.SystemClock.sleep(180);
             return dumpOnce(displayId,width,height,mode,false);
         }
         out.put("connectionGeneration",connectionGeneration);
         out.put("rawWindowCount",snapshot.windows.size());
         out.put("nullRootCount",nullRoots);
+        out.put("placeholderRootCount",placeholderRoots);
         out.put("rootReadMs",android.os.SystemClock.uptimeMillis()-began);
-        out.put("rootsUnavailable",windows.isEmpty() || incomplete);
+        out.put("rootsUnavailable",unavailable);
         out.put("incompleteTraversal",incomplete);
         out.put("readableNodeCount",context.readableNodes);
         out.put("nullChildCount",context.nullChildren);

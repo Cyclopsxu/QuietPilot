@@ -6,6 +6,8 @@
 
 | 日期 | 设备 | 任务 | 结果 | 证据 |
 | --- | --- | --- | --- | --- |
+| 2026-10-26 | Mate 40 Pro / API31 | 不换手机的无抢焦点输入替代 | 标准EditText直接SET_TEXT通过；微信无编辑节点，定向按键/粘贴仍抢焦点 | [报告](../DEVELOPMENT.md#12-微信视觉兼容与焦点边界)、[摘要](wechat-2026-10-26/nofocus-input-result.json)、[事件日志](wechat-2026-10-26/nofocus-input-probe.txt)、[无障碍日志](wechat-2026-10-26/accessibility-nofocus-probe.txt) |
+| 2026-10-26 | Mate 40 Pro / API31 / 微信8.0.79 | 正式引擎虚拟屏185向文件传输助手发送编号1792986804 | 4步VERIFIED，草稿/已发气泡复制全文一致；焦点借用3次并恢复，非零打扰 | [报告](../DEVELOPMENT.md#12-微信视觉兼容与焦点边界)、[结果](wechat-2026-10-26/background-engine-result.json)、[完整原图](wechat-2026-10-26/background-engine-full.png) |
 | 2026-10-24 | Mate 40 Pro / SDK31 | 三类页面反复抓图/读控件 | 60/60成功；无原屏切换 | [摘要](capture-stability/report.md)、[计算器](capture-stability/calculator-cycles.json)、[高德](capture-stability/amap-cycles.json)、[美团当前页](capture-stability/meituan-cycles.json) |
 | 2026-10-24 | 同上 | 先清除再计算（Step6重测） | ANSWERED 156，7步；另一次16步失败保留 | [重测JSON](query/step6-calculator.json)、[失败JSON](query/step6-calculator-repeat-failed.json) |
 | 2026-10-24 | 同上 | 普通计算12×13 | ANSWERED 156，6步 | [任务JSON](query/calculator-simple-final.json)、[截图](query/calculator-simple-source.png) |

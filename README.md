@@ -27,7 +27,7 @@ QuietPilot (隐航, formerly 隐控) keeps background tasks on course while fore
 
 The video covers parallel input, skills, context, queries and coffee voice amendments. Live footage, still evidence and failures are labeled. It is not one continuous successful run.
 
-Archived samples include calculator queries, three memo skill runs, a public hotel name copied to a memo, coffee specification amendments and a pre-payment handoff, and a calculator task completed after locking and unlocking. WeChat sending has not passed. Full shop-address transfer and continuous dual-screen footage of the successful coffee flow remain missing. See the [evidence index](docs/evidence/README.md), [Step6 status](docs/STEP6-STATUS.md) and [screen-lock report](docs/evidence/screen-lock/report.md).
+Archived samples include calculator queries, three memo skill runs, a public hotel name copied to a memo, coffee specification amendments and a pre-payment handoff, and a calculator task completed after locking and unlocking. A local working-tree build completed one verified File Transfer Assistant send on a virtual display using temporary focus leases; this is not no-focus-stealing input validation. Full shop-address transfer and continuous dual-screen footage of the successful coffee flow remain missing. See the [evidence index](docs/evidence/README.md), [Step6 status](docs/STEP6-STATUS.md) and [screen-lock report](docs/evidence/screen-lock/report.md).
 
 ## Install a preview build
 
@@ -94,9 +94,21 @@ Build before running host regressions. Device probes and real-app acceptance tes
 
 Describe the purpose, scope and actual validation of a contribution. Update the development document when behavior changes, sanitize public evidence and preserve unverified results as unverified.
 
+## WeChat compatibility and background input
+
+The current fallback uses screenshot/OCR and visible paste menus. A local working-tree build completed one formal File Transfer Assistant send entirely on a virtual display on Mate 40 Pro / API31 / WeChat 8.0.79: 4 steps, 58.9 seconds, `VERIFIED`, with exact draft and sent-bubble copy comparisons. This does not certify arbitrary recipients, general WeChat stability, or that published preview packages include these fixes.
+
+| Input path | Measured scope |
+| --- | --- |
+| Direct accessibility text | A standard EditText fixture accepted Chinese while its window remained unfocused; the target app must expose a writable node. |
+| WeChat visual compatibility | This build exposes no writable node, so input temporarily acquires global focus, then restores main focus and clipboard. The successful sample retains 3 raw focus changes; it is not zero disturbance. |
+| Continuous foreground typing with no background WeChat focus stealing | Unresolved on this setup. Display-targeted keys/paste also steal focus; ordinary permission grants or a different ADB keyboard are not a demonstrated fix. |
+
+Keep the default isolation gate and risky-key protection. Insufficient capability requires an explicit compatibility override. No root/framework/target-process hook was implemented. The [technical document](docs/DEVELOPMENT.md#12-微信视觉兼容与焦点边界) consolidates implementation, permissions, alternatives, and measured limits; screenshots, JSON, and logs remain evidence attachments.
+
 ## Known limitations
 
-- Full focus/IME isolation is not certified on the tested device. Experimental compatibility mode does not supply missing system capabilities or guarantee uninterrupted foreground use.
+- Full focus/IME isolation is not certified on the tested device. The compatibility path above does not guarantee uninterrupted foreground typing.
 - Tasks pause while locked. Original UI sessions cannot be restored after process termination or reboot.
 - App startup, UI accessibility, login and verification may block execution. CAPTCHA, payment and identity verification require the owner.
 - Skills may need recovery or model fallback; existing samples do not establish an overall speedup.

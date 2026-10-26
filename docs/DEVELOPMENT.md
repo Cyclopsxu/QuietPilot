@@ -1,6 +1,6 @@
 # 开发与技术方案
 
-维护日期：2026-10-26。基线：`cf017b7` 提交及本次发布准备中的锁屏保护增量，包含 `DeviceLockState`、`AutomationEngine`、`MainAppConflictGuard` 和 `ScreenLockRegression`。Step6 原有 Android 验证基线为 `cedab19`；锁屏增量的验证单独见[锁屏报告](evidence/screen-lock/report.md)。本次仅同步开发文档，未改运行代码。
+维护日期：2026-10-26。代码基线为`f97c8ba`及本轮微信视觉兼容增量。Step6原有Android验证基线为`cedab19`，锁屏保护单独见[锁屏报告](evidence/screen-lock/report.md)；微信实现、正式发送、焦点调查与本次整理范围统一见第12节。
 
 本文是本分支的开发维护基线，回答“目前实现了什么、如何实现、修改时要保持哪些约束、哪些结论尚未验证”。面向接手开发、排查问题和评审实现的人。安装、权限与日常操作见[中文使用手册](USER_GUIDE.zh-CN.md)；演示素材见[视频索引](evidence/demo-path/VIDEO.md)；阶段验收明细见[Step6 状态](STEP6-STATUS.md)。使用手册中的旧轮次记录按当时范围理解，当前阶段状态以本文和 Step6 状态为准。
 
@@ -12,7 +12,7 @@
 
 | 能力 | 当前实现 | 已验证的范围与缺口 |
 | --- | --- | --- |
-| 后台任务与预览 | 每任务虚拟屏、目标 App 启动、UI/OCR、输入、H.264 预览 | Mate 40 Pro 有实际任务记录；微信启动退出，部分页面根节点不可读 |
+| 后台任务与预览 | 每任务虚拟屏、目标 App 启动、UI/OCR、输入、H.264 预览 | Mate 40 Pro 有实际任务记录；微信显示规格已修复，节点不可读时可回退截图/OCR；文件传输助手正式后台发送有单次VERIFIED，仍借用全局焦点 |
 | 调度与主屏优先 | 最多两个活动槽位；同 App 串行；与主屏同 App 冲突时等待/暂停 | 具备保护逻辑；跨设备和长期并发稳定性未覆盖 |
 | 锁屏暂停与解锁续跑 | 熄屏/Keyguard 门禁；新任务排队、运行中暂停保留；解锁重新观察；不消耗锁屏期间的冲突超时预算 | Mate 40 Pro 同一计算器任务第 5 步暂停，解锁后第 8 步 ANSWERED 579；仅证明解锁续跑，不能锁屏持续操作或跨进程恢复 |
 | 输入与焦点保护 | 显示屏定向输入、无焦点触摸、危险键门禁、节点归属检查、剪贴板保护 | 三轮中文输入采样四项均 0、机主反馈正常；原生独立焦点和本地 IME 能力不足，不认证全程隔离 |
@@ -25,7 +25,7 @@
 | 历史、指标与证据 | 步骤来源、角色调用数、耗时、截图、隔离诊断、原始干扰采样、任务归档 | 有脱敏仓库证据；缺失/不可用观测不能计作零 |
 | 录制与演示 | READY 识别、双路 scrcpy、虚拟屏销毁收尾、可重建剪辑 | 已有 02:57 五段证据版；含失败、静态证据和归档说明，非一次连续全成功录像 |
 
-当前没有实现：RPC 应用级鉴权、免电脑 Shizuku 启动、云账号与计费、跨重启恢复原 UI 会话、通用设备隔离认证。微信发送验收未通过。私人订单查询由机主选择跳过，不属于已验收功能。
+当前没有实现：RPC 应用级鉴权、免电脑 Shizuku 启动、云账号与计费、跨重启恢复原 UI 会话、通用设备隔离认证。微信文件传输助手在本机正式虚拟屏任务单次验收通过，使用短时焦点借用与明确编号原文参数，尚未证明通用发送稳定性。私人订单查询由机主选择跳过，不属于已验收功能。
 
 ## 2. 系统分层与部署边界
 
@@ -173,7 +173,7 @@ executor 负责规划；[ResultVerifier](../android-shell/src/main/java/com/sile
 ./scripts/test-interaction-regressions.sh
 ```
 
-先完成 Android 构建，回归脚本复用已解析的 Gson 缓存与 debug classes。目前包含八组 Java 检查：连接、UI 恢复、交互保护、任务转移、查询、RPC 输出、锁屏保护、重复检测；另外运行 isolation-report JS 测试与录制脚本 Python 测试。主机检查不能证明设备接受隐藏 API。设备探针、真实模型任务和中文输入并行测试需要单独进行。Web 修改在 `web-launcher` 执行 `npm run build`；纯文档修改只需检查链接和内容一致性。
+先完成 Android 构建，回归脚本复用已解析的 Gson 缓存与 debug classes。目前包含九组 Java 检查：连接、UI 恢复、交互保护、任务转移、查询、RPC 输出、锁屏保护、视觉输入、重复检测；另外运行 isolation-report JS 测试与录制脚本 Python 测试。主机检查不能证明设备接受隐藏 API。设备探针、真实模型任务和中文输入并行测试需要单独进行。Web 修改在 `web-launcher` 执行 `npm run build`；纯文档修改只需检查链接和内容一致性。
 
 Step6 的 Android 构建、两模块 Lint 和当时回归通过，见 [build-checks.json](evidence/build-checks.json)；该 JSON 不覆盖新增锁屏代码。锁屏增量的[验证报告](evidence/screen-lock/report.md)另记两模块构建/Lint、最终补充后的 shell 构建/Lint及完整回归通过。[ScreenLockRegression](../scripts/tests/ScreenLockRegression.java) 覆盖输入即时拦截、模拟一小时锁屏保留、解锁恢复、真实同 App 冲突超时和锁屏取消。模拟一小时不代表一小时真机耐久测试。本次仅核对代码、报告与文档链接，未重跑构建或设备验收。
 
@@ -185,7 +185,7 @@ Step6 的 Android 构建、两模块 Lint 和当时回归通过，见 [build-che
 
 | 优先级 | 工作 | 完成判据 |
 | --- | --- | --- |
-| P1 | 微信启动兼容与消息路径 | 定位退出原因，专用测试对象真实发送，记录结果；仍失败则保留设备限制 |
+| P1 | 微信发送稳定性与更多入口 | 文件传输助手正式后台任务已有单次通过；继续覆盖普通任务入口、更多布局和重复运行，保留焦点/设备限制 |
 | P1 | 完整店铺上下文 | 公开详情页同时包含店名和完整地址，来源→intake→目标正文逐项核对 |
 | P1 | 咖啡成功流程连续双屏录像 | 同一任务覆盖真语音追加、规格确认、支付前暂停与原页面交付，无付款操作 |
 | P1 | 隔离复验 | 修正后中文拼音候选词与滚动三轮重跑，联合原始日志、双屏录像和机主反馈；仍缺系统能力则保留实验标记 |
@@ -200,9 +200,114 @@ Step6 的 Android 构建、两模块 Lint 和当时回归通过，见 [build-che
 | --- | --- |
 | 2026-10-25 | 对照工作区锁屏增量补齐能力表、状态/输入/异常恢复方案、实际计时语义、八组回归清单及真机范围；区分 Step6 与锁屏验证基线 |
 | 2026-10-25 | 建立本文件，整理截至 Step6 的实现、模块边界、技术约束、验证状态和后续判据；未改运行代码 |
-
 | 2026-10-26 | README 改为标准项目首页，详细操作手册迁至 `USER_GUIDE.zh-CN.md` / `USER_GUIDE.en.md`，开发文档继续维护技术方案与验证状态 |
-
 | 2026-10-26 | 项目工作名改为隐航 QuietPilot；保留包名、RPC 与设备数据兼容；生成部署资源不再纳入当前源码树，补齐贡献/安全/发布说明 |
-
 | 2026-10-26 | 准备 v0.1.0-alpha.1（versionCode 2）release 构建，以开发证书签名，提供 APK、ARM64 后台/OCR ZIP、安装与限制说明；打包方法见 `scripts/package-release.py` |
+
+| 2026-10-26 | 保留微信视觉兼容方案，合并六份阶段说明到第12节，补齐原文参数/发送后目标变更保护与回归；证据附件保留 |
+
+## 12. 微信视觉兼容与焦点边界
+
+本节合并2026-10-26的启动诊断、截图/OCR对照、正式后台发送、焦点根因与不换手机的输入绕行调查。当前保留兼容方案，不把它提升为原生独立焦点；原始JSON、日志和完整截图保留为证据附件，独立阶段说明已归并到本文。设备为Huawei Mate40Pro NOH-AN01 / HarmonyOS4.2 / SDK31，微信8.0.79 (3200)。
+
+### 12.1 能力与使用约束
+
+| 路径 | 当前结果 | 使用边界 |
+| --- | --- | --- |
+| 可写无障碍节点直接设置文本 | 标准EditText样本成功写入中文，目标windowFocus=false，主屏焦点保持0 | 要求目标App暴露可写节点，不代表任意App或持续拼音输入并发已认证 |
+| 微信截图/OCR＋可见菜单粘贴 | 正式虚拟屏任务单次VERIFIED | 输入、草稿复制与已发气泡复制短时借用全局焦点，finally恢复焦点及剪贴板；不能保证主屏持续打字不中断 |
+| 指定displayId的原生按键/粘贴键 | 能写入测试框，但同时转移全局焦点 | 原生后台按键门禁保持关闭，不能用这种方式宣称无打扰 |
+| 本机微信真正无抢焦点输入 | 未找到当前权限下可交付的通用路径 | 微信无障碍节点不可写；系统级改造未实施 |
+
+严格隔离检查仍为默认门禁；不足时阻止后台，只有明确选择的`--allow-unverified-isolation=true`兼容实验才放行。`experimental_unverified`、`behaviorValidated=false`和原始焦点变化记录保留。归还焦点不等于从未抢过，也不保证恢复主屏输入法的 composing/candidate 状态。锁屏期间仍暂停任务，解锁后重新观察；本轮不是锁屏持续输入验证。
+
+### 12.2 实现与接口合同
+
+- **显示规格与根节点：**`DisplaySpec.current`优先从同一逻辑显示配置的`getRealMetrics`读取尺寸和密度，再回退wm。修复本机1152×2376与物理560 dpi混用，实际逻辑密度为480。`UiBridge`排除不可见、零尺寸、无子节点、无有效内容的占位根；真实叶节点不受误伤，系统/IME窗口不能掩盖空应用根。记录`placeholderRootCount`并执行有界清缓存/重连。
+- **正式视觉回退：**重连后应用根仍不可读时，`AutomationEngine`在目标仍属任务虚拟屏、手机未锁定等条件下，使用同一帧截图及本地PaddleOCR生成视觉观察；步骤来源为`vision_ocr`，规划使用verifier配置的视觉模型，调用单独记录`visual_planner`。控制端总调用数包含该角色。视觉步骤不编译为依赖语义节点的技能。
+- **定位与菜单：**唯一、高置信度OCR文字优先于模型估计坐标；0–1000归一化坐标经换算与边界校验后使用。文字点击执行前重新截图定位，以应对会话列表重排。菜单可有限重观察；低置信度的小字候选可局部2倍放大OCR，仍须精确标签、置信度≥0.85且唯一，失败保存原图并停止，不猜坐标或降级原生快捷键。
+- **焦点事务：**`InputFocusTransaction`串行化兼容输入。开始要求主屏焦点0及可识别的当前主屏任务；正常触摸取得目标虚拟屏焦点，检查任务归属、锁屏/冲突与10秒期限，再通过可见菜单全选/粘贴。成功、失败、取消都恢复用户当前主屏任务焦点，保留线程中断，剪贴板经原始ClipData快照恢复。10秒是受控点的期限检查，不是对底层系统调用阻塞的硬实时上限。
+- **原文绑定：**`startTask`可同时提供`exactMessage`、`exactRecipient`，两者必须逐字出现在授权goal中；正文必须只有一个至少10位的数字编号。缺一项、原文不在目标中、编号缺失或歧义会提前拒绝。不传这两个字段则保持普通视觉规划/独立发送前验收，不自动获得本轮确定性正文断言。发送前目标变化会失效旧绑定并重新观察；发送后目标变化则停止验收，不能把旧消息当成新目标完成，也不能重发。
+- **发送前门禁：**显式绑定路径在正确标题下写入原文，通过“全选→复制”逐字比较完整草稿；新OCR须再次确认标题，并且完整编号只能出现一次、置信度≥0.9且位于底部15%草稿区。该保守几何范围只适用于已测试的短消息布局，不是任意输入框的通用判据。
+- **发送后验收：**发送尝试在执行点击前锁存；后续只验收，禁止重复输入/重发。必须仍在原虚拟屏、未转主屏且焦点已恢复0。对唯一编号气泡执行“复制”，逐字比较原文，设置`draftCopyVerified`/`messageCopyVerified`。独立视觉验收继续核对会话标题、对应编号的右侧已发气泡及无失败/持续发送指示；不要求微信不存在的已读对勾，不宣称跨设备接收或已读。
+- **证据与指标：**视觉验收可查看原图顶部7%标题与编号中心上下各10%高度全宽区域的拼接检查视图，明确标注坐标映射、像素不改写；最终证据仍保存完整原图。`DisturbanceMonitor`只将明确焦点借用区间归因于输入事务，原始焦点计数不抹零，超出事务的焦点异常仍触发保护。新增`inputFocusTransactions`，`zeroDisturbanceVerified`仍为false。
+
+代码入口：[AutomationEngine](../android-shell/src/main/java/com/silentauto/shell/AutomationEngine.java)、[InputFocusTransaction](../android-shell/src/main/java/com/silentauto/shell/ext/guard/InputFocusTransaction.java)、[VisualActionPolicy](../android-shell/src/main/java/com/silentauto/shell/ext/guard/VisualActionPolicy.java)、[ResultVerifier](../android-shell/src/main/java/com/silentauto/shell/ext/verify/ResultVerifier.java)。
+
+### 12.3 本机系统限制与源码依据
+
+| 检查 | 本机结果 | 含义 |
+| --- | --- | --- |
+| `config_perDisplayFocusEnabled`资源 | false | 系统未启用全局每屏独立焦点，不是普通App设置 |
+| `OWN_FOCUS` / `STEAL_TOP_FOCUS_DISABLED` | 均为NoSuchFieldException | 本机框架缺失单屏独立/不抢顶层焦点标志，反射或猜常量不能补齐实现 |
+| shell UID2000权限 | `ADD_TRUSTED_DISPLAY=-1`；`INTERNAL_SYSTEM_WINDOW=0`、`INJECT_EVENTS=0` | 拥有注入权限不等于拥有受信任显示屏权限 |
+| 创建TRUSTED虚拟屏 | SecurityException，要求ADD_TRUSTED_DISPLAY | 权限拒绝得到探针确认 |
+| 临时普通屏186设置LOCAL IME | SecurityException，原因是untrusted virtual display；前后策略均为1（fallback） | 本地输入法显示策略被系统信任检查拒绝 |
+
+Android10已有可配置的多屏焦点机制，但普通手机不一定启用。传统IME可随焦点移动显示位置，不等于两条独立输入会话；AOSP12也拒绝对不受信任虚拟屏设置LOCAL策略，不能仅据本机现象归为华为独有问题。较新分支（如Android15）有OWN_FOCUS和STEAL_TOP_FOCUS_DISABLED，OWN_FOCUS仍要求trusted；具体补丁、权限、厂商行为须实测，不能只凭SDK号承诺隔离。
+
+尤其重要的是，AOSP12 `PhoneWindowManager.interceptKeyBeforeQueueing`在多屏独立焦点关闭、按键指向非当前显示屏时会调用`moveDisplayToTop(displayId)`。这解释了为何“显式指定displayId”能避免字符落错屏，却仍让主屏失去焦点；触摸的NO_FOCUS_CHANGE不能照搬为KeyEvent的同名能力。
+
+依据：[AOSP多屏焦点](https://source.android.com/docs/core/display/multi_display/displays)、[IME说明](https://source.android.com/docs/core/display/multi_display/ime-support)、[Android12 PhoneWindowManager](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/services/core/java/com/android/server/policy/PhoneWindowManager.java)、[Android12 WMS](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/services/core/java/com/android/server/wm/WindowManagerService.java)、[Android15 DisplayManager](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-15.0.0_r1/core/java/android/hardware/display/DisplayManager.java)。
+
+### 12.4 不换手机的候选方案与实测
+
+临时测试夹具`com.silentauto.focusprobe`的主屏与次屏Activity在独立进程中，只记录自己的测试文本/焦点，关闭软键盘显示。每个按键试验前要求主屏焦点0，试验之间显式恢复主屏；恢复本身不计作未曾抢焦点。
+
+| 路径 | 结果 | 判断 |
+| --- | --- | --- |
+| NO_FOCUS_CHANGE触摸 | 主屏保持0 | 触摸可用，但不自动建立目标输入连接 |
+| ACTION_MULTIPLE直接字符`MULTIPLE_后台` | 发往屏188，返回false，无文本到达 | 本机不可用 |
+| 定向ASCII按键 | 后台收到`a`，主屏失焦，全局焦点188 | 绕开IME但仍抢焦点 |
+| 定向KEYCODE_PASTE | 后台收到`PASTE_后台`，全局焦点188 | 不是无打扰替代 |
+| 不先ACTION_FOCUS、直接ACTION_SET_TEXT | 屏190标准EditText收到`SETTEXT_后台`；windowFocus始终false，主屏焦点0 | 标准样本通过，不外推到所有App |
+| 微信普通UiAutomation | 1个占位根、class=null、children=0、editable=0 | 无直接写入节点 |
+| 微信DONT_SUPPRESS_ACCESSIBILITY_SERVICES | 从设备读取标志值1后连接，仍为空根、editable=0 | 未解决节点问题，不据此断言微信全部自绘 |
+
+[定向事件原始记录](evidence/wechat-2026-10-26/nofocus-input-probe.txt)、[无障碍对照原始记录](evidence/wechat-2026-10-26/accessibility-nofocus-probe.txt)、[摘要与哈希](evidence/wechat-2026-10-26/nofocus-input-result.json)。测试App已卸载，临时jar/虚拟屏释放，主屏恢复原桌面任务7、焦点0，正式后台通过ping。粘贴走ClipboardGuard快照/finally恢复路径，本轮未另做独立剪贴板摘要审计，也未做主屏真实拼音输入并发压力测试。
+
+其余方向按源码/权限核查记录，不伪装成已实现：
+
+| 方向 | 当前边界 |
+| --- | --- |
+| 普通授权、`pm grant`、ADB模式Shizuku | ADD_TRUSTED_DISPLAY是signature权限，不是运行时权限；ADB入口仍受shell边界约束，不能补齐本机缺失的授权/实现 |
+| 桌面模式、`wm`、`cmd display` | 本机命令清单没有独立焦点开关；桌面窗口模式、IME显示位置与独立输入不是同一能力 |
+| 全局资源覆盖 | 本机fabricate命令明确要求root，ro.debuggable=0；WMS与PhoneWindowManager读取该资源。未做覆盖或重启，不承诺改一个布尔值能同时解决IME/剪贴板 |
+| ADBKeyboard、自定义IME、旧InputConnection | 目标需要有效输入连接。Android12服务端核对客户端焦点，应用端忽略inactive连接的commitText；隐藏键盘窗口不提供第二条独立会话。本轮未安装或切换全局输入法 |
+| 反射目标View、ViewServer | 当前进程反射不能取得微信进程内View；ViewDebug的层次/抓图/布局诊断没有通用跨App setText命令。未读取私人View树 |
+| 通知快捷回复、Intent、业务接口 | 要求目标App主动提供并有相应授权；未验证文件传输助手存在可用入口，未申请通知读取权限 |
+| root、系统签名、框架改造或App内Hook | 可以作为系统级研究方向，需要版本和输入链路适配，维护成本较高；本轮未实施，不纳入当前能力承诺 |
+
+依据：[Android12权限声明](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/core/res/AndroidManifest.xml)、[IME焦点检查](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/services/core/java/com/android/server/inputmethod/InputMethodManagerService.java)、[inactive连接检查](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/core/java/com/android/internal/view/IInputConnectionWrapper.java)、[ViewDebug](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/core/java/android/view/ViewDebug.java)、[Shizuku官方说明](https://shizuku.rikka.app/guide/setup/)。
+
+### 12.5 正式发送结果与历史失败
+
+正式任务`wechat-background-1792986804`最终`VERIFIED`且`finalized=true`，全程在虚拟屏185，4步、58.918秒；只点击发送一次，没有转主屏，结束释放虚拟屏（displayId=-1）。原文为：
+
+> ShadowAuto 后台截图OCR测试 1792986804（仅文件传输助手，无需回复）
+
+`draftCopyVerified=true`、`messageCopyVerified=true`；独立验收确认标题、对应编号的右侧绿色气泡及无失败/持续发送指示。视觉规划3次、独立验收1次、选App1次，四步均为`vision_ocr`。三次焦点借用分别6258/6300/4487毫秒并恢复；原始前台切换0、剪贴板最终摘要变化0，原始焦点变化3，桌面8/60新增帧被计为卡顿，不能称零打扰或流畅度全部通过。
+
+[正式结果与构建哈希](evidence/wechat-2026-10-26/background-engine-result.json)、[完整原始截图](evidence/wechat-2026-10-26/background-engine-full.png)。截图仅含文件传输助手及测试消息，已目视检查；首页、联系人和其他私人聊天没有纳入公开证据。该设备记录对应当时工作区APK；本次整理新增的参数与目标版本保护由主机回归覆盖，不冒充已重新跑过这轮真机发送。
+
+前序结果保持原状态，不把主屏诊断或模型误判改写为正式成功：
+
+| 阶段/样本 | 实际结果与后续处理 |
+| --- | --- |
+| 最初560 dpi启动、480 dpi对照 | 560反复EXIT_SELF；480在30秒及45秒对照内稳定，截图首页可见；微信内部退出调用栈仍未取得。[启动诊断摘要](evidence/wechat-2026-10-26/summary.json)只对应此阶段，productionCodeChanged=false不是当前总体状态 |
+| 初次正式任务wechat-send-1792956203 / 屏166 | 密度修复后稳定，但占位根重连代际1→2仍不可用，约14.1秒在0步WAITING_USER，未输入/未发送；主屏对照同样不可读，随后取消 |
+| 屏167视觉诊断及主屏对照1792956203 | 后台截图/OCR与搜索触摸可用，输入无粘贴入口；主屏诊断发出完整消息，但未接入正式引擎，不能当作后台通过 |
+| 1792958742及早期视觉失败 | 包含归一化坐标误用、标题重复点击、正文被规划器截断、旧草稿、列表重排误入公众号；保留失败并分别补齐原文绑定与执行前重定位 |
+| 1792985249 / 5428 / 5593 | 发送前模型把旧编号或正常换行读错，或忽略已成立的复制证明；均未点击发送，后改为确定性标题/草稿/编号门禁 |
+| 1792985777 / 5906 | 全选后小菜单OCR把粘贴读成低置信度重复字，有限等待仍失败；加入候选局部放大，不降阈值、不猜坐标 |
+| 1792986071 / 6296 | 草稿、编号检查已成立，模型仍误报重复；最终由确定性门禁负责这些条件，发送后仍独立视觉验收 |
+| 1792984356 / 4685 / 6520 | 有实际发送，但验收把操作过程、排版或相似长图当成失败；6520草稿/气泡复制均相等，仍保持FAILED。后来缩小视觉检查范围、完整原图仍保留 |
+| 首轮焦点/无障碍探针 | 缓存DisplayManager探针被终止；按键探针检测到失焦提前退出；无障碍探针误用DONT_USE_ACCESSIBILITY=2，第二阶段无效。更正显式ShellContext、补齐按键对、读取设备DONT_SUPPRESS=1后才形成最终结果 |
+
+所有原始任务、探针源码、失败日志、未公开截图及原独立说明留在仓库同级`../docs/validation/wechat-2026-10-26/`。主机检查和单台手机的一次正式成功，不等价于任意自然语言入口、任意联系人、全局历史去重、跨设备接收/已读、长时运行或全程零打扰通过。
+
+### 12.6 检查与维护
+
+按第10节执行两模块assembleDebug、两模块lintDebug及完整交互回归，本次均通过，见[整理后检查摘要](evidence/wechat-2026-10-26/consolidation-checks.json)。新增回归覆盖占位根/真实叶节点、焦点成功/失败/取消清理、用户更换主屏任务后的恢复、外部焦点拒绝、OCR菜单歧义、归一化坐标、动态文字重定位、标题区域、相似编号/历史重复/低置信度、绑定参数完整性和发送后目标修改拒绝。不会向手机重复发送消息来验证只读文档整理或纯参数拒绝分支。
+
+对外说明继续限定为“兼容方案单次正式发送通过”；保留默认隔离门禁、危险按键保护、原始指标和失败记录。新设备或系统级改造需重新验证信任权限、独立焦点、IME/剪贴板及主屏真实输入，不能凭接口存在或设置返回成功置为通过。

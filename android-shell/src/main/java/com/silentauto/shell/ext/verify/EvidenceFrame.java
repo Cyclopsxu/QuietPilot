@@ -30,5 +30,25 @@ public final class EvidenceFrame {
             return new EvidenceFrame(bytes.toByteArray(), bright == 0, hash);
         } finally { bitmap.recycle(); }
     }
+    /** A labeled-in-metadata inspection view; the original full PNG remains the saved evidence. */
+    public EvidenceFrame messageInspection(String ocrJson,String message) {
+        Bitmap original=null,view=null;
+        try {
+            com.google.gson.JsonArray rows=com.google.gson.JsonParser.parseString(ocrJson).getAsJsonObject().getAsJsonArray("results");
+            int[] marker=com.silentauto.shell.ext.guard.VisualActionPolicy.messageMarker(rows,message);
+            if(marker==null)return this;
+            original=android.graphics.BitmapFactory.decodeByteArray(png,0,png.length);if(original==null)return this;
+            int w=original.getWidth(),h=original.getHeight(),header=Math.max(1,(int)(h*.07));
+            int top=Math.max(header,marker[1]-h/10),bottom=Math.min(h,marker[1]+h/10);
+            if(marker[0]<0||marker[0]>=w||bottom<=top||marker[1]<top||marker[1]>=bottom)return this;
+            view=Bitmap.createBitmap(w,header+bottom-top,Bitmap.Config.ARGB_8888);
+            android.graphics.Canvas canvas=new android.graphics.Canvas(view);
+            canvas.drawBitmap(original,new android.graphics.Rect(0,0,w,header),new android.graphics.Rect(0,0,w,header),null);
+            canvas.drawBitmap(original,new android.graphics.Rect(0,top,w,bottom),new android.graphics.Rect(0,header,w,view.getHeight()),null);
+            EvidenceFrame inspection=from(view);view=null;return inspection;
+        } catch(RuntimeException unavailable){return this;}
+        finally {if(original!=null)original.recycle();if(view!=null&&!view.isRecycled())view.recycle();}
+    }
+
     public String dataUrl() { return "data:image/png;base64," + Base64.encodeToString(png, Base64.NO_WRAP); }
 }

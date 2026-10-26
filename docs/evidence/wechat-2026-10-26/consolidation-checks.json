@@ -1,0 +1,54 @@
+{
+  "date": "2026-10-26",
+  "baseRevision": "f97c8ba4673b522bf32b3d3c89ea268f79d9b2a7",
+  "scope": "Final compatibility implementation and merged documentation; prior device results remain historical, no new message sent for this consolidation.",
+  "checks": [
+    {
+      "command": "./gradlew :android-shell:assembleDebug :controller-app:assembleDebug :android-shell:lintDebug :controller-app:lintDebug",
+      "exitCode": 0
+    },
+    {
+      "command": "./scripts/test-interaction-regressions.sh",
+      "exitCode": 0
+    }
+  ],
+  "sourceSha256": {
+    "android-shell/src/main/java/com/silentauto/shell/AutomationEngine.java": "6f38f33a3d345335777d3904d00f22afbbd8b9f867172d97b6c94fdf5d0c5a2c",
+    "android-shell/src/main/java/com/silentauto/shell/DisplaySpec.java": "34bcc67434ec1300d7f67fa275825654ad2b6eaf5e7cf38f6656165236fc6826",
+    "android-shell/src/main/java/com/silentauto/shell/InputBridge.java": "fdbab32edb5f927a52e121662b4e3c2897834972400ab0bd0509dd384a94e741",
+    "android-shell/src/main/java/com/silentauto/shell/RpcServer.java": "b530c7d3419b8cf463abfe04ad98ab3adcd817dbc2c8023d0eff850b9d1fd16a",
+    "android-shell/src/main/java/com/silentauto/shell/UiBridge.java": "5450573f53d0fe7cfb5471598c260be245d817622364c90276f11dab0932426b",
+    "android-shell/src/main/java/com/silentauto/shell/ext/TaskProgress.java": "1b341663a983fabc3ab357ea5668581efa433946569d115ed51c01a71c0c1bb2",
+    "android-shell/src/main/java/com/silentauto/shell/ext/guard/InputFocusTransaction.java": "4d4170343967ea84b75169210a00c0437e972d734991b94902d4ae83c9c2276b",
+    "android-shell/src/main/java/com/silentauto/shell/ext/guard/LoopDetector.java": "0d1c4da842a8a58a63050db1a94284e7a6b8d849405b2f13bc8bb2b04564eaff",
+    "android-shell/src/main/java/com/silentauto/shell/ext/guard/UiRecoveryBudget.java": "495c554dae440b656d40baa42e7cbadc86c6e7d3ad0a23eb7e6e71b801b60c64",
+    "android-shell/src/main/java/com/silentauto/shell/ext/guard/VisualActionPolicy.java": "94f3db856b366b6e5f22157c53b35ceaa119af88db41273d580eb944a47872e3",
+    "android-shell/src/main/java/com/silentauto/shell/ext/metrics/DisturbanceMonitor.java": "48307c38c4cb2eef1498bc74f7e11b30222e9901522353e68032e17ddca05dad",
+    "android-shell/src/main/java/com/silentauto/shell/ext/verify/EvidenceFrame.java": "0013161e3745db7204e7798c252119ed664e438d2acdb6769a24c4c4b5f09bfc",
+    "android-shell/src/main/java/com/silentauto/shell/ext/verify/ResultVerifier.java": "5908bb968f05dd17fa40e6a553a96e020bc711f7ac78cae94f94914d341daf4f",
+    "controller-app/src/main/java/com/silentauto/controller/ext/history/TaskCenterActivity.java": "5c1e76e080735d3c14bd6fcedded0a81db3de2cde9269ff03b7835649bd475a0",
+    "scripts/test-interaction-regressions.sh": "9c1c0784503ee59ce0fbd6963894179e4a1c92f45bed8ffa720470f78383b222",
+    "scripts/tests/UiRecoveryRegression.java": "8546a515b5336abd2ed50f568b23702be340b4bc3f25f73537b03af26d88474b",
+    "scripts/tests/VisualInputRegression.java": "bae6af83dcfdb49eb066a4295b4f3c06b2264ad90f527ce06244dc9769c62e5f",
+    "scripts/tests/android/os/SystemClock.java": "36a064ba5c7769c00c5de79e22308e9e9c7b9db2968fe61438eb67c402931164"
+  },
+  "logSha256": {
+    "consolidation-build.log": "fee5486811e72bb973edd255088378ae4c83ca390e7d67b9a37125b8122e73e8",
+    "consolidation-regressions.log": "30cefb6f3ad2c895f1a6bc194dc4c81053ae8973ff91b48b7ad40204239443e9"
+  },
+  "newRegressionScope": [
+    "exact message/recipient pair required",
+    "verbatim goal binding",
+    "single numeric marker required",
+    "goal changes after send cannot verify new goal or replay send"
+  ],
+  "docsChecks": [
+    "local Markdown targets/anchors",
+    "evidence JSON parse and provenance hashes",
+    "git diff --check"
+  ],
+  "excludedFromCommit": [
+    ".idea/gradle.xml",
+    ".idea/misc.xml"
+  ]
+}

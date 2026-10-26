@@ -1,0 +1,484 @@
+{
+  "date": "2026-10-26",
+  "device": "Huawei Mate 40 Pro NOH-AN01 / API31",
+  "wechatVersion": "8.0.79 (3200)",
+  "messageSent": false,
+  "modelCalls": 0,
+  "productionCodeChanged": false,
+  "cases": {
+    "current": [
+      {
+        "tick": 0,
+        "timestampMs": 1792955679393,
+        "displayId": 161,
+        "pids": "17228",
+        "rawWindowCount": 0,
+        "rootsUnavailable": true,
+        "readableNodeCount": 0,
+        "windowError": "",
+        "windows": []
+      },
+      {
+        "tick": 4,
+        "timestampMs": 1792955679652,
+        "displayId": 161,
+        "pids": "17228",
+        "rawWindowCount": 0,
+        "rootsUnavailable": true,
+        "readableNodeCount": 0,
+        "windowError": "",
+        "windows": []
+      },
+      {
+        "tick": 10,
+        "timestampMs": 1792955689421,
+        "displayId": 161,
+        "pids": "19730",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 2,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 20,
+        "timestampMs": 1792955694321,
+        "displayId": 161,
+        "pids": "21033",
+        "rawWindowCount": 0,
+        "rootsUnavailable": true,
+        "readableNodeCount": 0,
+        "windowError": "",
+        "windows": []
+      },
+      {
+        "tick": 29,
+        "timestampMs": 1792955703322,
+        "displayId": 161,
+        "pids": "23251",
+        "rawWindowCount": 0,
+        "rootsUnavailable": true,
+        "readableNodeCount": 0,
+        "windowError": "no windows for display 161",
+        "windows": []
+      }
+    ],
+    "standard": [
+      {
+        "tick": 0,
+        "timestampMs": 1792955759898,
+        "displayId": 162,
+        "pids": "",
+        "rawWindowCount": 0,
+        "rootsUnavailable": true,
+        "readableNodeCount": 0,
+        "windowError": "",
+        "windows": []
+      },
+      {
+        "tick": 4,
+        "timestampMs": 1792955763893,
+        "displayId": 162,
+        "pids": "",
+        "rawWindowCount": 0,
+        "rootsUnavailable": true,
+        "readableNodeCount": 0,
+        "windowError": "",
+        "windows": []
+      },
+      {
+        "tick": 10,
+        "timestampMs": 1792955769900,
+        "displayId": 162,
+        "pids": "24963",
+        "rawWindowCount": 0,
+        "rootsUnavailable": true,
+        "readableNodeCount": 0,
+        "windowError": "",
+        "windows": []
+      },
+      {
+        "tick": 20,
+        "timestampMs": 1792955779904,
+        "displayId": 162,
+        "pids": "24963",
+        "rawWindowCount": 0,
+        "rootsUnavailable": true,
+        "readableNodeCount": 0,
+        "windowError": "",
+        "windows": []
+      },
+      {
+        "tick": 29,
+        "timestampMs": 1792955788909,
+        "displayId": 162,
+        "pids": "24963",
+        "rawWindowCount": 0,
+        "rootsUnavailable": true,
+        "readableNodeCount": 0,
+        "windowError": "no windows for display 162",
+        "windows": []
+      }
+    ],
+    "current480": [
+      {
+        "tick": 0,
+        "timestampMs": 1792955810197,
+        "displayId": 163,
+        "pids": "25763",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 4,
+        "timestampMs": 1792955812083,
+        "displayId": 163,
+        "pids": "25763",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 10,
+        "timestampMs": 1792955818099,
+        "displayId": 163,
+        "pids": "25763",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 20,
+        "timestampMs": 1792955828108,
+        "displayId": 163,
+        "pids": "25763",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 29,
+        "timestampMs": 1792955837110,
+        "displayId": 163,
+        "pids": "25763",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      }
+    ],
+    "current480-repeat": [
+      {
+        "tick": 0,
+        "timestampMs": 1792955876312,
+        "displayId": 164,
+        "pids": "27413",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 4,
+        "timestampMs": 1792955878395,
+        "displayId": 164,
+        "pids": "27413",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 10,
+        "timestampMs": 1792955884407,
+        "displayId": 164,
+        "pids": "27413",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 20,
+        "timestampMs": 1792955894412,
+        "displayId": 164,
+        "pids": "27413",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 29,
+        "timestampMs": 1792955903794,
+        "displayId": 164,
+        "pids": "27413",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      },
+      {
+        "tick": 44,
+        "timestampMs": 1792955918804,
+        "displayId": 164,
+        "pids": "27413",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "package": null
+          }
+        ]
+      }
+    ],
+    "current480-full": [
+      {
+        "tick": 0,
+        "timestampMs": 1792955954115,
+        "displayId": 165,
+        "pids": "29352",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "root": {
+              "package": "com.tencent.mm",
+              "class": "",
+              "id": "",
+              "visible": false,
+              "bounds": "0,0,0,0"
+            },
+            "children": 0
+          }
+        ]
+      },
+      {
+        "tick": 4,
+        "timestampMs": 1792955956410,
+        "displayId": 165,
+        "pids": "29352",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "root": {
+              "package": "com.tencent.mm",
+              "class": "",
+              "id": "",
+              "visible": false,
+              "bounds": "0,0,0,0"
+            },
+            "children": 0
+          }
+        ]
+      },
+      {
+        "tick": 10,
+        "timestampMs": 1792955962413,
+        "displayId": 165,
+        "pids": "29352",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "root": {
+              "package": "com.tencent.mm",
+              "class": "",
+              "id": "",
+              "visible": false,
+              "bounds": "0,0,0,0"
+            },
+            "children": 0
+          }
+        ]
+      },
+      {
+        "tick": 20,
+        "timestampMs": 1792955972419,
+        "displayId": 165,
+        "pids": "29352",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "root": {
+              "package": "com.tencent.mm",
+              "class": "",
+              "id": "",
+              "visible": false,
+              "bounds": "0,0,0,0"
+            },
+            "children": 0
+          }
+        ]
+      },
+      {
+        "tick": 29,
+        "timestampMs": 1792955981769,
+        "displayId": 165,
+        "pids": "29352",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "root": {
+              "package": "com.tencent.mm",
+              "class": "",
+              "id": "",
+              "visible": false,
+              "bounds": "0,0,0,0"
+            },
+            "children": 0
+          }
+        ]
+      },
+      {
+        "tick": 44,
+        "timestampMs": 1792955996780,
+        "displayId": 165,
+        "pids": "29352",
+        "rawWindowCount": 1,
+        "rootsUnavailable": false,
+        "readableNodeCount": 1,
+        "windowError": "",
+        "windows": [
+          {
+            "type": 1,
+            "root": {
+              "package": "com.tencent.mm",
+              "class": "",
+              "id": "",
+              "visible": false,
+              "bounds": "0,0,0,0"
+            },
+            "children": 0
+          }
+        ]
+      }
+    ]
+  },
+  "mainDisplay": {
+    "size": "1152x2376",
+    "logicalDensityDpi": 480,
+    "wmDensityDpi": 560,
+    "source": "wm size, wm density, dumpsys display mOverrideDisplayInfo"
+  },
+  "mainBaseline": [
+    {
+      "timeMs": 1792955732760,
+      "pids": "23251",
+      "resumed": [
+        "mResumedActivity: ActivityRecord{53de778 u0 com.tencent.mm/.ui.LauncherUI t305}"
+      ]
+    },
+    {
+      "timeMs": 1792955739902,
+      "pids": "23251",
+      "resumed": [
+        "mResumedActivity: ActivityRecord{53de778 u0 com.tencent.mm/.ui.LauncherUI t305}"
+      ]
+    },
+    {
+      "timeMs": 1792955748042,
+      "pids": "23251",
+      "resumed": [
+        "mResumedActivity: ActivityRecord{53de778 u0 com.tencent.mm/.ui.LauncherUI t305}"
+      ]
+    }
+  ],
+  "logs": {
+    "virtualExitEvidence": "com.tencent.mm: System.exit called, status: 0",
+    "mainExitCallCount": 0,
+    "instrumentationWarningOnMain": true,
+    "instrumentationWarningOnVirtual": true
+  }
+}

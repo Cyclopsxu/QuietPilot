@@ -447,5 +447,54 @@
       }
     ],
     "note": "按固定计划从真实录像、已核看静态图及文字说明渲染；所有媒体源均有SHA256；缺录像处不生成虚构App页面"
+  },
+  {
+    "sourceRelative": "wechat-2026-10-26/background-6804-evidence.png",
+    "artifact": "wechat-2026-10-26/background-engine-full.png",
+    "sourceSha256": "6ad501d1f25b7752ca80afa656518e68af5782c840d178f172eb99728c54af56",
+    "redactedSha256": "6ad501d1f25b7752ca80afa656518e68af5782c840d178f172eb99728c54af56",
+    "transformation": "Original full virtual-display screenshot; visually reviewed, only File Transfer Assistant and test messages."
+  },
+  {
+    "sourceRelative": "wechat-2026-10-26/background-result.json",
+    "artifact": "wechat-2026-10-26/background-engine-result.json",
+    "sourceSha256": "d213f801f94a7ac82f5ec4a36a274b1727f8a993ad12f996a7660eb13addc881",
+    "redactedSha256": "47d123500c233c690037fbb19842c0b80323a544fef98c5d2cc880e49afa6069",
+    "transformation": "Selected final task fields plus device audit and build hashes; derived summary, not a byte-identical task dump."
+  },
+  {
+    "sourceRelative": "wechat-2026-10-26/nofocus-input-result.json",
+    "artifact": "wechat-2026-10-26/nofocus-input-result.json",
+    "sourceSha256": "e0b926e4374ba81c7d190847d27270f83767da09ef3b59901a753d857eef5e70",
+    "redactedSha256": "e0b926e4374ba81c7d190847d27270f83767da09ef3b59901a753d857eef5e70",
+    "transformation": "Local diagnostic evidence/report; only own fixture text and root metadata, no production input changes or new WeChat sends."
+  },
+  {
+    "sourceRelative": "wechat-2026-10-26/nofocus-input-probe.txt",
+    "artifact": "wechat-2026-10-26/nofocus-input-probe.txt",
+    "sourceSha256": "36f8b6f856a07a0eaa9bec1968a5a22465c170091510b9bc0aa0f0e5557b3e14",
+    "redactedSha256": "36f8b6f856a07a0eaa9bec1968a5a22465c170091510b9bc0aa0f0e5557b3e14",
+    "transformation": "Local diagnostic evidence/report; only own fixture text and root metadata, no production input changes or new WeChat sends."
+  },
+  {
+    "sourceRelative": "wechat-2026-10-26/accessibility-nofocus-probe.txt",
+    "artifact": "wechat-2026-10-26/accessibility-nofocus-probe.txt",
+    "sourceSha256": "8eaaee7e814edc0d7da3666ff195b2be850f3b3fb1180d1a4d31c09f3c517793",
+    "redactedSha256": "8eaaee7e814edc0d7da3666ff195b2be850f3b3fb1180d1a4d31c09f3c517793",
+    "transformation": "Local diagnostic evidence/report; only own fixture text and root metadata, no production input changes or new WeChat sends."
+  },
+  {
+    "sourceRelative": "wechat-2026-10-26/consolidation-checks.json",
+    "artifact": "wechat-2026-10-26/consolidation-checks.json",
+    "sourceSha256": "63b03b0e133a62f44bac632e4f2a00035a51411a7290f55007ab40288119754f",
+    "redactedSha256": "63b03b0e133a62f44bac632e4f2a00035a51411a7290f55007ab40288119754f",
+    "transformation": "Final build/regression summary with source and private log hashes; historical phone evidence is not relabeled as a retest."
+  },
+  {
+    "sourceRelative": "wechat-2026-10-26/startup-diagnostics-public.json",
+    "artifact": "wechat-2026-10-26/summary.json",
+    "sourceSha256": "1bfac98b0cb76b29da3cbda2f5d31b4b00c32c555a3e5c8e9391949682d1abd2",
+    "redactedSha256": "1bfac98b0cb76b29da3cbda2f5d31b4b00c32c555a3e5c8e9391949682d1abd2",
+    "transformation": "Archived startup-only diagnostic snapshot; later implementation and final status are documented in DEVELOPMENT.md section 12."
   }
 ]

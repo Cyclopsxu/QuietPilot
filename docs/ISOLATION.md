@@ -11,8 +11,13 @@
 | 触摸防抢焦点 | 本机 FLAG_NO_FOCUS_CHANGE=64；对照普通触摸切到次屏、防抢触摸保持主屏 | 触摸层规避实际生效，不代表拥有原生独立焦点 |
 | 运行时保护 | 危险键门禁、无障碍文字写入、临时剪贴板恢复、发现焦点干扰后锁定暂停 | 路径相关保护，不能代替并行输入实测 |
 
-源码核查而非凭记忆：AOSP [Android 13 DisplayManager](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android13-release/core/java/android/hardware/display/DisplayManager.java) 无这两个焦点字段，[Android 14 DisplayManager](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android14-release/core/java/android/hardware/display/DisplayManager.java) 已有。因此 AOSP 正式大版本边界为 Android 14 / API 34；它们是隐藏的 TestApi/SystemApi，不能表述为从 API 34 起任意 App 均有公共 SDK 权限。OWN_FOCUS 还要求 trusted。本机厂商回移能力应以运行时字段和行为探针为准。
+较新的平台分支提供单屏独立焦点机制，但不能仅凭SDK号认定厂商固件具备。AOSP [Android12初始分支](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/core/java/android/hardware/display/DisplayManager.java)没有本机缺失的两个标志，[Android15分支](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-15.0.0_r1/core/java/android/hardware/display/DisplayManager.java)包含OWN_FOCUS与STEAL_TOP_FOCUS_DISABLED，OWN_FOCUS还要求trusted。它们是隐藏的TestApi/SystemApi，并非任意App的公共授权。旧文仅由可变android14-release分支推断“所有API34起必备”的说法过强；具体补丁、权限与行为须由设备探针核实。
 
 创建时日志打印 SDK、失败候选及异常、成功候选和最终 flags、IME 设置结果与回读。任务归档保留 creationAttempts；未实际尝试的候选不声称失败。`isolation.mitigations` 表示已启用的代码保护及本地 IME 是否回读成功；不是对所有输入动作已经验收的声明。`behaviorValidated` 仍为 false，完整三轮测试前不改变含义。
 
 严格门禁能力不足时默认阻止后台。兼容实验模式需用户明确选择；本次部署沿用已有选择，不自动替用户开启。旧结果与局限见 [既有对照与人工输入记录](evidence/isolation/previous-test.md)，本轮验收见 [报告](evidence/isolation/report.md)。
+
+
+## 当前兼容输入方案
+
+2026-10-26的微信视觉输入、确定性正文核对、焦点/IME权限根因、无抢焦点替代试验和正式发送结果已统一合并到[开发与技术方案第12节](DEVELOPMENT.md#12-微信视觉兼容与焦点边界)。标准编辑框的直接无障碍写入样本通过；本机微信仍需短时焦点借用，定向按键/粘贴会抢焦点。默认隔离与按键门禁保留，兼容方案不等于独立焦点或主屏输入不中断。

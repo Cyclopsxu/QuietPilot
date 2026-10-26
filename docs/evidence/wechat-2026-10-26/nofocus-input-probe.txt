@@ -1,0 +1,34 @@
+[info] [nofocus-controlled-probe] video encoder rejected 800x1200 basic=false: java.lang.IllegalArgumentException
+[info] [nofocus-controlled-probe] video encoder using basic AVC configuration
+SETUP_DONE display=188 mainTask=335 mainFocus=0
+NO_FOCUS_TOUCH mainFocus=0
+inject action=2 code=0 display=188 result=false elapsed=1
+inject action=0 code=29 display=188 result=true elapsed=54
+inject action=1 code=29 display=188 result=true elapsed=10
+ASCII_CASE focusAfter=188
+inject action=0 code=279 display=188 result=true elapsed=87
+inject action=1 code=279 display=188 result=true elapsed=4
+PASTE_CASE focusAfter=188
+MAIN_EVENTS
+1431393661 created display=0 windowFocus=false text=
+1431393753 focus=true display=0 windowFocus=true text=
+1431397492 focus=false display=0 windowFocus=false text=
+1431398007 focus=true display=0 windowFocus=true text=
+1431398589 focus=false display=0 windowFocus=false text=
+1431399588 focus=true display=0 windowFocus=true text=
+
+VIRTUAL_EVENTS
+1431394808 created display=188 windowFocus=false text=
+1431397493 focus=true display=188 windowFocus=true text=
+1431397509 key=0:29 display=188 windowFocus=true text=
+1431397515 text display=188 windowFocus=true text=a
+1431397574 key=1:29 display=188 windowFocus=true text=a
+1431398026 focus=false display=188 windowFocus=false text=a
+1431398591 focus=true display=188 windowFocus=true text=a
+1431398621 key=0:279 display=188 windowFocus=true text=a
+1431398633 text display=188 windowFocus=true text=aPASTE_后台
+1431398677 key=1:279 display=188 windowFocus=true text=aPASTE_后台
+1431399587 focus=false display=188 windowFocus=false text=aPASTE_后台
+
+INPUT_PHASE_END mainFocus=0
+CLEANUP restoredOriginalMain=7 focus=0

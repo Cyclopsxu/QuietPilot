@@ -1,0 +1,18 @@
+[info] device display spec: 1152x2376 dpi=480
+[info] [a11y-nofocus-probe] video encoder rejected 1152x2376 basic=false: java.lang.IllegalArgumentException
+[info] [a11y-nofocus-probe] video encoder using basic AVC configuration
+fixture-flags0 rootClass=android.widget.FrameLayout children=1 visible=true
+fixture-flags0 display=190 roots=1 placeholders=0 nodes=6 editables=1 mainFocus=0
+fixture-flags0 directSetText=true
+fixture-flags0 afterWriteFocus=0
+FIXTURE_EVENTS
+1431676346 created display=190 windowFocus=false text=
+1431678100 text display=190 windowFocus=false text=SETTEXT_后台
+
+[info] [a11y-nofocus-probe] am start exit=0 Starting: Intent { flg=0x10008000 cmp=com.tencent.mm/.ui.LauncherUI }
+wechat-flags0 rootClass=null children=0 visible=false
+wechat-flags0 display=190 roots=1 placeholders=1 nodes=1 editables=0 mainFocus=0
+DONT_SUPPRESS_FLAG=1
+wechat-dont-suppress-services rootClass=null children=0 visible=false
+wechat-dont-suppress-services display=190 roots=1 placeholders=1 nodes=1 editables=0 mainFocus=0
+CLEANUP focus=0

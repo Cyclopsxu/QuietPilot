@@ -1,0 +1,121 @@
+{
+  "date": "2026-10-26",
+  "baseline": "f97c8ba4673b522bf32b3d3c89ea268f79d9b2a7",
+  "codeState": "uncommitted working tree fixes",
+  "device": "Huawei Mate 40 Pro NOH-AN01 / API31",
+  "wechat": "8.0.79 (3200)",
+  "taskId": "wechat-background-1792986804",
+  "status": "VERIFIED",
+  "finalized": true,
+  "sourceDisplayId": 185,
+  "releasedDisplayId": -1,
+  "message": "ShadowAuto 后台截图OCR测试 1792986804（仅文件传输助手，无需回复）",
+  "draftCopyVerified": true,
+  "messageCopyVerified": true,
+  "step": 4,
+  "elapsedMs": 58918,
+  "llmCalls": {
+    "executor": 1,
+    "verifier": 1,
+    "intake": 0,
+    "visual_planner": 3
+  },
+  "sourceSteps": {
+    "model": 0,
+    "skill": 0,
+    "rescue": 0,
+    "query_recovery": 0,
+    "vision_ocr": 4
+  },
+  "evidence": "会话标题为‘文件传输助手’；右侧绿色已发气泡中包含编号1792986804，正文为‘ShadowAuto 后台截图OCR 测试 1792986804（仅文件传输助手，无需回复）’（OCR中‘测漁将’为错字，但截图清晰显示为‘测试’）；无红色失败标记或持续发送指示；引擎已通过复制菜单逐字核对原文相等（messageCopyVerified=true）",
+  "mainFocusedDisplayAfter": 0,
+  "mainForegroundAfter": "com.huawei.android.launcher",
+  "inputFocusTransactions": 3,
+  "inputFocusLeaseDurationsMs": [
+    6258,
+    6300,
+    4487
+  ],
+  "rawForegroundSwitches": 0,
+  "disturbanceMetrics": [
+    {
+      "key": "foreground",
+      "label": "未归因前台切换",
+      "value": 0,
+      "available": true,
+      "pass": true,
+      "reason": "原始切换 0；显式交接关联 0；触摸关联 0；数据不足 0（关联不等于因果证明）"
+    },
+    {
+      "key": "focus",
+      "label": "焦点丢失次数",
+      "value": 3,
+      "available": true,
+      "pass": false,
+      "reason": "主焦点指向本任务虚拟屏的次数"
+    },
+    {
+      "key": "ime",
+      "label": "键盘被抢次数",
+      "value": 0,
+      "available": true,
+      "pass": true,
+      "reason": "活动输入法目标变为本任务虚拟屏"
+    },
+    {
+      "key": "clipboard",
+      "label": "剪贴板内容变化",
+      "value": 0,
+      "available": true,
+      "pass": true,
+      "reason": "仅比较摘要，不保存剪贴板内容"
+    },
+    {
+      "key": "jank",
+      "label": "指定 App 掉帧率",
+      "value": 0.13333333333333333,
+      "available": true,
+      "pass": false,
+      "reason": "新增卡顿帧 8 / 60，阈值 5%；仅任务开始时的 com.huawei.android.launcher，不代表其他 App 或持续信息流流畅度",
+      "measuredPackage": "com.huawei.android.launcher",
+      "scope": "task_start_foreground_package_process",
+      "foregroundSamples": 113,
+      "totalSamples": 113,
+      "coversOtherApps": false,
+      "frames": 60,
+      "jankyFrames": 8
+    }
+  ],
+  "zeroDisturbanceVerified": false,
+  "isolationStatus": "experimental_unverified",
+  "nativeBackgroundKeysAllowed": false,
+  "capture": {
+    "mode": "layer_stack_mirror",
+    "fallback": "",
+    "requests": 16,
+    "misses": 0,
+    "surfaceSwitches": 0,
+    "frames": 1050
+  },
+  "checks": {
+    "androidShellAssembleDebug": "passed",
+    "controllerAssembleDebug": "passed",
+    "androidShellLintDebug": "passed",
+    "controllerLintDebug": "passed",
+    "interactionRegressions": "passed"
+  },
+  "sha256": {
+    "shellApk": "fb12cf3aa4a0a4f2fb5514a08439de9794a7f1136e11e104af731560dadce156",
+    "controllerApk": "839d66eab768e36553b4a11633b6f369278419b3511acb0d61f00679d3c09d4f",
+    "fullScreenshot": "6ad501d1f25b7752ca80afa656518e68af5782c840d178f172eb99728c54af56",
+    "buildLog": "9857fc8504c87bb6438a31a1849b4d5444c94e62bc5bb0c6eefb67f014f3b3cd",
+    "regressionLog": "30cefb6f3ad2c895f1a6bc194dc4c81053ae8973ff91b48b7ad40204239443e9"
+  },
+  "limits": [
+    "one successful formal task on this device",
+    "short global focus leases, not independent focus or zero disturbance",
+    "exact RPC parameters for numbered short-message assertions",
+    "not cross-device received/read proof",
+    "not lock-screen active-input or long-duration validation"
+  ]
+}

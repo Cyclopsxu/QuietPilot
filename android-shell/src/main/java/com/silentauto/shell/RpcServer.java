@@ -139,6 +139,7 @@ final class RpcServer {
                         JsonRpc.text(params, "model")
                 );
                 taskRequest.type=com.silentauto.shell.ext.query.TaskType.parse(JsonRpc.text(params,"type"));
+                taskRequest.exactMessage=JsonRpc.text(params,"exactMessage");taskRequest.exactRecipient=JsonRpc.text(params,"exactRecipient");
                 taskRequest.models = params.getAsJsonObject("models");
                 String taskId = engine.startTask(taskRequest);
                 JsonObject value = new JsonObject();

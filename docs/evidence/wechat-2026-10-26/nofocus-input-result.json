@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-26",
+  "device": "Huawei Mate40Pro NOH-AN01",
+  "sdkInt": 31,
+  "wechat": "8.0.79 (3200)",
+  "runtimeIdentity": "shell uid2000",
+  "productionCodeChanged": false,
+  "wechatMessagesSentThisInvestigation": 0,
+  "nativeKeyProbe": {
+    "displayId": 188,
+    "actionMultipleAccepted": false,
+    "asciiAccepted": true,
+    "pasteAccepted": true,
+    "focusBefore": 0,
+    "focusAfterAscii": 188,
+    "focusAfterPaste": 188,
+    "mainFixtureTextChanged": false,
+    "virtualFixtureText": "aPASTE_后台",
+    "independentFocusPassed": false
+  },
+  "accessibilityProbe": {
+    "displayId": 190,
+    "standardFixtureNodes": 6,
+    "standardEditableCount": 1,
+    "directSetTextAccepted": true,
+    "standardFixtureText": "SETTEXT_后台",
+    "mainFocusBefore": 0,
+    "mainFocusAfter": 0,
+    "targetWindowHadFocus": false,
+    "wechatDefault": {
+      "nodes": 1,
+      "placeholderRoots": 1,
+      "editables": 0
+    },
+    "wechatDontSuppressServices": {
+      "flagValue": 1,
+      "nodes": 1,
+      "placeholderRoots": 1,
+      "editables": 0
+    }
+  },
+  "cleanup": {
+    "probePackageUninstalled": true,
+    "temporaryDisplaysReleased": true,
+    "mainFocusedDisplay": 0,
+    "restoredMainTask": 7,
+    "mainForeground": "com.huawei.android.launcher",
+    "backendHealthy": true
+  },
+  "clipboardAudit": "ClipboardGuard restoration path executed; no independent digest audit this round",
+  "limits": [
+    "standard EditText fixture success is not arbitrary-app certification",
+    "WeChat no-focus input remains unsupported on this tested setup",
+    "no continuous real IME composition/concurrent typing stress test",
+    "system-level and notification/API alternatives were not implemented"
+  ],
+  "sha256": {
+    "nofocus-input-probe.txt": "36f8b6f856a07a0eaa9bec1968a5a22465c170091510b9bc0aa0f0e5557b3e14",
+    "accessibility-nofocus-probe.txt": "8eaaee7e814edc0d7da3666ff195b2be850f3b3fb1180d1a4d31c09f3c517793"
+  }
+}

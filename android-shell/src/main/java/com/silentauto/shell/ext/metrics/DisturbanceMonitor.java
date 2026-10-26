@@ -21,6 +21,7 @@ public final class DisturbanceMonitor implements StepListener {
         volatile DisturbanceCounters counts;String mainPackage="",clipBefore;long[] framesBefore;
         volatile int display=-1,step;volatile String action="准备",source="model";
         volatile boolean backgroundRunning;
+        volatile long inputFocusFrom,inputFocusUntil;int inputFocusTransactions;
         final JsonArray focusSamples=new JsonArray();
         boolean focusSamplesTruncated;
         final com.silentauto.shell.ext.guard.BackgroundFocusGuard safety=new com.silentauto.shell.ext.guard.BackgroundFocusGuard();
@@ -54,7 +55,9 @@ public final class DisturbanceMonitor implements StepListener {
             try{
                 DisturbanceReadings current=reading();
                 counts.sample(current,display,System.nanoTime()/1_000_000,elapsed(),step,action,source);
-                String before=safety.issue();safety.observe(backgroundRunning,display,current.focusedDisplay);
+                // Attribute a sample by interval: its window read may precede lease cleanup.
+                boolean expectedInput=begin<=inputFocusUntil&&System.nanoTime()>=inputFocusFrom&&inputFocusFrom>0&&current.focusedDisplay==display;
+                String before=safety.issue();safety.observe(backgroundRunning&&!expectedInput,display,current.focusedDisplay);
                 if(before.isEmpty()&&!safety.issue().isEmpty())counts.event("background_safety",elapsed(),step,action,source,safety.issue());
             }
             catch(Exception failure){error=failure.getClass().getSimpleName();counts.foregroundAvailable=false;counts.focusAvailable=false;counts.imeAvailable=false;}
@@ -76,12 +79,21 @@ public final class DisturbanceMonitor implements StepListener {
             JsonObject frame=DisturbanceCounters.metric("jank","指定 App 掉帧率",rate,frameAvailable&&frames>0,rate<=.05,frameAvailable?(frames==0?"本次主屏无新增帧，无法评估掉帧率":"新增卡顿帧 "+janky+" / "+frames+"，阈值 5%") : "gfxinfo 不可用或计数重置");frame.addProperty("measuredPackage",mainPackage);frame.addProperty("scope","task_start_foreground_package_process");frame.addProperty("foregroundSamples",counts.foregroundSamples.getOrDefault(mainPackage,0));frame.addProperty("totalSamples",counts.samples);frame.addProperty("coversOtherApps",false);frame.addProperty("frames",frames);frame.addProperty("jankyFrames",janky);frame.addProperty("reason",frame.get("reason").getAsString()+"；仅任务开始时的 "+mainPackage+"，不代表其他 App 或持续信息流流畅度");metrics.add(frame);
             JsonObject report=new JsonObject();report.add("focusSamples",focusSamples);report.addProperty("focusSamplesTruncated",focusSamplesTruncated);report.add("metrics",metrics);report.add("events",counts.events);report.addProperty("foregroundPackage",mainPackage);report.addProperty("samples",counts.samples);
             report.addProperty("backgroundSafetyIssue",safety.issue());
+            report.addProperty("inputFocusTransactions",inputFocusTransactions);
             report.addProperty("backgroundSafetyTriggered",safety.triggered());
             report.addProperty("sampleIntervalMs",500);report.addProperty("avgSampleMs",counts.samples==0?0:sampleNanos/1_000_000.0/counts.samples);report.addProperty("maxSampleMs",maxNanos/1_000_000.0);report.addProperty("skippedTicks",skipped);
             report.addProperty("touchMethod","dumpsys input / RecentQueue / displayId=0 MotionEvent / age");report.addProperty("rawForegroundSwitches",counts.totalSwitches);report.addProperty("authorizedHandoffSwitches",counts.authorizedSwitches);report.addProperty("unattributedForegroundSwitches",counts.switches);report.addProperty("unknownForegroundSwitches",counts.unknownSwitches);report.addProperty("userForegroundSwitches",counts.userSwitches);report.addProperty("eventsTruncated",counts.eventsTruncated);report.addProperty("zeroDisturbanceVerified",false);report.addProperty("assessmentScope","采样观察与显式交接关联，非全程无打扰认证");report.addProperty("samplingError",error);return report;
         }
     }
     public String backgroundIssue(String id){Session s=active.get(id);return s==null?"":s.safety.issue();}
+    public void inputFocus(String id,boolean begin,boolean restored){
+        Session s=active.get(id);if(s==null)return;
+        if(begin){s.inputFocusFrom=System.nanoTime();s.inputFocusUntil=s.inputFocusFrom+10_000_000_000L;}
+        else s.inputFocusUntil=Math.min(s.inputFocusUntil,System.nanoTime());
+        if(begin)s.inputFocusTransactions++;
+        if(s.counts!=null)s.counts.event("input_focus_transaction",s.elapsed(),s.step,s.action,s.source,
+                begin?"兼容输入：短时取得虚拟屏焦点，页面不转主屏":restored?"兼容输入结束：主屏焦点已核对恢复":"兼容输入异常：主屏焦点未恢复");
+    }
     public void backgroundRunning(String id,boolean running){Session s=active.get(id);if(s!=null)s.backgroundRunning=running;}
     public void explicitBackgroundRetry(String id){Session s=active.get(id);if(s!=null)s.safety.explicitRetry();}
     public void handoffEntry(String id){Session s=active.get(id);if(s!=null&&s.counts!=null)s.counts.authorizeEntry("com.silentauto.controller",System.nanoTime()/1_000_000);}

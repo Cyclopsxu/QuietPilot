@@ -1,8 +1,8 @@
 package com.silentauto.shell;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.hardware.display.DisplayManager;
+import android.util.DisplayMetrics;
 import android.view.Display;
 
 import java.io.BufferedReader;
@@ -29,9 +29,9 @@ final class DisplaySpec {
     }
 
     static DisplaySpec current(LogHub logs) {
-        DisplaySpec spec = fromWm();
+        DisplaySpec spec = fromDisplayManager();
         if (spec == null) {
-            spec = fromDisplayManager();
+            spec = fromWm();
         }
         if (spec == null) {
             spec = new DisplaySpec(FALLBACK_WIDTH, FALLBACK_HEIGHT, FALLBACK_DPI);
@@ -58,9 +58,13 @@ final class DisplaySpec {
             if (display == null) {
                 return null;
             }
-            Point point = new Point();
-            display.getRealSize(point);
-            return new DisplaySpec(point.x, point.y, FALLBACK_DPI);
+            // Read size and density from the same logical display configuration.
+            // On Huawei's resolution scaling, wm size is logical but wm density
+            // can still report the physical panel density.
+            DisplayMetrics metrics = new DisplayMetrics();
+            display.getRealMetrics(metrics);
+            if(metrics.widthPixels<=0||metrics.heightPixels<=0||metrics.densityDpi<=0)return null;
+            return new DisplaySpec(metrics.widthPixels, metrics.heightPixels, metrics.densityDpi);
         } catch (Throwable ignored) {
             return null;
         }

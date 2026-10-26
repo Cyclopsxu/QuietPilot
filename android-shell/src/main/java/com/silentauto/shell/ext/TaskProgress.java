@@ -23,6 +23,9 @@ public final class TaskProgress {
     private JsonObject isolation=new JsonObject();
     public synchronized void isolation(JsonObject value){isolation=value.deepCopy();publish();}
     private boolean protectedScreen, finalized, resultReady, uncertain;
+    private boolean messageCopyVerified,draftCopyVerified;
+    public synchronized void draftCopyVerified(){draftCopyVerified=true;publish();}
+    public synchronized void messageCopyVerified(){messageCopyVerified=true;publish();}
     private String type="action",answer="",quote="",searched="";
     private TaskStatus status = TaskStatus.QUEUED;
     private String appName = "";
@@ -35,8 +38,8 @@ public final class TaskProgress {
 
     public TaskProgress(String taskId, String goal, LogHub logs) {
         this.taskId = taskId; this.goal = goal;this.originalGoal=goal; this.logs = logs;
-        calls.put("executor", 0); calls.put("verifier", 0); calls.put("intake", 0);
-        for (String source : new String[]{"model","skill","rescue","query_recovery"}) sourceSteps.addProperty(source,0);
+        calls.put("executor", 0); calls.put("verifier", 0); calls.put("intake", 0); calls.put("visual_planner", 0);
+        for (String source : new String[]{"model","skill","rescue","query_recovery","vision_ocr"}) sourceSteps.addProperty(source,0);
     }
     public synchronized void amendIntake(long elapsed){calls.put("intake",calls.get("intake")+1);intakeElapsedMs+=elapsed;}
     public synchronized void amended(String effective,com.google.gson.JsonArray records,String detail) {
@@ -63,7 +66,7 @@ public final class TaskProgress {
     public synchronized void resultReady(boolean value) { resultReady = value; }
     public synchronized TaskStatus status() { return status; }
     public synchronized void app(String value, String name) { app = value; appName = name; }
-    public synchronized void call(String role) { calls.put(role, calls.get(role) + 1); }
+    public synchronized void call(String role) { calls.put(role, calls.getOrDefault(role,0) + 1); }
     public synchronized void action(int number,String reason,String actionSource) { step=number;action(reason,actionSource); }
     public synchronized void action(String reason, String actionSource) {
         if (status.terminal()) return;
@@ -101,6 +104,7 @@ public final class TaskProgress {
         for (Map.Entry<String,Integer> entry : calls.entrySet()) counts.addProperty(entry.getKey(), entry.getValue());
         o.add("llmCalls", counts);
         o.addProperty("finalized",finalized);
+        o.addProperty("messageCopyVerified",messageCopyVerified);o.addProperty("draftCopyVerified",draftCopyVerified);
         o.add("disturbance",disturbance.deepCopy());o.add("isolation",isolation.deepCopy());
         o.addProperty("skillId", skillId); o.add("sourceSteps",sourceSteps.deepCopy()); o.addProperty("comparison",comparison);
         o.addProperty("evidenceScreenshot",evidenceScreenshot); o.addProperty("createdAtMs",createdAtMs); o.addProperty("finishedAtMs",finishedAtMs);

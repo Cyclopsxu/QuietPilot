@@ -18,6 +18,8 @@ java -cp "$work:$classes:$gson" com.silentauto.shell.RpcOutputRegression
 
 javac -d "$work" -cp "$classes:$gson" "$repo/scripts/tests/ScreenLockRegression.java"
 java -cp "$work:$classes:$gson" ScreenLockRegression
+javac -d "$work" -cp "$classes:$gson" "$repo/scripts/tests/android/os/SystemClock.java" "$repo/scripts/tests/VisualInputRegression.java"
+java -cp "$work:$classes:$gson" VisualInputRegression
 java -cp "$work:$classes:$gson" LoopDetectorRegression
 
 node "$repo/scripts/tests/isolation-report.test.mjs"

@@ -47,6 +47,21 @@ public final class InputBridge {
         return downOk && upOk;
     }
 
+    // Only the scoped input transaction calls this; ordinary touches keep NO_FOCUS_CHANGE.
+    boolean tapForInput(int displayId,int x,int y)throws Exception {
+        long now=SystemClock.uptimeMillis();
+        MotionEvent down=MotionEvent.obtain(now,now,MotionEvent.ACTION_DOWN,x,y,0);
+        MotionEvent up=MotionEvent.obtain(now,now+80,MotionEvent.ACTION_UP,x,y,0);
+        down.setSource(InputDevice.SOURCE_TOUCHSCREEN);up.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+        return send(displayId,down)&&send(displayId,up);
+    }
+    boolean longPressForInput(int displayId,int x,int y)throws Exception {
+        long now=SystemClock.uptimeMillis();MotionEvent down=MotionEvent.obtain(now,now,MotionEvent.ACTION_DOWN,x,y,0);
+        MotionEvent up=MotionEvent.obtain(now,now+700,MotionEvent.ACTION_UP,x,y,0);
+        down.setSource(InputDevice.SOURCE_TOUCHSCREEN);up.setSource(InputDevice.SOURCE_TOUCHSCREEN);
+        boolean began=send(displayId,down);SystemClock.sleep(700);return send(displayId,up)&&began;
+    }
+
     public boolean longPress(int displayId, int x, int y, int durationMs) throws Exception {
         int duration = Math.max(450, durationMs);
         long now = SystemClock.uptimeMillis();

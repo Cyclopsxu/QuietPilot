@@ -9,6 +9,11 @@ public class UiRecoveryRegression {
   for(String[] field:list?new String[][]{{"com.huawei.notepad:id/list_title",title}}:new String[][]{{"com.huawei.notepad:id/title",title},{"com.huawei.notepad:id/notetext_textview",body}}){JsonObject n=new JsonObject();n.addProperty("package","com.huawei.notepad");n.addProperty("id",field[0]);n.addProperty("text",field[1]);n.addProperty("visible",true);children.add(n);}root.add("children",children);JsonObject window=new JsonObject();window.addProperty("type",1);window.add("root",root);JsonArray windows=new JsonArray();windows.add(window);JsonObject ui=new JsonObject();ui.add("windows",windows);return ui.toString();
  }
  public static void main(String[] args){
+  ok(UiRecoveryBudget.placeholderRoot(false,true,0,false),"WeChat invisible zero-bounds placeholder is unusable");
+  ok(!UiRecoveryBudget.placeholderRoot(true,true,0,false),"visible leaf isn't a placeholder");
+  ok(!UiRecoveryBudget.placeholderRoot(false,false,0,false),"sized root isn't a zero-bounds placeholder");
+  ok(!UiRecoveryBudget.placeholderRoot(false,true,1,false),"root with descendants remains traversable");
+  ok(!UiRecoveryBudget.placeholderRoot(false,true,0,true),"meaningful leaf isn't rejected");
   ok(UiRecoveryBudget.incompleteTraversal(1,1,1,false),"root with only null children is unusable");
   ok(!UiRecoveryBudget.incompleteTraversal(1,1,0,false),"genuine leaf remains valid");
   ok(!UiRecoveryBudget.incompleteTraversal(1,12,1,false),"one missing branch does not invalidate a readable page");

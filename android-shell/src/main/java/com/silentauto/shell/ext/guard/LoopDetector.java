@@ -22,6 +22,7 @@ public final class LoopDetector implements StepListener {
         try { ui = new UiSnapshot(dump); } catch (RuntimeException unavailable) { recent.clear(); return; }
         // Full visible semantics, including result text; exclude timestamps, focus and volatile node indices.
         StringBuilder screen = new StringBuilder();
+        if(ui.dump.has("ocr"))screen.append(ui.dump.get("ocr"));
         for (JsonObject node : ui.nodes) for (String key : new String[]{"package","id","class","text","desc"})
             screen.append(UiSnapshot.text(node,key)).append('\u0000');
         JsonObject target=ui.target(action);

@@ -46,7 +46,7 @@ Operate real Android apps on a background virtual display while the owner uses t
 
 **Coding Agent collaboration:** product/design documents → task specification → implementation → phone measurement → correction. Actual iterations: unstable UI after surface swaps → independent capture mirror; successful accessibility clicks without activation in Amap/Meituan → re-resolve targets and touch their bounds; whole-goal text entered into city fields → remove broad correction; repeated clearing after reaching 156 → repetition detection with independent verification. [Reports](../docs/evidence/capture-stability/report.md) retain the limits of these observations.
 
-**Limits:** full isolation needs three human/video rounds; some apps and login/payment boundaries require the owner; memo skills still fall back to model planning; WeChat sending remains unvalidated; voice/context alternatives have phone evidence but lack the full video; loopback RPC is unauthenticated and can be called by other local apps (planned 32-byte token); other Android versions and long-running stability remain untested.
+**Limits:** full isolation needs three human/video rounds; some apps and login/payment boundaries require the owner; memo skills still fall back to model planning; one local compatibility-mode WeChat send passed, but no-focus-stealing WeChat input remains unsupported on this setup; voice/context alternatives have phone evidence but lack the full video; loopback RPC is unauthenticated and can be called by other local apps (planned 32-byte token); other Android versions and long-running stability remain untested.
 
 ## Contents
 
@@ -302,6 +302,16 @@ Secondary-display touches request `FLAG_NO_FOCUS_CHANGE` (64). `BackgroundKeyPol
 `ForegroundWatcher`, `MainAppConflictGuard`, and `BackgroundFocusGuard` prioritize user foreground work. Same-app tasks serialize/pause; resumption requires fresh observation. Unexpected focus changes latch protection instead of immediately continuing after one normal sample.
 
 There are at most two concurrent tasks, not two independent sessions/accounts within one app. Waiting handoffs and retained results can consume resources. Clipboard snapshots/restoration and digest observations do not prove the clipboard was never temporarily touched.
+
+### Same-phone input alternatives measured on October 26, 2026
+
+A standard EditText fixture accepted Chinese text through direct `ACTION_SET_TEXT` while its window remained unfocused and main-display focus stayed at 0. This requires an exposed writable accessibility node and is not arbitrary-app or continuous-IME certification. On this WeChat version, both ordinary UiAutomation and `FLAG_DONT_SUPPRESS_ACCESSIBILITY_SERVICES` returned an empty root with no editable node.
+
+Display-targeted ASCII and paste keys wrote to the virtual fixture but also moved global focus to that display; direct Unicode character injection was rejected. These are not no-focus-stealing alternatives. Ordinary ADB input methods or ADB-mode Shizuku do not supply the missing platform privileges.
+
+One formal File Transfer Assistant send in the local working-tree build reached `VERIFIED` using screenshot/OCR and temporary focus leases. All three leases restored focus, but the raw focus-loss count remains 3. Simultaneous foreground typing and background WeChat input with no focus transfer is unsupported on this tested setup. Keep the isolation/key gates; compatibility mode does not guarantee uninterrupted typing. Root, platform-signature/framework changes, or target-process hooks would require separate system-level work and were not implemented.
+
+See the [same-phone input investigation](DEVELOPMENT.md#12-微信视觉兼容与焦点边界) and [formal-send report](DEVELOPMENT.md#12-微信视觉兼容与焦点边界). This investigation changed no production input code or global keyboard/system configuration; the temporary fixture was uninstalled.
 
 ## Verification and handoffs
 

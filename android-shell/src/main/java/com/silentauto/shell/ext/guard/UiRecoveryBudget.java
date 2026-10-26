@@ -11,8 +11,12 @@ public final class UiRecoveryBudget {
                                               boolean hasControls) {
         return windows > 0 && readableNodes == windows && nullChildren > 0 && !hasControls;
     }
+    public static boolean placeholderRoot(boolean visible,boolean emptyBounds,int children,boolean usefulContent) {
+        return !visible&&emptyBounds&&children==0&&!usefulContent;
+    }
     private int missing;
     private boolean restarted,reconnected;
+    public boolean reconnectAttempted(){return reconnected;}
     public Next observe(String dump,boolean query) {
         JsonObject ui=JsonParser.parseString(dump).getAsJsonObject();
         boolean unavailable=ui.has("rootsUnavailable")&&ui.get("rootsUnavailable").getAsBoolean();
