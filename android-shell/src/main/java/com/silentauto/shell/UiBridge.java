@@ -25,6 +25,7 @@ import static com.silentauto.shell.UiNodeUtils.*;
 public final class UiBridge {
     public static final String MODE_SIMPLE = "simple";
     public static final String MODE_FULL = "full";
+    public static final String MODE_CONTEXT = "context";
     private static final Gson GSON = new Gson();
 
     private final HandlerThread thread = new HandlerThread("ui-automation");
@@ -84,7 +85,7 @@ public final class UiBridge {
     }
 
     private String dumpOnce(int displayId,int width,int height,String mode,boolean retry) {
-        DumpContext context = new DumpContext(MODE_FULL.equals(mode) ? MODE_FULL : MODE_SIMPLE);
+        DumpContext context = new DumpContext(MODE_CONTEXT.equals(mode) ? MODE_CONTEXT : MODE_FULL.equals(mode) ? MODE_FULL : MODE_SIMPLE);
         WindowSnapshot snapshot = windowSnapshot(displayId);
         Map<String, Object> out = object();
         out.put("displayId", displayId);
@@ -117,6 +118,10 @@ public final class UiBridge {
                 windowIndex++;
             }
         } catch (Throwable e) {
+            if (MODE_CONTEXT.equals(mode)) {
+                logs.info("Screen context traversal failed nodes="+context.readableNodes+" elapsedMs="+(android.os.SystemClock.uptimeMillis()-context.started)+" cause="+e.getClass().getSimpleName());
+                throw new IllegalStateException("屏幕内容读取未完成，请停稳页面后重试",e);
+            }
             Map<String, Object> error = object();
             error.put("error", e.getMessage());
             windows.add(error);
@@ -125,7 +130,7 @@ public final class UiBridge {
                 windows.size(), context.readableNodes, context.nullChildren,
                 !context.targets.isEmpty() || !context.inputs.isEmpty());
         boolean unavailable=windows.isEmpty()||incomplete||(placeholderRoots>0&&applicationRoots==0);
-        if(unavailable&&retry&&clearAccessibilityCache()) {
+        if(unavailable&&retry&&!MODE_CONTEXT.equals(mode)&&clearAccessibilityCache()) {
             android.os.SystemClock.sleep(180);
             return dumpOnce(displayId,width,height,mode,false);
         }
@@ -660,6 +665,7 @@ public final class UiBridge {
             context.nullChildren++;
             return null;
         }
+        if (MODE_CONTEXT.equals(context.mode)) return contextNodeMap(node,context,path);
         context.readableNodes++;
 
         Rect rect = new Rect();
@@ -698,6 +704,27 @@ public final class UiBridge {
         Map<String, Object> out = simpleNodeMap(node, rect, target, input);
         out.put("children", children);
         return out;
+    }
+
+    // Voice context needs text and privacy masks, not actionable target labels.
+    // label() recursively scans descendants; repeating it for every node can stall large pages.
+    private Map<String,Object> contextNodeMap(AccessibilityNodeInfo node,DumpContext context,String path) {
+        if (++context.readableNodes>1000 || path.length()>180 ||
+                android.os.SystemClock.uptimeMillis()-context.started>6000)
+            throw new IllegalStateException("Screen context traversal exceeded its budget");
+        Rect bounds=new Rect();node.getBoundsInScreen(bounds);
+        Map<String,Object> out=object();
+        out.put("package",text(node.getPackageName()));out.put("password",node.isPassword());
+        out.put("visible",node.isVisibleToUser());out.put("bounds",boundsValue(bounds));
+        if(!node.isVisibleToUser() || bounds.isEmpty()) { out.put("children",new ArrayList<>());return out; }
+        out.put("text",text(node.getText()));out.put("desc",text(node.getContentDescription()));
+        ArrayList<Object> children=new ArrayList<>();
+        if(!node.isPassword())for(int i=0;i<node.getChildCount();i++) {
+            AccessibilityNodeInfo child=node.getChild(i);
+            if(child==null)throw new IllegalStateException("Screen context contains unreadable children");
+            children.add(contextNodeMap(child,context,path+"/"+i));
+        }
+        out.put("children",children);return out;
     }
 
     private Map<String, Object> fullNodeMap(AccessibilityNodeInfo node, Rect rect, Target target, InputTarget input) {
@@ -970,6 +997,7 @@ public final class UiBridge {
 
     private final class DumpContext {
         final String mode;
+        final long started=android.os.SystemClock.uptimeMillis();
         int readableNodes, nullChildren;
         final ArrayList<Target> targets = new ArrayList<>();
         final ArrayList<InputTarget> inputs = new ArrayList<>();

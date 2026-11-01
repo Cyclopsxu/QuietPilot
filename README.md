@@ -1,56 +1,80 @@
 # 隐航 / QuietPilot
 
-English | [中文](README.zh-CN.md) | [User guide](docs/USER_GUIDE.en.md) | [Development document (中文)](docs/DEVELOPMENT.md)
+English | [中文](README.zh-CN.md) | [User guide](docs/USER_GUIDE.en.md) | [Technical documentation](docs/DEVELOPMENT.md)
 
-[GitHub: Cyclopsxu/QuietPilot](https://github.com/Cyclopsxu/QuietPilot)
+QuietPilot is a background assistant for Android phones: it operates real apps to complete tasks while you continue using your phone normally.
 
-Run real Android apps on virtual displays, let models plan and execute actions, and use an Android controller to submit tasks, preview progress and receive results.
+The project creates an invisible virtual display on the phone and launches apps such as WeChat, Meituan, and Notes on it. A large language model observes the current interface, decides what to do next, and taps, types, and scrolls until the task is complete or an answer is found. The foreground app on the main display stays in place, so you can keep browsing and typing. The assistant operates the apps and accounts on your own phone, rather than a cloud phone or cloned apps.
 
-This is an independent derivative prototype of [android-notes/ShadowAuto](https://github.com/android-notes/ShadowAuto), extending result verification, human handoffs, learned skills, voice and screen context. Deployment currently uses ADB / `app_process`. Most device testing uses a Huawei Mate 40 Pro; compatibility with every Android device or third-party app is not established.
+For example, you can hold the floating ball and say, “Send this shop to File Transfer Assistant.” The system first reads the main display to identify which shop you mean, then carries out the task in the background. When it reaches a step that requires you, such as payment, login, or a verification code, it pauses and moves the current page intact to the main display. After handling that step, tap “Return to background” to resume the task.
 
-QuietPilot (隐航, formerly 隐控) keeps background tasks on course while foreground use takes priority. Suggested repository slug: `quietpilot`. Naming availability and trademark status have not been verified.
+## Demos
 
-## Features
+[![Voice amendment and coffee handoff: a 53-second dual-screen recording](docs/evidence/coffee-dual-screen/preview.jpg)](docs/evidence/coffee-dual-screen/coffee-handoff-53s.mp4)
 
-- **Background execution and preview:** task-owned virtual displays, live progress and video previews.
-- **Scheduling and foreground priority:** up to two active tasks, serialized per app; foreground use of the same app pauses automation.
-- **Voice and context:** floating-ball recording, main-screen context and amendments to running tasks.
-- **Learned skills:** parameterized workflows from eligible successful runs, current-page targeting, bounded recovery and model fallback.
-- **Verification and read-only queries:** result evidence checks, short answers and supporting page quotes.
-- **Human handoffs and delivery:** pause at login, CAPTCHA and payment boundaries, and transfer the original page to its owner.
-- **Screen-lock protection:** queue new tasks while locked, pause and retain running tasks, then observe again and resume after unlocking and resolving conflicts.
-- **History and metrics:** steps, model calls, timing, screenshots and isolation diagnostics.
+[53-second dual-screen recording](docs/evidence/coffee-dual-screen/coffee-handoff-53s.mp4): the left side shows the main display, where the user types in Notes; the right side shows the background virtual display. The user asks by voice to order a coconut latte in Meituan, then adds “Make it large and iced” while the task is running. After changing the options, the system stops at the order page for the user to enter delivery details and pay, and moves that page to the main display. The video runs at 5× speed, delivery details are masked, and no payment was made.
 
-## Demo and validation
+[Five demos (02:57)](docs/evidence/demo-path/step6-five-segments.mp4) cover parallel input, skill reuse and recovery, acting on main-screen content, read-only queries, and coffee order amendments. Each segment is labeled as live footage, a freeze frame, or static evidence; unsuccessful portions are also retained. See the [video index](docs/evidence/demo-path/VIDEO.md) for timestamps.
 
-[![Voice amendment and coffee handoff — 53-second dual-screen recording](docs/evidence/coffee-dual-screen/preview.jpg)](docs/evidence/coffee-dual-screen/coffee-handoff-53s.mp4)
+## Key features
 
-[Play / download the 53-second video](docs/evidence/coffee-dual-screen/coffee-handoff-53s.mp4) · [Recording details](docs/DEVELOPMENT.md#6-完成验收查询与人工交接)
+**Voice commands grounded in screen content.** Hold the floating ball for about one second, start speaking after the vibration, and release to submit. The main display is read once when you press, to resolve references such as “this” or “this shop.” Speech recognition, task classification, and reference resolution happen in a single multimodal model call.
 
-Main-screen memo input alongside a voice-started Meituan task and a change to a large iced coconut latte. At step 25, automation retains the order page for manual address/payment handling and the owner transfers the original page to the main display. This clip runs at 5×, uses recorder-start timestamps for approximate synchronization, and removes the first 30 seconds of the 83-second edit. No audio; delivery details are masked. It shows a human handoff, with no payment or completed order.
+**Background execution without taking over the main display.** Each task has its own virtual display. Up to two tasks can run concurrently, but tasks using the same app are serialized. If you open an app that a background task is using, the task pauses automatically and resumes when you leave. Tasks also pause when the phone is locked, then observe the interface again and resume after unlocking.
 
-[Five-segment demo (02:57)](docs/evidence/demo-path/step6-five-segments.mp4) · [Timestamps and limitations](docs/evidence/demo-path/VIDEO.md)
+**Handoff and delivery of the original page across displays.** Tasks stop at payment, login, verification-code, and similar boundaries. When you tap “Handle it,” the system moves the original Activity to the main display rather than reopening the app's home page. When you return it to the background, the system verifies the page's identity before continuing. After completion, “View result” likewise transfers the result page intact to the main display.
 
-The video covers parallel input, skills, context, queries and coffee voice amendments. Live footage, still evidence and failures are labeled. It is not one continuous successful run.
+**Independent result verification.** After the execution model declares completion, a vision model from another provider independently checks the current screenshot and UI tree to determine whether the task is actually complete. For cases such as Notes that allow exact text comparison, the system checks the title and body by resource ID, returns to the list, and reopens the note to check again.
 
-Archived samples include calculator queries, three memo skill runs, a public hotel name copied to a memo, coffee specification amendments and a pre-payment handoff, and a calculator task completed after locking and unlocking. A local working-tree build completed one verified File Transfer Assistant send on a virtual display using temporary focus leases; this is not no-focus-stealing input validation. Full shop-address transfer remains unverified; the new dual-screen clip documents the coffee handoff, without certifying uninterrupted foreground typing or independent input focus. See the [evidence index](docs/evidence/README.md), [Step6 status](docs/STEP6-STATUS.md) and [screen-lock report](docs/evidence/screen-lock/report.md).
+**Read-only queries.** Query tasks can only read: sending, ordering, paying, sharing, and similar actions are blocked. Answers are limited to 60 characters and must include an exact quote from the interface as evidence. The verification model extracts an answer independently before comparing it with the executor's result. If nothing is found, the system says so and reports where it searched.
 
-## Install a preview build
+**Skill learning.** Verified tasks are compiled into parameterized skills, such as “send a given message to a given contact.” Similar tasks later locate targets using semantics and UI element features instead of replaying old coordinates. If the interface differs from expectations, the system attempts up to three recovery steps, then falls back to the model if recovery fails.
 
-Download the controller APK or first-deployment ZIP from [GitHub Releases](https://github.com/Cyclopsxu/QuietPilot/releases) and follow the [installation guide (中文)](docs/INSTALL.md). The APK still requires a computer with ADB to start the shell backend. Preview builds use a development signing certificate.
+**Amendments during execution.** While a task is running, you can speak again to say “Make it large,” “Add ‘see you tomorrow,’” or “Never mind, cancel it.” The request is added to the relevant task and takes effect after the current action finishes. If multiple tasks are active, the system asks which one to amend.
+
+**Execution records.** Each task records its steps, action sources (model / skill / recovery), calls to each model, elapsed time, verification screenshots, and sampled timelines of the foreground app, focus, input method, and clipboard.
+
+## Main contributions beyond upstream
+
+This project is derived from [ShadowAuto](https://github.com/android-notes/ShadowAuto) (Apache-2.0). The underlying virtual display, display-targeted input injection, UiAutomation access, OCR, and H.264 preview capabilities come from upstream, and several open-source implementations of this approach already exist. Building on that foundation, this project primarily adds:
+
+- Moving task pages between virtual and main displays for human handoff and result delivery, with page identity checks and rollback on failure
+- Skill learning, reuse, and recovery
+- Independent verification using a model from another provider; read-only constraints and safeguards against fabricated query answers
+- A voice floating ball, main-screen context capture, and amendments during execution
+- Layer-stack mirroring for screenshots (`CaptureMirror`), replacing upstream's temporary output-surface switching to avoid disturbing target apps on physical devices
+- Staged recovery when UI elements cannot be read, repeated-action detection, and pause/resume on screen lock
+- Yielding to main-screen app conflicts, touch without focus changes, risky-key gating, clipboard snapshot restoration, and quantitative disturbance sampling
+- A screenshot/OCR and temporary-focus-borrowing fallback for sending messages in apps such as WeChat that do not expose writable UI elements, with exact checks of drafts and sent messages
+
+See the [derivative changes](docs/DERIVATIVE_CHANGES.md) for individual changes and source locations, and the [technical documentation](docs/DEVELOPMENT.md) for implementation details and tradeoffs.
+
+Only China-based model services are used: DeepSeek for execution, and Alibaba Cloud Model Studio's Qwen for verification and voice understanding. Execution and verification use different providers to improve the independence of verification.
+
+## Physical-device test results
+
+The test device is a Huawei Mate 40 Pro (HarmonyOS 4.2 / API 31). Selected results are listed below; see the [evidence index](docs/evidence/README.md) for the full list.
+
+| Task | Result |
+| --- | --- |
+| Send a numbered message to WeChat File Transfer Assistant, entirely on the virtual display | `VERIFIED` in 4 steps; text copied from both the draft and sent bubble exactly matched the original |
+| Order coffee in Meituan by voice, then add “large and iced” | Options changed correctly; stopped at the order page and transferred the original page to the main display; no payment made |
+| Three rounds of continuous Chinese input on the main display alongside a background Amap task requiring text input | All four sampled disturbance counts—foreground app, focus, input method, and clipboard—were 0; typing and candidate suggestions behaved normally |
+| Notes skill: first run / reuse with new parameters / deliberately introduced deviation | All three runs `VERIFIED`; logs show `skill → rescue → skill` |
+| View a public hotel name on the main display and say “Save it to Notes” | `VERIFIED` in 10 steps; result page delivered to the main display |
+| Calculator: “Clear first, then calculate 12×13” | After adding repetition detection: `ANSWERED 156` in 7 steps; previously failed after 25 repeated clearing steps |
+| Lock the screen during execution | Paused with the session preserved; the same task reached `ANSWERED` at step 8 after unlocking |
+| Repeatedly capture screenshots and then read UI elements on three types of page | 60/60 successful, with no output-surface switches |
+
+Failure samples are also archived, including several early WeChat misjudgments, an uncertain answer to a public opening-hours query, and skill reuse that took longer than the initial run.
 
 ## Quick start
 
-### Requirements
+You need an Android 10 or later phone with USB debugging enabled, and a computer with ADB installed.
 
-- Android 10 / API 29 or later, USB debugging and computer authorization. The minimum SDK is not a compatibility certification.
-- JDK 17 or compatible, Android SDK Platform 36 and ADB; use the repository's Gradle Wrapper.
-- For browser deployment: Node.js/npm compatible with the bundled Vite version and a WebUSB-capable browser.
-- Network access for initial dependencies/OCR assets and valid model-service API configuration for model tasks.
+**Install a preview build:** download the controller APK and backend deployment package from [Releases](https://github.com/Cyclopsxu/QuietPilot/releases), then follow the [installation guide](docs/INSTALL.md). The backend process must be started through ADB on a computer and restarted after the phone reboots.
 
-### Build and launch
-
-From the repository root:
+**Build from source** (JDK 17, Android SDK Platform 36, Node.js):
 
 ```sh
 adb devices -l
@@ -60,35 +84,31 @@ npm ci
 npm run dev
 ```
 
-Open the local address printed by the launcher and follow its steps to connect the phone, upload assets, install the controller and start the shell backend. Installation may require confirmation on the phone.
+Open the local URL printed in the terminal in a WebUSB-capable browser. Connect your phone, then follow the prompts to upload assets, install the controller, and start the backend. See the [user guide](docs/USER_GUIDE.en.md) for manual ADB deployment and troubleshooting.
 
-Open the Android controller, configure and test model connections, then submit a task. Installing the controller alone does not start the backend. Restart it after a phone reboot or backend termination. See the [user guide](docs/USER_GUIDE.en.md) for manual ADB deployment, OCR paths, logs and troubleshooting.
+**Configure models:** on the controller's configuration page, enter the API key, API base, and model name for each of the three roles, then test the connections.
 
-### Model configuration
-
-Set each role's API Key, API Base and model name in the controller:
-
-| Role | Purpose | Supported remote service |
+| Role | Purpose | Service |
 | --- | --- | --- |
-| executor | Goal interpretation and action planning | Official DeepSeek HTTPS API |
-| verifier | Page evidence and result checks | Alibaba Cloud Bailian compatible API |
-| intake | Voice interpretation and task routing | Alibaba Cloud Bailian compatible API |
+| executor | UI understanding, action planning, skill compilation | Official DeepSeek API |
+| verifier | Result verification, query answer extraction | Alibaba Cloud Model Studio |
+| intake | Voice understanding, distinguishing new tasks from amendments | Alibaba Cloud Model Studio (Omni) |
 
-Use connection tests and account capabilities to select model names. Remote hosts are currently restricted to `api.deepseek.com` and `dashscope.aliyuncs.com`; loopback test endpoints are also supported. Tasks may send UI text, screenshots, audio and context to configured services. OCR runs on the device. Keep real credentials and unsanitized evidence out of commits.
+During tasks, UI text, screenshots, recordings, and main-screen context are sent to the configured model services. OCR runs locally on the phone.
 
-## Repository layout
+## Project structure
 
 ```text
-android-shell/    Shell backend, virtual displays, automation and RPC
-controller-app/   Android UI, previews, floating ball and history
-android-stubs/    Compile-time system interface declarations
-paddler-ocr/      OCR libraries, models and runtime assets
-web-launcher/    Browser deployment tool
-scripts/         Regressions, device probes and recording tools
-docs/            Guides, development design and validation evidence
+android-shell/    Backend: virtual displays, automation loop, verification, skills, RPC
+controller-app/   Phone controller: settings, tasks, preview, floating ball, status capsule, history
+android-stubs/    Compile-time declarations for hidden system APIs
+paddler-ocr/      OCR library and models
+web-launcher/     One-click deployment in the browser
+scripts/         Regression tests, device probes, recording and reporting tools
+docs/            Guides, technical documentation, evidence
 ```
 
-## Development and testing
+Common development commands:
 
 ```sh
 ./gradlew :android-shell:assembleDebug :controller-app:assembleDebug
@@ -96,40 +116,28 @@ docs/            Guides, development design and validation evidence
 ./scripts/test-interaction-regressions.sh
 ```
 
-Build before running host regressions. Device probes and real-app acceptance tests are separate. The [development document](docs/DEVELOPMENT.md) maintains module responsibilities, state contracts, technical decisions, test baselines and remaining work.
-
-Describe the purpose, scope and actual validation of a contribution. Update the development document when behavior changes, sanitize public evidence and preserve unverified results as unverified.
-
-## WeChat compatibility and background input
-
-The current fallback uses screenshot/OCR and visible paste menus. A local working-tree build completed one formal File Transfer Assistant send entirely on a virtual display on Mate 40 Pro / API31 / WeChat 8.0.79: 4 steps, 58.9 seconds, `VERIFIED`, with exact draft and sent-bubble copy comparisons. This does not certify arbitrary recipients, general WeChat stability, or that published preview packages include these fixes.
-
-| Input path | Measured scope |
-| --- | --- |
-| Direct accessibility text | A standard EditText fixture accepted Chinese while its window remained unfocused; the target app must expose a writable node. |
-| WeChat visual compatibility | This build exposes no writable node, so input temporarily acquires global focus, then restores main focus and clipboard. The successful sample retains 3 raw focus changes; it is not zero disturbance. |
-| Continuous foreground typing with no background WeChat focus stealing | Unresolved on this setup. Display-targeted keys/paste also steal focus; ordinary permission grants or a different ADB keyboard are not a demonstrated fix. |
-
-Keep the default isolation gate and risky-key protection. Insufficient capability requires an explicit compatibility override. No root/framework/target-process hook was implemented. The [technical document](docs/DEVELOPMENT.md#12-微信视觉兼容与焦点边界) consolidates implementation, permissions, alternatives, and measured limits; screenshots, JSON, and logs remain evidence attachments.
-
 ## Known limitations
 
-- Full focus/IME isolation is not certified on the tested device. The compatibility path above does not guarantee uninterrupted foreground typing.
-- Tasks pause while locked. Original UI sessions cannot be restored after process termination or reboot.
-- App startup, UI accessibility, login and verification may block execution. CAPTCHA, payment and identity verification require the owner.
-- Skills may need recovery or model fallback; existing samples do not establish an overall speedup.
-- RPC defaults to `127.0.0.1:43110` without application-level authentication. Loopback binding does not isolate other local processes. Stored controller API configuration is not a dedicated credential vault.
+- The Mate 40 Pro does not provide independent virtual-display focus or a local input method at the system level. The project works around this using touch without focus changes, key gating, and accessibility text writes, and therefore runs in experimental compatibility mode on this device. Text input does not steal focus in apps that expose writable UI elements. WeChat does not expose them, so sending messages requires borrowing focus for a few seconds. The system waits for two seconds of idle main-screen input before borrowing focus and returns it immediately afterward. See the [technical documentation](docs/DEVELOPMENT.md#6-input-and-focus-isolation) for the causes and approaches tried.
+- Tasks can only pause while the screen is locked. The original page cannot be restored after the process is terminated or the phone reboots.
+- The skill mechanism works end to end, but reuse still often requires recovery or model fallback and has not produced a consistent speed improvement.
+- Backend RPC listens on `127.0.0.1:43110` without authentication; other programs on the same phone can connect. API keys are stored in the controller's private storage without using the system keystore.
+- Systematic testing has been performed on only one Huawei phone. Compatibility with other devices and apps has not been verified.
 
-See [Contributing](CONTRIBUTING.md), [Security](SECURITY.md) and the [GitHub publication checklist](docs/PUBLISHING.md) before submitting changes or publishing a repository.
+## Deployment on everyday users' phones
+
+The backend currently requires a computer running ADB to start. Shizuku with wireless debugging could remove that step while retaining ADB-level privileges, without root. Truly independent focus and a local input method require system-signature-level privileges and cooperation with phone manufacturers; ordinary apps cannot obtain them. In addition, the user agreements of apps such as WeChat, Taobao, and Meituan generally restrict automated operations. Reading main-screen content and sending it to cloud models also requires explicit user authorization under China's Personal Information Protection Law.
 
 ## Documentation
 
-- [User guide](docs/USER_GUIDE.en.md): installation, configuration, operation and troubleshooting.
-- [Development document (中文)](docs/DEVELOPMENT.md): implementation, modules, constraints and maintenance plan.
-- [Isolation boundaries](docs/ISOLATION.md): device capabilities and compatibility experiments.
-- [Demo guide](docs/DEMO.md) and [evidence index](docs/evidence/README.md): measured scope, failures and provenance.
-- [Derivative changes](docs/DERIVATIVE_CHANGES.md): upstream attribution and downstream scope.
+- [User guide](docs/USER_GUIDE.en.md): installation, configuration, everyday use, troubleshooting
+- [Technical documentation](docs/DEVELOPMENT.md): architecture, implementation details, tradeoffs, and validation
+- [Isolation capability boundaries](docs/ISOLATION.md): system capabilities available on the test device
+- [Evidence index](docs/evidence/README.md) and [demo notes](docs/DEMO.md)
+- [Derivative changes](docs/DERIVATIVE_CHANGES.md)
 
-## License and acknowledgements
+See the [contribution guide](CONTRIBUTING.md) for development contributions and the [security notes](SECURITY.md) for security issues.
 
-Licensed under [Apache License 2.0](LICENSE). The upstream baseline is `611e5eb0e1c94befda3c17c97438912dfd30e8a8`. Preserve applicable attribution and notices; see [NOTICE](NOTICE). No upstream endorsement is implied.
+## License
+
+This project retains the [Apache License 2.0](LICENSE). The upstream baseline is ShadowAuto `611e5eb`; original author attribution and notices are preserved in [NOTICE](NOTICE). This project is not endorsed by upstream.

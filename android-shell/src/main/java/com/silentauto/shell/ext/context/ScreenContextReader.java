@@ -41,13 +41,19 @@ public final class ScreenContextReader {
         if (enabled) Files.deleteIfExists(setting.toPath());
         else { Files.write(setting.toPath(), "disabled".getBytes(StandardCharsets.UTF_8)); for (String id : new ArrayList<>(entries.keySet())) discard(id); }
     }
-    public synchronized JsonObject capture(int width, int height) throws Exception {
+    public synchronized JsonObject capture(int width, int height, Boolean enabled) throws Exception {
+        if(enabled!=null)reading(enabled);
         expire();
+
         String id = UUID.randomUUID().toString(); JsonObject result = empty(id);
         if (setting.exists()) { result.addProperty("screenReading",false); remember(id,result); return result; }
         String component = foreground.foregroundActivity(); String pkg = component.split("/")[0];
         if (excluded(pkg)) { result.addProperty("screenReading",true); remember(id,result); return result; }
-        UiSnapshot tree = new UiSnapshot(ui.dump(0,width,height,UiBridge.MODE_SIMPLE));
+
+        UiSnapshot tree = new UiSnapshot(ui.dump(0,width,height,UiBridge.MODE_CONTEXT));
+
+        if (UiSnapshot.bool(tree.dump,"rootsUnavailable") || UiSnapshot.integer(tree.dump,"nullRootCount")>0)
+            throw new IOException("屏幕内容暂不可读，请停稳页面后重试");
         LinkedHashSet<String> texts = new LinkedHashSet<>(); List<int[]> masks = new ArrayList<>();
         boolean[] sensitive = {false};
         for (JsonElement value : UiSnapshot.array(tree.dump,"windows")) {
@@ -70,6 +76,7 @@ public final class ScreenContextReader {
             if (capture.exitValue()!=0) throw new IOException("Main screenshot unavailable");
             bitmap = BitmapFactory.decodeFile(path.getAbsolutePath());
             if (bitmap == null) throw new IOException("Main screenshot is protected or unavailable");
+
             Bitmap mutable = bitmap.copy(Bitmap.Config.ARGB_8888,true); bitmap.recycle(); bitmap = mutable;
             Canvas canvas = new Canvas(bitmap); Paint paint = new Paint(); paint.setColor(Color.BLACK);
             for (int[] b : masks) canvas.drawRect(b[0],b[1],b[2],b[3],paint);
@@ -77,6 +84,7 @@ public final class ScreenContextReader {
                 try { for (String text : ocr.read(bitmap)) if (text!=null&&!text.trim().isEmpty()&&texts.size()<200) texts.add(text.trim()); }
                 catch (Exception | LinkageError error) { result.addProperty("ocrError",error.getClass().getSimpleName()); }
             }
+
             int edge=Math.max(bitmap.getWidth(),bitmap.getHeight());
             if(edge>1280){Bitmap resized=Bitmap.createScaledBitmap(bitmap,Math.max(1,bitmap.getWidth()*1280/edge),Math.max(1,bitmap.getHeight()*1280/edge),true);bitmap.recycle();bitmap=resized;}
             try (OutputStream output = new FileOutputStream(path)) { bitmap.compress(Bitmap.CompressFormat.PNG,100,output); }
@@ -84,6 +92,7 @@ public final class ScreenContextReader {
             result.addProperty("foregroundPackage",pkg);result.addProperty("foregroundActivity",component);
             JsonArray list=new JsonArray();texts.forEach(list::add);result.add("texts",list);
             result.addProperty("screenshotPath",path.getAbsolutePath());result.addProperty("screenReading",true);
+
             remember(id,result); return result.deepCopy();
         } catch (Exception error) { path.delete(); throw error; }
         finally { if(bitmap!=null)bitmap.recycle(); }

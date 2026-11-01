@@ -78,7 +78,7 @@ final class RpcServer {
             if("resolveVoice".equals(method))return JsonRpc.result(id,engine.resolveVoice(JsonRpc.text(params,"voiceId"),JsonRpc.text(params,"taskId")));
             if ("submitVoiceTask".equals(method)) return JsonRpc.result(id,engine.submitVoiceTask(params));
             if ("confirmTask".equals(method)) { engine.confirmTask(JsonRpc.text(params,"taskId"),params.get("ok").getAsBoolean()); return JsonRpc.result(id,"confirmed"); }
-            if ("captureContext".equals(method)) return JsonRpc.result(id, engine.captureContext());
+            if ("captureContext".equals(method)) return JsonRpc.result(id, engine.captureContext(params.has("screenReading")?params.get("screenReading").getAsBoolean():null));
             if ("discardContext".equals(method)) { engine.discardContext(JsonRpc.text(params,"contextId")); return JsonRpc.result(id,"discarded"); }
             if ("setContextReading".equals(method)) { engine.setContextReading(params.get("enabled").getAsBoolean()); return JsonRpc.result(id,"saved"); }
             if ("listHistory".equals(method)) return JsonRpc.result(id,engine.listHistory());

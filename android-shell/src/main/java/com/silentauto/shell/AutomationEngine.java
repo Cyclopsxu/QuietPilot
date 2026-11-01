@@ -375,8 +375,10 @@ public final class AutomationEngine {
         });
         return contexts;
     }
-    JsonObject captureContext() throws Exception {
-        DisplaySpec display = DisplaySpec.current(logs); return contexts().capture(display.width,display.height);
+    JsonObject captureContext(Boolean enabled) throws Exception {
+        long began=SystemClock.elapsedRealtime();
+        try { DisplaySpec display=DisplaySpec.current(logs); return contexts().capture(display.width,display.height,enabled); }
+        finally { logs.info("Screen context capture elapsedMs="+(SystemClock.elapsedRealtime()-began)); }
     }
     void setContextReading(boolean enabled) throws Exception { contexts().reading(enabled); }
     void discardContext(String id) { contexts().discard(id); }

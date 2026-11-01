@@ -67,7 +67,7 @@ public final class FloatingBallService extends Service {
             down=true;dragging=false;cancelled=false;contextId="";pressed=SystemClock.elapsedRealtime();startX=event.getRawX();startY=event.getRawY();originX=layout.x;originY=layout.y;int token=++generation;
             main.removeCallbacks(idle);main.postDelayed(hold,HOLD_TO_RECORD_MS);main.postDelayed(limit,30000);
             // First operation is context capture. Recording, focus changes and visual feedback wait for its reply.
-            io.execute(()->{try{ScreenPrivacy.sync(this);JSONObject result=rpc.request("captureContext",new JSONObject()).getJSONObject("result");String captured=result.optString("contextId");main.post(()->{
+            io.execute(()->{try{JSONObject result=rpc.request("captureContext",new JSONObject().put("screenReading",!ScreenPrivacy.disabled(this))).getJSONObject("result");String captured=result.optString("contextId");main.post(()->{
                 if(!down||token!=generation||dragging||cancelled){discard(captured);return;}contextId=captured;ball.setAlpha(1);ball.invalidate();android.util.Log.i("ShadowAutoVoice","context ready");tryRecord();
             });}catch(Exception error){main.post(()->{if(token==generation){cancelled=true;finishGesture(true);message(error.getMessage());}});}});
             return true;

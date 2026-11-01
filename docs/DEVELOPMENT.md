@@ -1,321 +1,353 @@
-# 开发与技术方案
+# Technical Documentation
 
-维护日期：2026-10-26。代码基线为`f97c8ba`及本轮微信视觉兼容增量。Step6原有Android验证基线为`cedab19`，锁屏保护单独见[锁屏报告](evidence/screen-lock/report.md)；微信实现、正式发送、焦点调查与本次整理范围统一见第12节。
+English | [中文](DEVELOPMENT.zh-CN.md)
 
-本文是本分支的开发维护基线，回答“目前实现了什么、如何实现、修改时要保持哪些约束、哪些结论尚未验证”。面向接手开发、排查问题和评审实现的人。安装、权限与日常操作见[中文使用手册](USER_GUIDE.zh-CN.md)；演示素材见[视频索引](evidence/demo-path/VIDEO.md)；阶段验收明细见[Step6 状态](STEP6-STATUS.md)。使用手册中的旧轮次记录按当时范围理解，当前阶段状态以本文和 Step6 状态为准。
+This document describes QuietPilot's implementation, key technical tradeoffs, and unresolved issues. For installation and everyday use, see the [user guide](USER_GUIDE.en.md); for test records, see the [evidence index](evidence/README.md).
 
-## 1. 实现范围与验证状态
+All physical-device measurements in this document come from a Huawei Mate 40 Pro (NOH-AN01, HarmonyOS 4.2.0.192, API 31).
 
-系统是同一台 Android 手机上的自动化原型：控制端接收任务，shell 进程在虚拟屏操作真实 App，完成后返回答案或将原页面交给用户。上游基线 `611e5eb0e1c94befda3c17c97438912dfd30e8a8` 提供 shell/app_process、虚拟屏、UI/OCR、输入与预览底座；本分支扩展验收、交接、技能、语音、保护与归档，具体归属见[二次开发说明](DERIVATIVE_CHANGES.md)。
+## 1. Choosing an approach
 
-下表的“实现”表示存在可执行代码；“验证”限定在已归档样本，不代表通用适配。
+The goal is to let an agent and a user operate the same phone simultaneously, using the user's own apps and accounts without disturbing the user. The main challenges lie at the system level rather than in the agent loop: Android assumes one person using one display, so rendering location, input injection targets, and observation of an invisible display each require a separate solution.
 
-| 能力 | 当前实现 | 已验证的范围与缺口 |
-| --- | --- | --- |
-| 后台任务与预览 | 每任务虚拟屏、目标 App 启动、UI/OCR、输入、H.264 预览 | Mate 40 Pro 有实际任务记录；微信显示规格已修复，节点不可读时可回退截图/OCR；文件传输助手正式后台发送有单次VERIFIED，仍借用全局焦点 |
-| 调度与主屏优先 | 最多两个活动槽位；同 App 串行；与主屏同 App 冲突时等待/暂停 | 具备保护逻辑；跨设备和长期并发稳定性未覆盖 |
-| 锁屏暂停与解锁续跑 | 熄屏/Keyguard 门禁；新任务排队、运行中暂停保留；解锁重新观察；不消耗锁屏期间的冲突超时预算 | Mate 40 Pro 同一计算器任务第 5 步暂停，解锁后第 8 步 ANSWERED 579；仅证明解锁续跑，不能锁屏持续操作或跨进程恢复 |
-| 输入与焦点保护 | 显示屏定向输入、无焦点触摸、危险键门禁、节点归属检查、剪贴板保护 | 三轮中文输入采样四项均 0、机主反馈正常；原生独立焦点和本地 IME 能力不足，不认证全程隔离 |
-| 办事验收与交付 | 独立验收、文档完整性核对、原任务转主屏、转移失败回退 | 备忘录同页交接有证据；不能用启动另一个页面替代原页面交付 |
-| 查询 | 只读动作约束、短答案、原文引文、独立提取与比较 | 计算器和公共地址有成功样本；公开时间查询另有不确定/截断答案，地址复测亦有失败 |
-| 重复动作退出 | 有限窗口检测，第一次反馈，第二次进入独立验收 | 7 步 ANSWERED 156；另一次 16 步重复验收失败，均保留 |
-| 技能学习与复用 | 参数化编译、语义定位、页面指纹、有限救援、模型回退、状态管理 | 备忘录探索/复用/救援三段均 VERIFIED；调用 10→8→14，耗时约 27.7→49.4→63.3 秒，未证明提速 |
-| 语音与执行中追加 | 悬浮球录音、intake 理解、任务路由、modify/add/cancel 队列 | 真语音修改大杯；另一次大杯冰美式到支付前 WAITING_USER 并交接，机主确认规格；成功流程连续双屏录像缺失 |
-| 主屏上下文 | 录音前采集、密码节点遮蔽、短时上下文、开关与丢弃 | 公开酒店名→备忘录成功；来源未显示完整地址，未验证地址传递或微信发送 |
-| 历史、指标与证据 | 步骤来源、角色调用数、耗时、截图、隔离诊断、原始干扰采样、任务归档 | 有脱敏仓库证据；缺失/不可用观测不能计作零 |
-| 录制与演示 | READY 识别、双路 scrcpy、虚拟屏销毁收尾、可重建剪辑 | 已有 02:57 五段证据版；含失败、静态证据和归档说明，非一次连续全成功录像 |
+The project uses virtual displays: it creates a `VirtualDisplay` with shell privileges, launches the target app on it with `am start --display`, reads its UI elements through UiAutomation, and injects input using `InputEvent` objects with a displayId, leaving the main display unaffected.
 
-当前没有实现：RPC 应用级鉴权、免电脑 Shizuku 启动、云账号与计费、跨重启恢复原 UI 会话、通用设备隔离认证。微信文件传输助手在本机正式虚拟屏任务单次验收通过，使用短时焦点借用与明确编号原文参数，尚未证明通用发送稳定性。私人订单查询由机主选择跳过，不属于已验收功能。
+Alternatives evaluated and rejected:
 
-## 2. 系统分层与部署边界
+| Approach | Reason for rejection |
+| --- | --- |
+| Cloud phone or another device logged into the same account | Not the user's own app instance; WeChat logs out the other device |
+| App cloning or a work profile | A separate account instance, not the one the user is currently using |
+| Accessibility taps on the main display | Takes over the screen the user is using |
+| iPhone | Neither virtual displays nor input injection are available |
+
+Open-source implementations of this approach already exist. [ShadowAuto](https://github.com/android-notes/ShadowAuto) (Apache-2.0) has the closest architecture. This project is derived from its `611e5eb` commit and retains underlying capabilities such as `app_process` startup, virtual displays, input injection, OCR, and H.264 previews. Most of the functionality described below was added by this project. See [derivative changes](DERIVATIVE_CHANGES.md) for attribution by component. The upstream article explaining the approach is preserved in [android-virtual-display-ai-automation.md](android-virtual-display-ai-automation.md).
+
+## 2. Overall architecture
 
 ```mermaid
 flowchart TD
-    U[用户文字 / 悬浮球语音] --> C[controller-app：配置、任务页、预览、交接]
-    C -->|本机 TCP 逐行 JSON-RPC| R[RpcServer]
-    R --> E[AutomationEngine：任务编排]
-    E --> G[调度 / 锁屏门禁 / 主屏冲突 / 输入保护]
-    G --> D[VirtualDisplaySession：任务虚拟屏]
-    D --> A[真实目标 App]
+    U[Floating-ball voice / text task] --> C[controller-app]
+    C -->|127.0.0.1:43110 line-delimited JSON-RPC| R[RpcServer]
+    R --> E[AutomationEngine]
+    E --> G[Scheduling / screen lock / main-screen conflicts / input protection]
+    G --> D[VirtualDisplaySession]
+    D --> A[Target app]
     A --> O[UiBridge / CaptureMirror / OCR]
-    O --> P[技能或模型规划]
+    O --> P[Skill or executor planning]
     P --> X[ActionExecutor / InputBridge]
     X --> D
-    O --> V[ResultVerifier / 查询核对]
-    V --> H[原页面交付 / 答案 / 任务归档]
+    O --> V[ResultVerifier / AnswerVerifier]
+    V --> H[Deliver original page / return answer / archive]
     H --> C
-    E --> M[已配置模型服务：executor / verifier / intake]
 ```
 
-| 模块 | 职责与入口 |
+- `android-shell`: a shell process launched through ADB using `app_process`, responsible for all automation logic. Entry points are `Main`, `RpcServer`, and `AutomationEngine`; most added code lives in `com.silentauto.shell.ext`.
+- `controller-app`: a regular Android app providing configuration, task pages, previews, the floating ball and status capsule, history, and skill management. It provides the interface only and cannot replace the shell process.
+- `android-stubs`: compile-time declarations for hidden APIs. A declaration's presence does not mean the device vendor's system permits the call.
+- Both modules use `minSdk=29`, `compileSdk/targetSdk=36`, and Java 17.
+
+### Model roles
+
+| Role | Default | Purpose |
+| --- | --- | --- |
+| executor | DeepSeek Flash | Step-by-step planning, skill matching, and compilation. This role makes the most calls and needs low cost and reliable tool calling |
+| verifier | `qwen3-vl-plus` | Result verification, independent query answer extraction, and visual planning for WeChat |
+| intake | `qwen3.8-omni-flash` | Speech recognition, reference resolution, and classification as a new task or amendment in a single call |
+
+Execution and verification deliberately use different providers to avoid having a model judge its own results. Separating the roles does not add user-perceived latency: after releasing the floating ball, the user waits for just one intake call. Most time is spent on execution steps, which skill learning is intended to reduce. Only `api.deepseek.com` and `dashscope.aliyuncs.com` are allowed as remote endpoints, with no routing through overseas relays.
+
+## 3. Task lifecycle
+
+A task broadly follows: parse the goal → select an app and match a skill → scheduler admission → create a virtual display → observe–act loop → verify or wait for the user → deliver and clean up → archive.
+
+**Scheduling.** `TaskScheduler` allows at most two active slots and serializes tasks using the same app. `forceStart` can skip waiting for the user to leave that app, but cannot bypass the slot limit or same-app serialization.
+
+**States.**
+
+| State | Meaning |
 | --- | --- |
-| `android-shell` | shell 权限执行进程；[Main](../android-shell/src/main/java/com/silentauto/shell/Main.java) 启动，[RpcServer](../android-shell/src/main/java/com/silentauto/shell/RpcServer.java) 分发，[AutomationEngine](../android-shell/src/main/java/com/silentauto/shell/AutomationEngine.java) 编排 |
-| `controller-app` | 用户界面与连接；[MainActivity](../controller-app/src/main/java/com/silentauto/controller/MainActivity.java)、[AutomationTaskView](../controller-app/src/main/java/com/silentauto/controller/AutomationTaskView.java)、[RpcClient](../controller-app/src/main/java/com/silentauto/controller/RpcClient.java) |
-| `android-stubs` | 编译期系统接口声明；不是运行时系统实现，也不提供额外权限 |
-| `paddler-ocr` | OCR 库、模型与字典；运行资产需部署到设备 |
-| `web-launcher` | 浏览器部署入口；不承担手机上的自动化循环 |
-| `scripts` | 主机回归、设备探针、采样汇总与录像整理 |
+| `QUEUED` | Waiting because slots are full, the same app is in use, or the screen is locked |
+| `RUNNING` | Executing |
+| `PAUSED` | The user opened the same app on the main display, or the screen is locked |
+| `WAITING_USER` | Waiting for the user at a payment/login boundary or after exhausting the step budget |
+| `VERIFIED` | An action task passed verification |
+| `ANSWERED` / `NOT_FOUND` | A query has an answer / the answer could not be found |
+| `FAILED` / `CANCELLED` / `HANDOFF_TIMEOUT` | Failed / cancelled / handoff timed out |
 
-shell APK 通过 ADB / `app_process` 作为 shell 进程运行。普通控制端 APK 的安装不能替代后台进程启动。代码使用系统服务与隐藏接口，API 声明存在不等于某个厂商系统允许调用。两 Android 模块当前 `minSdk=29`、`compileSdk/targetSdk=36`，Java 源码级别 17；最低 SDK 不等于完成该版本设备适配。
+Stopping before payment in `WAITING_USER` is correct boundary handling, but does not mean an order was successfully placed. Reaching a terminal state and completing archival happen at different times; wait for `finalized=true` before reading final screenshots and metrics.
 
-## 3. 任务编排与状态契约
+**Each iteration of the main loop:**
 
-一次任务主要经过：解析目标/角色配置 → 应用选择与技能匹配 → 调度准入 → 创建虚拟屏 → 观察与执行循环 → 验收或人工等待 → 交付/清理 → 归档。具体顺序与分支以 `AutomationEngine` 为准。
+1. Check stop requests, screen lock, same-app conflicts on the main display, main-display focus, and pending amendments.
+2. Read the virtual display's UI tree and check its usability.
+3. Execute a matching skill if available; otherwise ask the executor to plan.
+4. Before execution, check read-only constraints, target identity, and input policy.
+5. Execute one action, wait for the interface to change, then observe again and record the trajectory.
+6. Hand off at a human boundary, verify a completion claim, or independently extract a reported answer.
 
-[TaskScheduler](../android-shell/src/main/java/com/silentauto/shell/ext/guard/TaskScheduler.java) 同步维护活动槽位，最多两个、同 App 不重入；`force` 不突破两个槽位和同 App 串行约束。[MainAppConflictGuard](../android-shell/src/main/java/com/silentauto/shell/ext/guard/MainAppConflictGuard.java) 与前台观测处理主屏冲突。资源释放要覆盖成功、异常、停止、等待超时与转移后的收尾。
+The step limit is 25.
 
-### 3.1 锁屏保护与续跑
+## 4. Observation and execution
 
-[DeviceLockState](../android-shell/src/main/java/com/silentauto/shell/DeviceLockState.java) 通过 `!PowerManager.isInteractive() || KeyguardManager.isKeyguardLocked()` 判断阻塞。熄屏与亮屏但 Keyguard 未解除都不能执行自动输入；不自动唤醒或绕过系统锁屏。
+### Handling unreadable UI elements
 
-- **准入：**`awaitAdmission` 约每 2 秒检查一次，锁屏期间保持 `QUEUED`，不申请新调度槽位、不启动目标 App；`forceStart` 也不绕过锁屏门禁。应用选择/技能匹配等准入前准备仍可能调用模型，不能宣称锁屏排队零调用。
-- **运行：**`MainAppConflictGuard` 约每秒观察；首次发现锁屏时增加 epoch、设置恢复标记并转 `PAUSED`，保留任务与虚拟屏。`inputAllowed()` 另外直接检查锁屏状态，输入门禁不依赖下一次定时观察。重复观察同一次锁屏不会反复增加 epoch。
-- **超时：**锁屏期间持续刷新 `pausedAt`，解除锁屏时也重置计时起点；若解锁后主屏仍使用同一 App，则继续暂停并重新计算十分钟冲突超时。当前实现不是保留锁屏前已消耗的冲突预算。
-- **续跑：**解锁且主屏冲突解除后返回 `RUNNING`，由 `recoverAfterConflict` 重新观察。循环内遇到锁屏或冲突 epoch 变化相关异常，等待后丢弃本轮规划再重试；被打断输入不消耗执行步数。首次启动 App 因锁屏失败也等待后重试。用户停止/线程中断仍正常退出，不归入自动重试。
-- **边界：**任务和虚拟屏资源保留不代表厂商 App 页面永远不变；没有进程强杀、重启或 App 自行销毁页面后的原会话恢复。锁屏分支只将 `RUNNING` / `PAUSED` 转换，不能外推为 `WAITING_USER` 等所有等待状态的超时均被挂起。
+On physical devices, an app may look normal while its UI tree is empty. `UiBridge` distinguishes between no window, an unreadable root, incomplete traversal, and a lone placeholder root that is invisible, has zero dimensions, and has no children. Real leaf nodes are not mistaken for placeholder roots, and system or input-method windows do not conceal an empty app root.
 
-Mate 40 Pro（API 31）锁屏会用 SystemUI 时钟覆盖虚拟屏，目标 Activity 进入 STOPPED；局部唤醒锁不能阻止此行为。独立显示组创建因缺少 `ADD_TRUSTED_DISPLAY` 被拒，`ALWAYS_UNLOCKED` 标志不存在；这些探针未改变正式虚拟屏 flags。因此方案采用解锁后续跑，不能宣称锁屏持续操作。
+`UiRecoveryBudget` applies recovery in order: wait twice → clear the cache and reconnect accessibility → for query tasks only, restart the app on the virtual display after confirming it is not on the main display → hand off to the user. Action tasks do not restart the app, because doing so could lose work already completed.
 
-2026-10-25 的已有实机记录：同一计算器任务在 display 158 第 5 步锁屏暂停，68 秒检查仍保持步骤、display 和 executor 8 次；机主解锁后第 8 步 `ANSWERED` 579、`finalized=true`，executor 12 次、verifier 1 次，总耗时 642,079ms（含等待）。另一个锁屏新任务保持第 0 步排队后取消。详见[锁屏验证记录](evidence/screen-lock/report.md)。本次文档同步未重新执行这些设备测试。
+### Discarding stale plans
 
-### 3.2 对外状态与归档契约
+Planning takes several seconds, during which the interface may change, accessibility may reconnect, or the user may amend the task. Each plan records the connection generation, conflict epoch, and goal version. If any has changed before execution, the plan is discarded and the system observes again.
 
-[TaskProgress](../android-shell/src/main/java/com/silentauto/shell/ext/TaskProgress.java) 维护对外状态与指标；[TaskStatus](../android-shell/src/main/java/com/silentauto/shell/ext/TaskStatus.java) 定义终态。
+`ObservedTarget` stores the observed target element's path, class name, ID, text, and bounds, then rechecks it against the current tree before execution. `NodeWritePolicy` verifies that the node being written to belongs to the target window and package. Node numbers and coordinates are valid only for the observation that produced them.
 
-| 状态 | 转换约束 |
+Some Amap and Meituan nodes do not respond even when `performAction(CLICK)` returns success. In those cases, the system locates the node again and performs a touch within its bounds.
+
+### Repeated actions
+
+For “Clear first, then calculate 12×13,” the old version repeatedly cleared the result after obtaining 156, eventually failing after exhausting all 25 steps. `LoopDetector` checks the most recent 6 observations: it detects repetition when the same (screen fingerprint, action, target) occurs 3 times, or when the interface alternates between two states in an ABAB pattern.
+
+On the first trigger, the executor is told it is repeating actions and asked to check whether the goal is already complete. On the second trigger, the executor is no longer called; instead, the verification model judges the current interface directly. If it satisfies the goal, the task finishes normally; otherwise it fails. Skill playback is excluded from detection, and an amendment clears the detection window.
+
+After this change, the task reached `ANSWERED 156` in 7 steps. Another run failed after 16 steps because independent verification failed to recognize the result on the second trigger; that sample is also retained.
+
+## 5. Screen capture: layer-stack mirroring
+
+Upstream captures screenshots by temporarily switching the virtual display's output surface from the video encoder to an `ImageReader`, then switching back. On the Mate 40 Pro, this disturbs the target app: UI elements often become unreadable afterward, and Amap once encountered an ANR.
+
+`CaptureMirror` leaves the original output surface unchanged. It mirrors the virtual display's layer stack to a separate non-secure compositing display, while a dedicated thread continuously drains the mirror's `ImageReader`; a screenshot uses the latest frame. It falls back to the old method only if the mirror cannot be created. The fallback capture mode is recorded in diagnostics and counted separately from the normal path.
+
+Twenty rounds of “capture, then read UI elements” were performed on each of Calculator, a public Meituan page, and Amap's home page: 60/60 succeeded, with `surfaceSwitches=0`.
+
+## 6. Input and focus isolation
+
+This is the project's most difficult and most device-constrained area.
+
+### System capabilities of the test device
+
+| Check | Result |
 | --- | --- |
-| `QUEUED` | 准入后进入 `RUNNING` |
-| `RUNNING` | 可进入 `PAUSED`、`WAITING_USER`，或 `VERIFIED` / `ANSWERED` / `NOT_FOUND` |
-| `PAUSED` | 解除保护后回到 `RUNNING`；自动步数用尽后可转 `WAITING_USER` 保留现场 |
-| `WAITING_USER` | 本人完成后回 `RUNNING`，或 `HANDOFF_TIMEOUT` |
-| 取消/失败 | 非终态允许进入 `CANCELLED` / `FAILED`；终态不再普通转换 |
+| `config_perDisplayFocusEnabled` | `false`; per-display focus is not enabled |
+| `VIRTUAL_DISPLAY_FLAG_OWN_FOCUS` / `STEAL_TOP_FOCUS_DISABLED` | Fields not found through reflection; unavailable in the framework |
+| Shell permission `ADD_TRUSTED_DISPLAY` | Not granted; creation candidates using trusted flags throw `SecurityException` |
+| `setDisplayImePolicy(LOCAL)` | Rejected for untrusted virtual displays; readback remains fallback |
+| `MotionEvent` flag `FLAG_NO_FOCUS_CHANGE` (64) | Effective: ordinary touches move focus to the secondary display; touches with this flag do not |
 
-`WAITING_USER` 不是办事成功；支付前暂停可属于正确边界处理，但不能写成已付款或整单完成。`VERIFIED` 是办事验收终态，`ANSWERED` 是查询答案终态。验收还应读取 `uncertain`、引文与证据，不单看状态名。
+The final flags are 331 (0x14b). AOSP 12's `DisplayManager` lacks the two independent-focus flags above; they became available in Android 15, and `OWN_FOCUS` also requires a trusted display. This is therefore not a Huawei-specific limitation: the API 31 generation itself does not expose this capability to an ordinary shell. Virtual display creation logs the SDK version, the success or failure of each candidate flag set, the final flags, and both the result and readback of the IME policy setting. See [ISOLATION.md](ISOLATION.md) for detailed boundaries.
 
-`status` 到达终态与归档完成不是同一时刻。读取最终截图、指标和技能比较时应等待 `finalized=true`。接口集成同时保留 `taskId`、`displayId`、`originalGoal`、有效 `goal`、`amendments`、`transferState`、`resultReady`、`protectedScreen`，不能从单一字段推断页面仍可用。
+By default, the system checks these capabilities at startup and disallows background tasks if they are insufficient. The Mate 40 Pro requires the explicit option `--allow-unverified-isolation=true`; task status and history always carry `experimental_unverified` and `behaviorValidated=false`.
 
-## 4. 观察、规划与动作执行
+### Workarounds
 
-每轮先等待锁屏/主屏冲突解除，再检查后台安全与追加目标，之后读取当前 display 的 UI。根节点不可用、遍历不完整与真实叶节点分开判断；[UiRecoveryBudget](../android-shell/src/main/java/com/silentauto/shell/ext/guard/UiRecoveryBudget.java) 限制等待、无障碍重连及查询重启，耗尽后转人工。查询重启仅在确认目标 App 仍在虚拟屏且未位于主屏时尝试。
+- **Touch:** all secondary-display touches use `FLAG_NO_FOCUS_CHANGE`.
+- **Text input:** prefer accessibility `ACTION_SET_TEXT`, without opening the keyboard. Tests on a standard `EditText` show that setting text directly without first invoking `ACTION_FOCUS` keeps the target window's `windowFocus` false and preserves main-display focus.
+- **Keys:** when isolation is unconfirmed, `BackgroundKeyPolicy` blocks keys such as Enter and Paste. Search preferentially taps a search button, while `SubmitTargetPolicy` excludes incorrect targets such as microphone and camera icons.
+- **Clipboard:** when clipboard use is necessary, `ClipboardGuard` saves the user's complete `ClipData`, restores it in `finally`, and serializes access with a global lock.
+- **Fallback protection:** if `BackgroundFocusGuard` detects an unexpected transfer of main-display focus, it latches the condition and pauses the task. Later normal samples do not automatically resume it.
 
-动作优先取自技能和扩展策略，不能生成时由 executor 规划；最终由 [ActionExecutor](../android-shell/src/main/java/com/silentauto/shell/ext/ActionExecutor.java)、`InputBridge` 等落实。`StepListener` 贯穿观察和动作记录，动作来源用于区分 model、skill、rescue、query_recovery 等路径。
+### Why key injection steals focus
 
-规划期间记录 UI 连接代际、冲突 epoch 与目标版本。执行前发生变化则丢弃旧规划、重新观察；[ObservedTarget](../android-shell/src/main/java/com/silentauto/shell/ext/guard/ObservedTarget.java) 和 [NodeWritePolicy](../android-shell/src/main/java/com/silentauto/shell/ext/guard/NodeWritePolicy.java) 校验当前目标及窗口/包名归属。节点索引和坐标是当次观察的结果，不能跨重连或页面变化直接复用。
+Giving a `KeyEvent` a displayId sends characters to the correct background display, but the main display loses focus at the same time. The cause is AOSP 12's `PhoneWindowManager.interceptKeyBeforeQueueing`: when per-display focus is disabled, a key targeting a display other than the currently focused one triggers `moveDisplayToTop(displayId)`. Touch can avoid this with `NO_FOCUS_CHANGE`; keys have no corresponding mechanism.
 
-[LoopDetector](../android-shell/src/main/java/com/silentauto/shell/ext/guard/LoopDetector.java) 保留最近 6 次观察，检测相同屏幕/动作三次或屏幕 ABAB 交替。第一次向 executor 提供反馈；再次触发则不继续 executor 规划，直接独立验收/提取答案，无可核验证据则失败。技能回放不参与重复计数；目标追加后清空检测窗口。这是有限模式检测，不能识别所有业务循环。
+A temporary test app, with one Activity on each display recording only its own text and focus, was used to compare input methods:
 
-## 5. 显示屏、抓图与输入隔离方案
-
-[VirtualDisplaySession](../android-shell/src/main/java/com/silentauto/shell/VirtualDisplaySession.java) 负责屏幕、输出面及隔离能力诊断。优先尝试系统支持的独立焦点/禁止抢焦点等 flags，并记录候选、拒绝原因与最终 flags；兼容回退必须保持可见诊断。
-
-截图优先采用 [CaptureMirror](../android-shell/src/main/java/com/silentauto/shell/CaptureMirror.java) 的独立图层栈镜像与持续图像排空，避免为抓图切换原视频输出面，减少“抓图后控件不可读”的触发因素。隐藏接口不可用时仍可能回退旧路径；应分别报告 capture mode、misses、surfaceSwitches，不把回退当作相同保证。
-
-输入保护分多层：
-
-- 显式 displayId、无焦点触摸及 `BackgroundKeyPolicy` 限制可能影响主屏的按键。
-- 当前节点与目标包名检查；搜索提交由 `SubmitTargetPolicy` 排除语音/相机图标等误目标。
-- `ClipboardGuard` 处理需要剪贴板的输入与恢复；剪贴板恢复不等于从未发生瞬态变化。
-- 主屏同 App 冲突优先让用户操作；不能靠强行切回后台掩盖冲突。
-
-[DisturbanceMonitor](../android-shell/src/main/java/com/silentauto/shell/ext/metrics/DisturbanceMonitor.java) 约 500ms 采样焦点、IME、前台和剪贴板摘要等，原始时间线有上限，未知值、间隔和截断单独报告。Mate 40 Pro 当前 `behaviorValidated=false`，三轮正常反馈与零采样不改变这个结论。能力与实验模式说明见 [ISOLATION](ISOLATION.md)。
-
-## 6. 完成验收、查询与人工交接
-
-executor 负责规划；[ResultVerifier](../android-shell/src/main/java/com/silentauto/shell/ext/verify/ResultVerifier.java) 用当前证据独立判断结果与人工边界。模型角色通过 [ModelConfig](../android-shell/src/main/java/com/silentauto/shell/ext/config/ModelConfig.java) 分开配置。备忘录另有 [DocumentProof](../android-shell/src/main/java/com/silentauto/shell/ext/verify/DocumentProof.java) 的完整正文/保存与重开核对路径，因此某些 VERIFIED 样本 verifier 调用为 0，不能称为“另一模型视觉验收”。
-
-查询使用 [ReadOnlyGuard](../android-shell/src/main/java/com/silentauto/shell/ext/guard/ReadOnlyGuard.java) 限制交易、发送等写动作；候选答案与连续原文引文由 [AnswerVerifier](../android-shell/src/main/java/com/silentauto/shell/ext/query/AnswerVerifier.java) 及独立证据提取核对。答案上限 60 个 Unicode 码点。`NOT_FOUND` 只表示本次搜索范围；只读门禁不是对任意页面的形式化安全证明。
-
-[HandoffManager](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/HandoffManager.java) 处理登录、验证码、支付等本人边界；[ManualTaskTransfer](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/ManualTaskTransfer.java) 与 [TaskDisplayTransfer](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/TaskDisplayTransfer.java) 移动原任务；[PageIdentity](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/PageIdentity.java) 校验页面身份；[ResultRetention](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/ResultRetention.java) 保留可交付结果。
-
-自动循环上限仍为 25 步。预算用尽且尚未完成时，[StepBudgetHandoff](../android-shell/src/main/java/com/silentauto/shell/ext/handoff/StepBudgetHandoff.java) 仅做一次只读边界检查，然后以 `budgetExhausted=true`、`WAITING_USER` 保留原页面。检查失败、页面受保护或证据不足也转人工，不推定完成，不增加自动输入预算；该等待不自动超时、恢复或回收。追加要求会清空旧边界证据，但不会补充步数。用户可到主屏接管或取消；点击“结束接管”后按人工交接结束归档，不标为 `VERIFIED`，已转到主屏的页面不再搬回后台。进程退出、设备重启或 App 自身失效仍不能保证活页面保留。
-
-2026-10-26 本机验证：真实模型驱动的美团大杯冰生椰拿铁任务在第 13 步进入 `WAITING_USER`，原订单确认任务成功转到主屏，测试结束后仍为同一个 Android task；未付款。另用计算器的 25 次无输入等待及验收服务 503 故障注入，验证正式引擎在预算耗尽后保留页面、追加不补步数、显式结束才释放。该计算器样本仅验证控制流。随后机主再次通过麦克风发起美团任务并追加“大杯冰生椰拿铁”，真实任务在第 25 步耗尽后进入 `WAITING_USER`、`budgetExhausted=true`，原页面成功转到主屏（`manual_main`），未付款。
-
-[53 秒双屏实录](evidence/coffee-dual-screen/coffee-handoff-53s.mp4)覆盖上述第二次语音任务：两路按主机单调时钟记录的启动时间差 212.45968 秒近似对齐，以 5 倍速合成 83 秒，再按机主要求剪去合成版前 30 秒，剩余 53 秒。成片前约 12.49 秒尚无后台录像，后约 3.77 秒后台原片无后续帧，均用说明画面标注；无音轨，不延长后台画面。收货地址、电话及列表中的配送位置已遮挡，原片不公开。视频不能证明帧精确同步、主屏全程连续打字、独立焦点、付款或订单完成；第 25 步交接状态另由本地任务记录核对。[媒体来源与哈希](evidence/coffee-dual-screen/manifest.json)、[逐帧模式筛查](evidence/coffee-dual-screen/media-qa.json)仅覆盖本次成片。
-
-维护时要检查转移后的实际 display/root task、原页面身份及回退结果，再决定是否释放虚拟屏。响应中的 `moved` 与 `previewAvailable` 表示不同事实；不能提前关闭仍供预览/重试的资源。进程强杀后无法恢复相同活页面。
-
-## 7. 技能学习、复用与救援
-
-[TrajectoryRecorder](../android-shell/src/main/java/com/silentauto/shell/ext/skill/TrajectoryRecorder.java) 记录动作及前后页面；[SkillCompiler](../android-shell/src/main/java/com/silentauto/shell/ext/skill/SkillCompiler.java) 只将符合条件的成功轨迹编译为参数化技能；含人工交接、失败或目标追加等轨迹不作为普通成功学习样本。
-
-[SkillMatcher](../android-shell/src/main/java/com/silentauto/shell/ext/skill/SkillMatcher.java) 选择 active、类型相符且覆盖目标的技能，并校验本次参数。[SkillRunner](../android-shell/src/main/java/com/silentauto/shell/ext/skill/SkillRunner.java) 用当前语义目标定位；旧 bounds 仅作参考，不是坐标回放。[ScreenFingerprint](../android-shell/src/main/java/com/silentauto/shell/ext/skill/ScreenFingerprint.java) 排除时钟/相对时间、隐藏节点和列表条目等易变信息，以稳定控件描述页面。
-
-偏离时最多 3 个救援动作，救援用于恢复流程，不能直接跳过最终验收。仍不能继续则弃用本次技能，回到模型；连续弃用 3 次将技能标为 suspect。[SkillStore](../android-shell/src/main/java/com/silentauto/shell/ext/skill/SkillStore.java) 管理启停、删除、统计与落盘；用户禁用不应被普通学习覆盖。
-
-查询技能保存重新查找的方法，每次重新读答案，不复用旧答案。技能表现同时比较成功率、调用数、耗时和救援/回退比例；当前三个备忘录样本只证明路径可运行。[实测报告](evidence/skills/report.md) 中的脱敏技能副本不是可导入资产。
-
-## 8. 语音、主屏上下文与追加
-
-控制端 [FloatingBallService](../controller-app/src/main/java/com/silentauto/controller/ext/overlay/FloatingBallService.java) / `WavRecorder` 实现按住录音、就绪震动、松手提交和取消。shell [VoiceIntake](../android-shell/src/main/java/com/silentauto/shell/ext/voice/VoiceIntake.java) 理解语音，[VoiceRouting](../android-shell/src/main/java/com/silentauto/shell/ext/voice/VoiceRouting.java) 区分新任务与追加；有多个可能目标时要求选择。
-
-[ScreenContextReader](../android-shell/src/main/java/com/silentauto/shell/ext/context/ScreenContextReader.java) 在录音前读取主屏上下文，[ScreenPrivacy](../controller-app/src/main/java/com/silentauto/controller/ext/context/ScreenPrivacy.java) 参与隐私处理。上下文有开关、丢弃接口与 120 秒有效期。密码节点遮蔽和短时保留不能替代读取页面及发送模型的授权；页面包含的信息可能比用户口述更多。
-
-[AmendmentQueue](../android-shell/src/main/java/com/silentauto/shell/ext/amend/AmendmentQueue.java) 保留原目标、modify/add/cancel 记录和有效目标；循环在受控点消费，目标版本变化后丢弃旧规划并退出旧技能。测试必须区分真实麦克风/intake 路径与直接 RPC 注入，后者不能证明语音链路。
-
-## 9. RPC、配置与数据存储
-
-默认 `127.0.0.1:43110`，TCP 逐行 JSON-RPC。控制端必须按请求 id 关联响应，并处理异步状态/日志/视频事件；不是 HTTP 服务。状态事件使用 `event="status"`，任务 `type` 保留 action/query。方法和参数以 `RpcServer` 分发为准，完整操作示例在使用手册。
-
-| 接口族 | 典型方法 |
+| Method | Result |
 | --- | --- |
-| 健康与任务 | `ping`、`status`、`startTask`、`stopTask`、`listTasks`、`getTask` |
-| 语音/上下文/追加 | `submitVoiceTask`、`confirmTask`、`resolveVoice`、`captureContext`、`discardContext`、`amendTask` |
-| 人工与结果交接 | `takeManualOnMain`、`resumeTask`、`takeResultOnMain`、`injectTouch` |
-| 历史与技能 | `listHistory`、`listSkills`、`setSkillStatus`、`deleteSkill` |
+| Touch with `NO_FOCUS_CHANGE` | Main-display focus preserved, but no input connection established |
+| Direct string input through `ACTION_MULTIPLE` | Returns false; no text arrives |
+| Targeted ASCII keys | Background receives characters; main display loses focus |
+| Targeted `KEYCODE_PASTE` | Background receives pasted text; main display loses focus |
+| Direct `ACTION_SET_TEXT` | Background receives text; main-display focus unchanged |
 
-`RpcConnection` 防回环自连接；`RpcClient` 防止旧读线程清理新 socket，修改请求写入失败不自动重放。`OverlayRpc` 处理悬浮层重连和请求关联。服务端客户端发送队列容量 64，慢客户端断开，避免全体任务被阻塞。
+Other approaches were also investigated: `pm grant` cannot grant signature permissions; Shizuku in ADB mode still runs as shell; modifying global resources requires root; a custom input method cannot obtain the target input connection because Android 12 checks client focus on the server side; reflection cannot access Views in other processes.
 
-控制端三角色配置保存在私有 `ai_config` SharedPreferences，未实现密钥保险库。shell 的技能、轨迹、历史、截图和上下文位于 `/data/local/tmp/shadowauto/` 下对应子目录，属于 shell 可访问数据，控制端重装不代表清空这些数据。模型请求可能包含控件文本、截图、音频或上下文，按角色和实际路径发送。
+Conclusion: input can avoid stealing focus when the target app exposes writable nodes; otherwise, focus must be borrowed.
 
-当前 RPC 无应用级鉴权；回环监听不隔离同机其他进程。后续方案是随机 token，并同步处理控制端传递、部署、轮换及旧连接行为，尚未实现。[ModelConnectionProbe](../controller-app/src/main/java/com/silentauto/controller/ext/config/ModelConnectionProbe.java) 已显示服务返回的 model；现有三角色实测返回别名，不能据此证明精确权重快照。
+### Parallel-use measurements
 
-## 10. 开发验证与证据维护
+During testing, the user continuously typed Pinyin and occasionally scrolled in Huawei Notes on the main display, while a background Amap task also required text input. The foreground app, `mCurrentFocus`/`mTopFocusedDisplay`, input-method target, and clipboard digest were sampled every 500ms. Three rounds lasted 146, 165, and 193 seconds:
 
-在仓库根目录构建与检查：
+| Round | Samples | Foreground / focus / IME / clipboard disturbances | Maximum sampling interval |
+| --- | --- | --- | --- |
+| 1 | 292 | 0 / 0 / 0 / 0 | 1277ms |
+| 2 | 330 | 0 / 0 / 0 / 0 | 818ms |
+| 3 | 387 | 0 / 0 / 0 / 0 | 676ms |
+
+The user reported normal typing and scrolling in all three rounds, with no unexpected disappearance of candidate suggestions. However, the background task itself failed once and required human intervention twice because UI elements were unreadable. Sampling every 500ms also cannot capture very brief events between samples, so `behaviorValidated` remains false. See [evidence/isolation](evidence/isolation/report.md) for the report and raw timelines; results can be recomputed with `node scripts/isolation-report.mjs`.
+
+<a id="12-微信视觉兼容与焦点边界"></a>
+
+## 7. WeChat: a visual fallback
+
+WeChat is the most difficult app to support. On the test device, its accessibility tree contains only a placeholder root (`class=null`, no children, no editable nodes). Enabling `DONT_SUPPRESS_ACCESSIBILITY_SERVICES` produces the same result, so the accessibility text-write approach in Section 6 cannot be used.
+
+Two underlying problems were fixed first. The first was display configuration: the previous implementation mixed the logical resolution of 1152×2376 with the physical density of 560 dpi, causing WeChat to `EXIT_SELF` immediately after launch. `DisplaySpec` now reads `getRealMetrics` from the same logical display, whose actual density is 480; launch became stable after this fix. The second was placeholder-root detection, addressed by the `UiBridge` changes in Section 4.
+
+### Screenshot-based interaction
+
+If the app root remains unreadable after reconnection, `AutomationEngine` runs local PaddleOCR on the same screenshot frame to produce a visual observation, then asks the verifier role's vision model to plan. These calls are counted separately as `visual_planner`, and their step source is `vision_ocr`.
+
+- Unique, high-confidence OCR text takes precedence over model-estimated coordinates.
+- Model coordinates normalized to 0–1000 must pass bounds checks after conversion.
+- Before tapping text, the system captures another screenshot and locates it again to handle reordered conversation lists.
+- Long-press menu text is small and prone to OCR errors. Low-confidence regions are enlarged 2× and recognized again. The result must still be an exact, unique match with confidence ≥ 0.85; otherwise the operation stops rather than guessing coordinates.
+
+Visual steps are not compiled into skills, because skills depend on semantic nodes.
+
+### Borrowing focus
+
+WeChat's input field can acquire focus only through an ordinary touch, after which text is inserted using the visible “Select all / Paste” menu. `InputFocusTransaction` encapsulates this process:
+
+1. Before starting, require focus to be on the main display (display 0) and the current main-display task to be identifiable.
+2. Acquire virtual-display focus through touch, check task ownership, screen lock, and conflicts, and enforce a 10-second deadline.
+3. Paste through the menu, protecting the clipboard with a `ClipData` snapshot.
+4. On success, failure, or cancellation, return focus to the user's current main-display task and restore the clipboard in `finally`.
+
+Before borrowing focus, `MainInputIdleGuard` must also pass: borrowing is blocked if the main-display keyboard is open, an editable field has focus, there has been a recent touch or key event, or readings are missing. It proceeds only after two continuous seconds of confirmed idle input. This check reads main-display window and editing state in memory only; it does not record body text. If a new main-display event is detected during borrowing, the transaction exits immediately and returns focus. Waiting does not consume steps, and the status capsule displays “Waiting for input to become idle.”
+
+In a comparison test, the main display played a local video without an audio track while WeChat sent a message in the background. The video did not pause during approximately 67 seconds. Three focus-borrowing intervals lasted about 6.1, 6.5, and 4.6 seconds, and focus was returned each time. This mechanism conservatively estimates whether user input is idle; some players react to losing window focus, so an entirely imperceptible experience cannot be guaranteed.
+
+### Exact message checks and duplicate-send prevention
+
+Early model-planned runs produced several errors: truncated message bodies, navigation into an official account with the same name, an old draft mistaken for a new one, and incorrectly recognized identifiers. Critical checks therefore now use deterministic rules:
+
+- `startTask` may carry `exactRecipient` and `exactMessage`. Both must appear verbatim in the task goal, and the message body must contain exactly one numeric identifier at least 10 digits long; otherwise the request is rejected.
+- Before sending: confirm the conversation title, retrieve the draft through “Select all → Copy” for exact comparison, then use OCR to confirm that the identifier appears exactly once and is in the bottom draft area.
+- Immediately before tapping Send, latch “send attempted.” After that, perform verification only; never send again.
+- After sending: long-press the bubble with the unique identifier, copy it, and compare the text exactly. Then have the vision model check the title, the sent bubble on the right, and the presence of any failure indicator.
+
+The formal task `wechat-background-1792986804` ran entirely on the virtual display and reached `VERIFIED` in 4 steps and 58.9 seconds. Text copied from both the draft and the sent bubble matched the original exactly, and Send was tapped only once. The raw focus-change count was 3, corresponding to the three focus-borrowing transactions. `DisturbanceMonitor` attributes these to input transactions but retains the raw count, with `zeroDisturbanceVerified=false`.
+
+More than ten earlier failures are recorded by identifier in the [evidence](evidence/wechat-2026-10-26/). Most of the rules above correspond to one of those failures.
+
+## 8. Verification and queries
+
+### Verifying action tasks
+
+The `finish` tool requires `expected_evidence`, describing the completion evidence that should be visible. After a completion claim, `ResultVerifier` waits 1.5 seconds, reads the UI elements again with OCR supplementation if sparse, and captures a screenshot. It calls the verifier in a fresh conversation, providing only the goal, expected evidence, and current interface. Text such as “Send failed,” “Resend,” or “Network error” always causes rejection. A rejected result feeds the missing evidence back into the execution loop; three rejections cause task failure.
+
+Huawei Notes uses a dedicated `DocumentProof`: it checks the title and full body exactly by resource ID, returns to the list, and reopens the note for another check. This path does not call the verifier, which is why some `VERIFIED` samples have a verifier call count of 0.
+
+### Queries
+
+A query task aims to obtain an answer rather than change state.
+
+- `ReadOnlyGuard` checks actions before execution. It blocks targets whose text or description matches sending, submitting, paying, ordering, deleting, sharing, favoriting, and similar operations, as well as text input into non-search fields, and asks the model to query another way. Amap search fields without identifying labels and Meituan city selection have specific allow rules.
+- Only `report_answer {answer, quote}` and `report_not_found {searched}` are provided; `finish` is unavailable. Answers are limited to 60 code points, and `quote` must be a contiguous verbatim excerpt from the interface.
+- `AnswerVerifier` first asks the verifier to extract an answer independently without seeing the executor's answer. It then checks that both quotes occur in the current interface text and compares the answers. A disagreement is sent back to the executor for up to two retries; if disagreement remains, the verifier's answer is used and marked `uncertain`.
+- If the executor reports that nothing was found, the verifier also performs an independent search first.
+
+The answer appears in the status capsule for 8 seconds. “Copy” and “View source” are performed only after a user tap.
+
+<a id="6-完成验收查询与人工交接"></a>
+
+## 9. Handoff and delivery: moving the original page across displays
+
+The initial design let the user handle a handoff through the controller's virtual-display preview. Physical-device testing revealed two problems: protected pages such as payment screens appeared black in the preview, and verification codes were difficult to handle in the small preview. The design therefore changed to move the task's Activity directly between displays.
+
+**Human handoff** (`HandoffManager`, `ManualTaskTransfer`, `TaskDisplayTransfer`): when the executor calls `request_user`, the system first verifies that a genuine boundary has been reached, then enters `WAITING_USER`. Tapping “Handle it” moves the original task to the main display and pauses automation. After handling the step, the user taps “Return to background”; the system checks the page, moves it back to the virtual display, observes again, and resumes. The user explicitly indicates when they have finished, so the system does not have to infer it.
+
+**Result delivery** (`ResultRetention`, `PageIdentity`): after an action task completes, its page is retained. Tapping “View result” moves the original task, after which `PageIdentity` checks the package, page features, and entity anchors such as a note title. The virtual display is released only after confirming that the main display received the original page. On failure, the system attempts to move it back and verify the rollback. Relaunching the app's home page does not count as delivery.
+
+Issuing a move command does not prove that the move succeeded, so `moved`, rollback status, and `previewAvailable` are independent response fields.
+
+**Step-budget exhaustion:** after all 25 steps are used, `StepBudgetHandoff` performs one read-only boundary check and enters `WAITING_USER` with `budgetExhausted=true`, preserving the original page for the user. It neither assumes completion nor adds steps. The coffee order in the demo video is an example: after step 25 exhausted the budget, the order page was handed off to the main display; no payment was made.
+
+## 10. Skills
+
+### What can be learned
+
+At every step, `TrajectoryRecorder` records the pre-action screen fingerprint, action and parameters (preserving input text verbatim), target element features (text, description, resource ID, class name, sibling index, and parent features; bounds are reference-only), source, and whether the interface changed.
+
+Only verified trajectories with no handoff or amendments are learned. A user completes part of a handed-off task, and amended trajectories may include backtracking, making both unsuitable as learning samples. Before compilation, rules remove observation steps, waits, steps undone by Back, and non-input steps that did not change the interface. A single executor call then compiles the trajectory into a parameterized skill. Structural and parameter-reference checks follow, including a requirement that substituting the example parameters reproduces the original trajectory's inputs.
+
+### Screen recognition
+
+`ScreenFingerprint` consists of a package name and a set of stable text. A Jaccard similarity ≥ 0.6 indicates the same screen. Text stability matters: early versions included timestamps, so “Today 17:05” changing to “17:10” made the screen appear different. Clock and relative-time text, hidden nodes, and list items are now excluded.
+
+### Execution and recovery
+
+`SkillRunner` implements `ActionSource`. Each step first compares fingerprints, then scores candidate nodes by their features in the current UI tree. A match is executed, with actual arguments substituted for `{param}`. A mismatch starts recovery: the model is asked to return to the expected screen and stop, with a limit of 3 steps. If recovery succeeds, the skill resumes; otherwise the skill is abandoned and execution falls back to the model. A skill abandoned 3 consecutive times is marked suspect and excluded from matching. Query skills store only the path used to find an answer; the answer is read and verified anew on every run.
+
+### Measured performance
+
+Because WeChat launch was unstable during testing, the three-stage test used Huawei Notes instead:
+
+| Stage | Steps | Model / skill / recovery | Executor calls | Duration |
+| --- | --- | --- | --- | --- |
+| Initial exploration | 8 | 8 / 0 / 0 | 10 | 27.7 seconds |
+| Reuse with new parameters | 10 | 2 / 5 / 3 | 8 | 49.4 seconds |
+| Deliberately introduced deviation | 13 | 6 / 3 / 4 | 14 | 63.3 seconds |
+
+All three runs were `VERIFIED`. The recovery test's action-source sequence was `skill, skill, rescue, skill, rescue, …, model`. Reuse saved two model calls but increased both steps and elapsed time, mainly because the saved note's list item lacked unique semantic features. The skill could not match it and had to enter recovery. The skill mechanism therefore works end to end, but has not yet improved speed. See the [skill report](evidence/skills/report.md).
+
+## 11. Voice, main-screen context, and amendments
+
+**Floating ball** (`FloatingBallService`): 64dp in diameter, kept 28dp from screen edges and clear of system gesture areas to reduce accidental touches on curved screens. After a one-second hold, it first reads main-screen context, then requests temporary audio focus, pausing video or music playback to avoid speaker audio interfering with recognition. A short vibration indicates that recording is ready. Sliding up 80dp cancels; recording is limited to 30 seconds. The window matches the ball's dimensions and uses `FLAG_NOT_FOCUSABLE`, allowing touches outside the ball to pass through.
+
+**Status capsule:** Huawei's Live Window on HarmonyOS 4 is available only to partner apps, so this project draws its own capsule below the status bar and clear of the camera cutout. The implementation is abstracted behind `StatusSurface` to support future integration with vendor-native capabilities.
+
+**Main-screen context** (`ScreenContextReader`): read once when the floating ball is pressed, including the UI tree and a screenshot, with OCR added when text is sparse. Status-bar, navigation-bar, and this app's overlay content are filtered out, and password nodes are masked. Context expires after 120 seconds, can be discarded manually, and can be disabled entirely. It is not written to trajectories or included in skills.
+
+Main-screen capture uses the dedicated `UiBridge.MODE_CONTEXT`, reading only text, visibility, bounds, and information needed for privacy masking. This avoids recursively calculating action labels for every node. During traversal, it checks budgets of 1000 nodes, a path-string length of 180, and 6000ms. An unreadable child, unavailable root, or exceeded budget aborts capture and asks the user to let the page settle before retrying. Partial results are not used, and this mode does not automatically clear the cache and retry. Password-node children are not traversed. The 6000ms limit is checked during node traversal; it is not a hard timeout for the entire capture request.
+
+The floating ball includes the current privacy setting as the optional `screenReading` parameter in `captureContext`. Within the same synchronized capture call, the backend applies the setting before deciding whether to read the screen, eliminating a separate RPC. Calls that omit the parameter retain the saved setting. Logs record total capture time; traversal failures also record the node count, elapsed time, and exception type. These statements describe code behavior and do not establish new physical-device performance or privacy validation results.
+
+**Intake** (`VoiceIntake`, `VoiceRouting`): a single Omni call receives the recording, main-screen screenshot and text, installed apps, skill list, and active tasks. It returns a task type (action / query / amendment) and a self-contained task description. High-confidence action tasks start automatically after a three-second cancellation window; low-confidence tasks require user confirmation.
+
+**Amendments** (`AmendmentQueue`): supports modify / add / cancel. Amendments are queued and applied after the current action finishes and before the next step begins; they do not interrupt an action being injected. The effective goal combines the original goal, amendment, and handling rules: amendments take precedence in conflicts, and already-sent messages or submitted orders are not automatically compensated for. Subsequent planning, expected evidence, and verification all use the effective goal. An amendment during skill execution abandons the skill; an amendment during `WAITING_USER` exits the waiting state and resumes modification.
+
+## 12. Screen lock
+
+When the Mate 40 Pro locks, SystemUI overlays a clock on the virtual display and the target Activity enters the STOPPED state. Holding `PARTIAL_WAKE_LOCK` does not prevent this; the system has no `ALWAYS_UNLOCKED` flag, and an independent display group requires trusted privileges. Execution therefore cannot continue while locked; it must pause and resume after unlocking.
+
+`DeviceLockState` detects locking with `!isInteractive() || isKeyguardLocked()`. While locked, new tasks queue without taking a slot or launching an app, and running tasks become `PAUSED` while retaining their virtual display. The input gate checks lock state directly rather than relying on the next periodic sample. Input interrupted by locking does not consume a step; after unlocking, old plans are discarded and the system observes again.
+
+In testing, a Calculator task was locked at step 5. Three checks over 68 seconds all showed it still at step 5, with no additional executor calls. After unlocking, the same task reached `ANSWERED 579` at step 8. See the [screen-lock report](evidence/screen-lock/report.md).
+
+## 13. RPC, storage, and security
+
+The shell process listens on `127.0.0.1:43110` using line-delimited JSON-RPC, not HTTP. Main methods:
+
+| Category | Methods |
+| --- | --- |
+| Tasks | `ping` `status` `startTask` `stopTask` `listTasks` `getTask` `forceStart` |
+| Voice / context / amendments | `submitVoiceTask` `confirmTask` `resolveVoice` `captureContext` `discardContext` `setContextReading` `amendTask` |
+| Handoff / delivery | `takeManualOnMain` `resumeTask` `takeResultOnMain` `openTaskOnMain` `injectTouch` `openQuerySource` |
+| History / skills | `listHistory` `listSkills` `setSkillStatus` `deleteSkill` |
+
+Fixed connection issues include a loopback self-connection in the controller, now prevented by binding the source port; an old reader thread clearing a newer connection when it exited; and a single slow client blocking event delivery for all tasks. Each client now has a send queue with capacity 64 and is disconnected if it fills. Mutating requests are not automatically replayed after a write failure.
+
+Storage: model configuration is kept in the controller's private SharedPreferences. Skills, trajectories, history, screenshots, and context are stored under `/data/local/tmp/shadowauto/`; reinstalling the controller does not remove these files.
+
+Two security gaps remain. First, RPC has no authentication: any program on the same phone can connect and submit tasks, effectively gaining the ability to operate the user's apps. The planned solution is for the shell to generate a random token at startup, pass it to the controller, and validate it for every method except `ping`. Second, API keys are not encrypted using Keystore.
+
+## 14. Tests and evidence
 
 ```sh
-./gradlew :android-shell:assembleDebug :controller-app:assembleDebug :android-shell:lintDebug :controller-app:lintDebug
+./gradlew :android-shell:assembleDebug :controller-app:assembleDebug \
+          :android-shell:lintDebug :controller-app:lintDebug
 ./scripts/test-interaction-regressions.sh
 ```
 
-先完成 Android 构建，回归脚本复用已解析的 Gson 缓存与 debug classes。目前包含九组 Java 检查：连接、UI 恢复、交互保护、任务转移、查询、RPC 输出、锁屏保护、视觉输入、重复检测；另外运行 isolation-report JS 测试与录制脚本 Python 测试。主机检查不能证明设备接受隐藏 API。设备探针、真实模型任务和中文输入并行测试需要单独进行。Web 修改在 `web-launcher` 执行 `npm run build`；纯文档修改只需检查链接和内容一致性。
+The regression script runs eleven groups of Java checks on the host: connections, UI recovery, interaction protection, task transfer, queries, RPC output, screen lock, visual input, main-input idle detection, step-budget handoff, and repetition detection. There are also JS tests for `isolation-report` and Python tests for recording scripts. Host tests cannot establish whether a device accepts hidden APIs, so two device probes are provided: `CaptureMirrorDeviceRegression` and `TouchFlagsDeviceRegression`.
 
-Step6 的 Android 构建、两模块 Lint 和当时回归通过，见 [build-checks.json](evidence/build-checks.json)；该 JSON 不覆盖新增锁屏代码。锁屏增量的[验证报告](evidence/screen-lock/report.md)另记两模块构建/Lint、最终补充后的 shell 构建/Lint及完整回归通过。[ScreenLockRegression](../scripts/tests/ScreenLockRegression.java) 覆盖输入即时拦截、模拟一小时锁屏保留、解锁恢复、真实同 App 冲突超时和锁屏取消。模拟一小时不代表一小时真机耐久测试。本次仅核对代码、报告与文档链接，未重跑构建或设备验收。
+Recording uses `scripts/record-demo.sh`: it first records the main display, watches logs for `VIRTUAL_DISPLAY_READY taskId=… displayId=…`, and automatically starts a second `scrcpy --display-id` recording for that virtual display. The two streams use separate forward ports; with the default reverse mode, concurrent recording causes the main-display connection to fail. On the test device, scrcpy stalls instead of exiting when a virtual display is destroyed, so the script checks displays once per second and stops that recording after two consecutive checks find the display absent.
 
-[证据索引](evidence/README.md) 组织脱敏报告与样本，[provenance.json](evidence/provenance.json) 记录来源和公开产物哈希。原始资料留在仓库同级工作区 `../docs/validation/`，不默认进入 Git；原片可能包含个人信息。公开前检查截图/视频画面与 JSON，保留失败样本、未知指标与采样缺口，不能补造缺失录像。
+Evidence is stored in `docs/evidence/`. All files are sanitized copies with keys, phone numbers, contacts, address details below street number, and local machine paths removed. `provenance.json` records hashes of originals and sanitized copies. Original records are kept outside the repository and are not included in Git.
 
-录像工具为 `scripts/record-demo.sh`；成片由 `scripts/build-step6-demo.py`、编辑计划和来源原片重建，具体命令见[视频索引](evidence/demo-path/VIDEO.md)。`scripts/verify-step6-video.m` 做逐帧 OCR 规则检查，另配解码和画面抽查；无规则命中不能当作完整隐私保证。
+## 15. Future work
 
-## 11. 后续工作与变更记录规则
-
-| 优先级 | 工作 | 完成判据 |
-| --- | --- | --- |
-| P1 | 微信发送稳定性与更多入口 | 文件传输助手正式后台任务已有单次通过；继续覆盖普通任务入口、更多布局和重复运行，保留焦点/设备限制 |
-| P1 | 完整店铺上下文 | 公开详情页同时包含店名和完整地址，来源→intake→目标正文逐项核对 |
-| P1 | 咖啡成功流程连续双屏录像 | 同一任务覆盖真语音追加、规格确认、支付前暂停与原页面交付，无付款操作 |
-| P1 | 隔离复验 | 修正后中文拼音候选词与滚动三轮重跑，联合原始日志、双屏录像和机主反馈；仍缺系统能力则保留实验标记 |
-| P2 | RPC token 鉴权 | 未授权请求被拒，控制端正常重连，部署与轮换路径可回归 |
-| P2 | 技能稳定性与性能 | 扩大同类任务样本，降低救援/模型回退；同时报告耗时与调用数 |
-| P2 | 锁屏保护扩展验收 | 覆盖模型请求中途锁屏、解锁后同 App 冲突、长时待机、人工等待状态与其他设备；保留厂商页面销毁限制 |
-| P2 | 跨设备与长期稳定性 | 明确设备/系统矩阵，覆盖长时间任务、退出、重连、资源回收 |
-
-修改运行代码时，同步更新本文受影响的方案与状态；接口/状态字段变化同时更新控制端和回归；新增实测写日期、设备、代码基线、原始结果及限制，再链接到证据。README 只维护面向用户的入口、配置和操作，阶段细节进入状态/证据文档。功能计划在验收前始终标记为待实现或待验证。
-
-| 日期 | 开发文档变更 |
+| Priority | Item |
 | --- | --- |
-| 2026-10-25 | 对照工作区锁屏增量补齐能力表、状态/输入/异常恢复方案、实际计时语义、八组回归清单及真机范围；区分 Step6 与锁屏验证基线 |
-| 2026-10-25 | 建立本文件，整理截至 Step6 的实现、模块边界、技术约束、验证状态和后续判据；未改运行代码 |
-| 2026-10-26 | README 改为标准项目首页，详细操作手册迁至 `USER_GUIDE.zh-CN.md` / `USER_GUIDE.en.md`，开发文档继续维护技术方案与验证状态 |
-| 2026-10-26 | 项目工作名改为隐航 QuietPilot；保留包名、RPC 与设备数据兼容；生成部署资源不再纳入当前源码树，补齐贡献/安全/发布说明 |
-| 2026-10-26 | 准备 v0.1.0-alpha.1（versionCode 2）release 构建，以开发证书签名，提供 APK、ARM64 后台/OCR ZIP、安装与限制说明；打包方法见 `scripts/package-release.py` |
+| P1 | Cover more WeChat entry points and contacts, and validate stability across repeated tests |
+| P1 | Transfer complete shop addresses from main-screen context, checking each stage from source page through intake to message body |
+| P1 | Record the complete coffee flow continuously on both displays: voice, amendment, option confirmation, and pre-payment handoff |
+| P1 | Revalidate isolation with three more rounds of parallel Pinyin input and frame-by-frame checks of candidate suggestions |
+| P2 | RPC token authentication |
+| P2 | Skills: expand samples and reduce recovery and fallback rates so reuse actually improves speed |
+| P2 | Screen lock: cover locking during model requests, long standby periods, and the waiting-for-user state |
+| P2 | Other devices and system versions, long-running execution, and resource cleanup |
 
-| 2026-10-26 | 保留微信视觉兼容方案，合并六份阶段说明到第12节，补齐原文参数/发送后目标变更保护与回归；证据附件保留 |
-
-## 12. 微信视觉兼容与焦点边界
-
-本节合并2026-10-26的启动诊断、截图/OCR对照、正式后台发送、焦点根因与不换手机的输入绕行调查。当前保留兼容方案，不把它提升为原生独立焦点；原始JSON、日志和完整截图保留为证据附件，独立阶段说明已归并到本文。设备为Huawei Mate40Pro NOH-AN01 / HarmonyOS4.2 / SDK31，微信8.0.79 (3200)。
-
-### 12.1 能力与使用约束
-
-| 路径 | 当前结果 | 使用边界 |
-| --- | --- | --- |
-| 可写无障碍节点直接设置文本 | 标准EditText样本成功写入中文，目标windowFocus=false，主屏焦点保持0 | 要求目标App暴露可写节点，不代表任意App或持续拼音输入并发已认证 |
-| 微信截图/OCR＋可见菜单粘贴 | 正式虚拟屏任务单次VERIFIED | 输入、草稿复制与已发气泡复制短时借用全局焦点，finally恢复焦点及剪贴板；不能保证主屏持续打字不中断 |
-| 指定displayId的原生按键/粘贴键 | 能写入测试框，但同时转移全局焦点 | 原生后台按键门禁保持关闭，不能用这种方式宣称无打扰 |
-| 本机微信真正无抢焦点输入 | 未找到当前权限下可交付的通用路径 | 微信无障碍节点不可写；系统级改造未实施 |
-
-严格隔离检查仍为默认门禁；不足时阻止后台，只有明确选择的`--allow-unverified-isolation=true`兼容实验才放行。`experimental_unverified`、`behaviorValidated=false`和原始焦点变化记录保留。归还焦点不等于从未抢过，也不保证恢复主屏输入法的 composing/candidate 状态。锁屏期间仍暂停任务，解锁后重新观察；本轮不是锁屏持续输入验证。
-
-### 12.2 实现与接口合同
-
-- **显示规格与根节点：**`DisplaySpec.current`优先从同一逻辑显示配置的`getRealMetrics`读取尺寸和密度，再回退wm。修复本机1152×2376与物理560 dpi混用，实际逻辑密度为480。`UiBridge`排除不可见、零尺寸、无子节点、无有效内容的占位根；真实叶节点不受误伤，系统/IME窗口不能掩盖空应用根。记录`placeholderRootCount`并执行有界清缓存/重连。
-- **正式视觉回退：**重连后应用根仍不可读时，`AutomationEngine`在目标仍属任务虚拟屏、手机未锁定等条件下，使用同一帧截图及本地PaddleOCR生成视觉观察；步骤来源为`vision_ocr`，规划使用verifier配置的视觉模型，调用单独记录`visual_planner`。控制端总调用数包含该角色。视觉步骤不编译为依赖语义节点的技能。
-- **定位与菜单：**唯一、高置信度OCR文字优先于模型估计坐标；0–1000归一化坐标经换算与边界校验后使用。文字点击执行前重新截图定位，以应对会话列表重排。菜单可有限重观察；低置信度的小字候选可局部2倍放大OCR，仍须精确标签、置信度≥0.85且唯一，失败保存原图并停止，不猜坐标或降级原生快捷键。
-- **焦点事务：**`InputFocusTransaction`串行化兼容输入。开始要求主屏焦点0及可识别的当前主屏任务；正常触摸取得目标虚拟屏焦点，检查任务归属、锁屏/冲突与10秒期限，再通过可见菜单全选/粘贴。成功、失败、取消都恢复用户当前主屏任务焦点，保留线程中断，剪贴板经原始ClipData快照恢复。10秒是受控点的期限检查，不是对底层系统调用阻塞的硬实时上限。
-- **主屏输入空闲门禁：**`MainInputIdleGuard` 用主屏可读、可见的应用窗口、系统 `mInputShown` 及 InputDispatcher `RecentQueue` 元数据决定是否允许焦点借用。主屏键盘展开、聚焦可编辑框、近期主屏触摸/按键、读数缺失均阻挡；只有连续确认空闲 2 秒才放行。主屏UI快照仅在内存中提取窗口/编辑状态，不记录或发送正文，也不把“没有收到文字变化”当成空闲。键盘展开但暂时停打、键盘收起但输入框仍聚焦时继续等待。
-- **等待与打断：**粘贴输入、草稿复制核对、已发气泡复制核对均先等待空闲，再开始临时剪贴板/焦点事务；借用前重检，借用中的检查点发现新主屏事件则退出事务并在 finally 归还焦点。等待不消耗自动步数，`waitingForMainInput` 在悬浮提示显示“等待输入空闲”，取消/锁屏/同 App 冲突保护仍有效。等待后丢弃旧坐标、重新观察，发送尝试锁存仍禁止重发。此门禁是输入空闲的保守估计，检测与归还有采样/系统调用延迟；某些播放器会响应窗口失焦，不能承诺看视频完全无感。新增路径已部署。专用主屏编辑框/实际系统键盘展开时，正式微信任务在第2步等待至少8秒，合成ASCII输入仍无焦点借用或失焦，模型调用及步骤不增长；这不是持续真人拼音测试。切到本地无音轨VideoView后，约67.4秒观测内无暂停或停止播放样本，3次借用均归还（约6.1/6.5/4.6秒），文件传输助手仅发送1条编号消息，草稿及已发气泡复制全文一致。该次任务发送后的结果保留规则未识别“不保留页面”，末尾误走交接锚点验收而FAILED；正则已修复并更新部署，未再发第二条消息冒充完整重测通过。纯本地OCR另行确认正确会话标题、完整原文与唯一右侧编号，焦点前后均为0。第三方播放器、音频连续性、真人中途抢占及零瞬态干扰仍未验证。
-- **原文绑定：**`startTask`可同时提供`exactMessage`、`exactRecipient`，两者必须逐字出现在授权goal中；正文必须只有一个至少10位的数字编号。缺一项、原文不在目标中、编号缺失或歧义会提前拒绝。不传这两个字段则保持普通视觉规划/独立发送前验收，不自动获得本轮确定性正文断言。发送前目标变化会失效旧绑定并重新观察；发送后目标变化则停止验收，不能把旧消息当成新目标完成，也不能重发。
-- **发送前门禁：**显式绑定路径在正确标题下写入原文，通过“全选→复制”逐字比较完整草稿；新OCR须再次确认标题，并且完整编号只能出现一次、置信度≥0.9且位于底部15%草稿区。该保守几何范围只适用于已测试的短消息布局，不是任意输入框的通用判据。
-- **发送后验收：**发送尝试在执行点击前锁存；后续只验收，禁止重复输入/重发。必须仍在原虚拟屏、未转主屏且焦点已恢复0。对唯一编号气泡执行“复制”，逐字比较原文，设置`draftCopyVerified`/`messageCopyVerified`。独立视觉验收继续核对会话标题、对应编号的右侧已发气泡及无失败/持续发送指示；不要求微信不存在的已读对勾，不宣称跨设备接收或已读。
-- **证据与指标：**视觉验收可查看原图顶部7%标题与编号中心上下各10%高度全宽区域的拼接检查视图，明确标注坐标映射、像素不改写；最终证据仍保存完整原图。`DisturbanceMonitor`只将明确焦点借用区间归因于输入事务，原始焦点计数不抹零，超出事务的焦点异常仍触发保护。新增`inputFocusTransactions`，`zeroDisturbanceVerified`仍为false。
-
-代码入口：[AutomationEngine](../android-shell/src/main/java/com/silentauto/shell/AutomationEngine.java)、[InputFocusTransaction](../android-shell/src/main/java/com/silentauto/shell/ext/guard/InputFocusTransaction.java)、[VisualActionPolicy](../android-shell/src/main/java/com/silentauto/shell/ext/guard/VisualActionPolicy.java)、[ResultVerifier](../android-shell/src/main/java/com/silentauto/shell/ext/verify/ResultVerifier.java)。
-
-### 12.3 本机系统限制与源码依据
-
-| 检查 | 本机结果 | 含义 |
-| --- | --- | --- |
-| `config_perDisplayFocusEnabled`资源 | false | 系统未启用全局每屏独立焦点，不是普通App设置 |
-| `OWN_FOCUS` / `STEAL_TOP_FOCUS_DISABLED` | 均为NoSuchFieldException | 本机框架缺失单屏独立/不抢顶层焦点标志，反射或猜常量不能补齐实现 |
-| shell UID2000权限 | `ADD_TRUSTED_DISPLAY=-1`；`INTERNAL_SYSTEM_WINDOW=0`、`INJECT_EVENTS=0` | 拥有注入权限不等于拥有受信任显示屏权限 |
-| 创建TRUSTED虚拟屏 | SecurityException，要求ADD_TRUSTED_DISPLAY | 权限拒绝得到探针确认 |
-| 临时普通屏186设置LOCAL IME | SecurityException，原因是untrusted virtual display；前后策略均为1（fallback） | 本地输入法显示策略被系统信任检查拒绝 |
-
-Android10已有可配置的多屏焦点机制，但普通手机不一定启用。传统IME可随焦点移动显示位置，不等于两条独立输入会话；AOSP12也拒绝对不受信任虚拟屏设置LOCAL策略，不能仅据本机现象归为华为独有问题。较新分支（如Android15）有OWN_FOCUS和STEAL_TOP_FOCUS_DISABLED，OWN_FOCUS仍要求trusted；具体补丁、权限、厂商行为须实测，不能只凭SDK号承诺隔离。
-
-尤其重要的是，AOSP12 `PhoneWindowManager.interceptKeyBeforeQueueing`在多屏独立焦点关闭、按键指向非当前显示屏时会调用`moveDisplayToTop(displayId)`。这解释了为何“显式指定displayId”能避免字符落错屏，却仍让主屏失去焦点；触摸的NO_FOCUS_CHANGE不能照搬为KeyEvent的同名能力。
-
-依据：[AOSP多屏焦点](https://source.android.com/docs/core/display/multi_display/displays)、[IME说明](https://source.android.com/docs/core/display/multi_display/ime-support)、[Android12 PhoneWindowManager](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/services/core/java/com/android/server/policy/PhoneWindowManager.java)、[Android12 WMS](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/services/core/java/com/android/server/wm/WindowManagerService.java)、[Android15 DisplayManager](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-15.0.0_r1/core/java/android/hardware/display/DisplayManager.java)。
-
-### 12.4 不换手机的候选方案与实测
-
-临时测试夹具`com.silentauto.focusprobe`的主屏与次屏Activity在独立进程中，只记录自己的测试文本/焦点，关闭软键盘显示。每个按键试验前要求主屏焦点0，试验之间显式恢复主屏；恢复本身不计作未曾抢焦点。
-
-| 路径 | 结果 | 判断 |
-| --- | --- | --- |
-| NO_FOCUS_CHANGE触摸 | 主屏保持0 | 触摸可用，但不自动建立目标输入连接 |
-| ACTION_MULTIPLE直接字符`MULTIPLE_后台` | 发往屏188，返回false，无文本到达 | 本机不可用 |
-| 定向ASCII按键 | 后台收到`a`，主屏失焦，全局焦点188 | 绕开IME但仍抢焦点 |
-| 定向KEYCODE_PASTE | 后台收到`PASTE_后台`，全局焦点188 | 不是无打扰替代 |
-| 不先ACTION_FOCUS、直接ACTION_SET_TEXT | 屏190标准EditText收到`SETTEXT_后台`；windowFocus始终false，主屏焦点0 | 标准样本通过，不外推到所有App |
-| 微信普通UiAutomation | 1个占位根、class=null、children=0、editable=0 | 无直接写入节点 |
-| 微信DONT_SUPPRESS_ACCESSIBILITY_SERVICES | 从设备读取标志值1后连接，仍为空根、editable=0 | 未解决节点问题，不据此断言微信全部自绘 |
-
-[定向事件原始记录](evidence/wechat-2026-10-26/nofocus-input-probe.txt)、[无障碍对照原始记录](evidence/wechat-2026-10-26/accessibility-nofocus-probe.txt)、[摘要与哈希](evidence/wechat-2026-10-26/nofocus-input-result.json)。测试App已卸载，临时jar/虚拟屏释放，主屏恢复原桌面任务7、焦点0，正式后台通过ping。粘贴走ClipboardGuard快照/finally恢复路径，本轮未另做独立剪贴板摘要审计，也未做主屏真实拼音输入并发压力测试。
-
-其余方向按源码/权限核查记录，不伪装成已实现：
-
-| 方向 | 当前边界 |
-| --- | --- |
-| 普通授权、`pm grant`、ADB模式Shizuku | ADD_TRUSTED_DISPLAY是signature权限，不是运行时权限；ADB入口仍受shell边界约束，不能补齐本机缺失的授权/实现 |
-| 桌面模式、`wm`、`cmd display` | 本机命令清单没有独立焦点开关；桌面窗口模式、IME显示位置与独立输入不是同一能力 |
-| 全局资源覆盖 | 本机fabricate命令明确要求root，ro.debuggable=0；WMS与PhoneWindowManager读取该资源。未做覆盖或重启，不承诺改一个布尔值能同时解决IME/剪贴板 |
-| ADBKeyboard、自定义IME、旧InputConnection | 目标需要有效输入连接。Android12服务端核对客户端焦点，应用端忽略inactive连接的commitText；隐藏键盘窗口不提供第二条独立会话。本轮未安装或切换全局输入法 |
-| 反射目标View、ViewServer | 当前进程反射不能取得微信进程内View；ViewDebug的层次/抓图/布局诊断没有通用跨App setText命令。未读取私人View树 |
-| 通知快捷回复、Intent、业务接口 | 要求目标App主动提供并有相应授权；未验证文件传输助手存在可用入口，未申请通知读取权限 |
-| root、系统签名、框架改造或App内Hook | 可以作为系统级研究方向，需要版本和输入链路适配，维护成本较高；本轮未实施，不纳入当前能力承诺 |
-
-依据：[Android12权限声明](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/core/res/AndroidManifest.xml)、[IME焦点检查](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/services/core/java/com/android/server/inputmethod/InputMethodManagerService.java)、[inactive连接检查](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/core/java/com/android/internal/view/IInputConnectionWrapper.java)、[ViewDebug](https://raw.githubusercontent.com/aosp-mirror/platform_frameworks_base/android-12.0.0_r1/core/java/android/view/ViewDebug.java)、[Shizuku官方说明](https://shizuku.rikka.app/guide/setup/)。
-
-### 12.5 正式发送结果与历史失败
-
-正式任务`wechat-background-1792986804`最终`VERIFIED`且`finalized=true`，全程在虚拟屏185，4步、58.918秒；只点击发送一次，没有转主屏，结束释放虚拟屏（displayId=-1）。原文为：
-
-> ShadowAuto 后台截图OCR测试 1792986804（仅文件传输助手，无需回复）
-
-`draftCopyVerified=true`、`messageCopyVerified=true`；独立验收确认标题、对应编号的右侧绿色气泡及无失败/持续发送指示。视觉规划3次、独立验收1次、选App1次，四步均为`vision_ocr`。三次焦点借用分别6258/6300/4487毫秒并恢复；原始前台切换0、剪贴板最终摘要变化0，原始焦点变化3，桌面8/60新增帧被计为卡顿，不能称零打扰或流畅度全部通过。
-
-[正式结果与构建哈希](evidence/wechat-2026-10-26/background-engine-result.json)、[完整原始截图](evidence/wechat-2026-10-26/background-engine-full.png)。截图仅含文件传输助手及测试消息，已目视检查；首页、联系人和其他私人聊天没有纳入公开证据。该设备记录对应当时工作区APK；本次整理新增的参数与目标版本保护由主机回归覆盖，不冒充已重新跑过这轮真机发送。
-
-前序结果保持原状态，不把主屏诊断或模型误判改写为正式成功：
-
-| 阶段/样本 | 实际结果与后续处理 |
-| --- | --- |
-| 最初560 dpi启动、480 dpi对照 | 560反复EXIT_SELF；480在30秒及45秒对照内稳定，截图首页可见；微信内部退出调用栈仍未取得。[启动诊断摘要](evidence/wechat-2026-10-26/summary.json)只对应此阶段，productionCodeChanged=false不是当前总体状态 |
-| 初次正式任务wechat-send-1792956203 / 屏166 | 密度修复后稳定，但占位根重连代际1→2仍不可用，约14.1秒在0步WAITING_USER，未输入/未发送；主屏对照同样不可读，随后取消 |
-| 屏167视觉诊断及主屏对照1792956203 | 后台截图/OCR与搜索触摸可用，输入无粘贴入口；主屏诊断发出完整消息，但未接入正式引擎，不能当作后台通过 |
-| 1792958742及早期视觉失败 | 包含归一化坐标误用、标题重复点击、正文被规划器截断、旧草稿、列表重排误入公众号；保留失败并分别补齐原文绑定与执行前重定位 |
-| 1792985249 / 5428 / 5593 | 发送前模型把旧编号或正常换行读错，或忽略已成立的复制证明；均未点击发送，后改为确定性标题/草稿/编号门禁 |
-| 1792985777 / 5906 | 全选后小菜单OCR把粘贴读成低置信度重复字，有限等待仍失败；加入候选局部放大，不降阈值、不猜坐标 |
-| 1792986071 / 6296 | 草稿、编号检查已成立，模型仍误报重复；最终由确定性门禁负责这些条件，发送后仍独立视觉验收 |
-| 1792984356 / 4685 / 6520 | 有实际发送，但验收把操作过程、排版或相似长图当成失败；6520草稿/气泡复制均相等，仍保持FAILED。后来缩小视觉检查范围、完整原图仍保留 |
-| 首轮焦点/无障碍探针 | 缓存DisplayManager探针被终止；按键探针检测到失焦提前退出；无障碍探针误用DONT_USE_ACCESSIBILITY=2，第二阶段无效。更正显式ShellContext、补齐按键对、读取设备DONT_SUPPRESS=1后才形成最终结果 |
-
-所有原始任务、探针源码、失败日志、未公开截图及原独立说明留在仓库同级`../docs/validation/wechat-2026-10-26/`。主机检查和单台手机的一次正式成功，不等价于任意自然语言入口、任意联系人、全局历史去重、跨设备接收/已读、长时运行或全程零打扰通过。
-
-### 12.6 检查与维护
-
-按第10节执行两模块assembleDebug、两模块lintDebug及完整交互回归，本次均通过，见[整理后检查摘要](evidence/wechat-2026-10-26/consolidation-checks.json)。新增回归覆盖占位根/真实叶节点、焦点成功/失败/取消清理、用户更换主屏任务后的恢复、外部焦点拒绝、OCR菜单歧义、归一化坐标、动态文字重定位、标题区域、相似编号/历史重复/低置信度、绑定参数完整性和发送后目标修改拒绝。不会向手机重复发送消息来验证只读文档整理或纯参数拒绝分支。
-
-对外说明继续限定为“兼容方案单次正式发送通过”；保留默认隔离门禁、危险按键保护、原始指标和失败记录。新设备或系统级改造需重新验证信任权限、独立焦点、IME/剪贴板及主屏真实输入，不能凭接口存在或设置返回成功置为通过。
+In the long term, truly independent focus and a local input method on everyday users' phones require system-signature-level privileges and cooperation with phone manufacturers. With those capabilities, most workarounds in Sections 6 and 7 could be removed.
